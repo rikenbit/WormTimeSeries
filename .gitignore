@@ -1,0 +1,15 @@
+.nfs*
+._*
+.DS_Store
+data/*
+.snakemake/*
+output/*
+benchmarks/*
+logs/*
+.git/*
+*.sh.*
+*tiff*.log
+.Rproj.user
+.RData
+.Rhistory
+*.Rproj
