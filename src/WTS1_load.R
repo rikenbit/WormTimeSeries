@@ -1,8 +1,8 @@
 source("src/functions_WTS1.R")
 
-# load & save cleandata
+# load and export neuron activity data
 ##################################################
-# number of c.elegans file
+# number of c.elegans neuron activity file
 list.files("data/cleandata/", all.files = TRUE, recursive = TRUE) %>%
     length() %>%
         seq() -> celegans
@@ -29,6 +29,31 @@ for(i in celegans){
 
 
 
-# load stimulation_timing.xlsx
+# load and export stimulation timing data
 ##################################################
+# load csv 
+stimdata <- read.csv("data/stimulation_timing.csv")
+
+# stim celegans1~15
+# １列目のタイムフレームを削除したデータフレーム作成
+stimdata %>% select(., -1) -> stim15
+
+# timeframe
+timeframe <- stimdata[,1]
+
+# save each stimulation timing
+for(i in celegans){
+    # stimtiming <- stim15[,1]
+    eval(parse(text = paste0("stimtiming <- stim15[,",i,"]")))
+    # dataframe
+    data.frame(
+        TimeFrame = timeframe,
+        StimTiming = stimtiming,
+        stringsAsFactors = FALSE
+    ) -> stimdf
+    # stimdf -> stim_1
+    eval(parse(text = paste0("stimdf -> stim_",i)))
+    # save(stim_1, file ='data/stimulation/stim_1.RData')
+    eval(parse(text = paste0("save(stim_",i,", file ='data/stimulation/stim_",i,".RData')")))
+}
 ##################################################
