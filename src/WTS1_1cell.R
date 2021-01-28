@@ -25,7 +25,7 @@ eval(parse(text = paste0("load('data/cleandata_mat/matrix_",args_celegans,".RDat
 eval(parse(text = paste0("n_matrix <- matrix_",args_celegans)))
 
 # Time
-timeframe <- colnames(n_matrix)
+timeframe <- as.numeric(colnames(n_matrix))
 
 # CellType
 # eval cellType <- rownames(n_matrix)[1]
@@ -44,7 +44,7 @@ eval(parse(text = paste0("load('data/stimulation/stim_",args_celegans,".RData')"
 # StimTiming
 # eval stim <- stim_1
 eval(parse(text = paste0("stim <- stim_",args_celegans)))
-stimtiming <- stim[,2]
+stimtiming <- as.numeric(stim[,2])
 ##################################################
 
 # dataframe for ggplot
@@ -59,16 +59,22 @@ data.frame(
 ##################################################
 # plot
 p_0 <- ggplot(data = g, mapping = aes(x = timeframe, y = nactivity, group = 1))
-p_1 <- p_0 +
-    layer(geom = "point", stat = "identity", position = "identity")
-p_1_2 <- p_1 +
-  layer(geom = "line", stat = "identity", position = "identity")
 
+## scale
+p_1_2 <- p_0 +
+    geom_point() +
+    geom_line()
+sX <- scale_x_continuous(name = "TimeFrame(1frame/0.2sec)",    # 軸の名前を変える
+                         breaks = seq(0, 6000, by=1000),     # 軸の区切りを0,2,4にする
+                         #labels = c("zero","two","four"), # 区切りを名付ける
+                         # limits = c(0,4)       # 0から4までしか表示しない
+                        )
+## font size
+# theme(text = element_text(size = 24))
 
-
-
+gg <- p_1_2 + sX
 
 # ggsave(filename = 'output/WTS1/1_1_X1.png', plot = gg, dpi = 100, width = 7.0, height = 7.0)
-eval(parse(text = paste0("ggsave(filename = 'output/WTS1/",args_celegans,"_",args_cell,"_",celltype,".png', plot = p_1_2, dpi = 100, width = 21.0, height = 7.0)")))
+eval(parse(text = paste0("ggsave(filename = 'output/WTS1/",args_celegans,"_",args_cell,"_",celltype,".png', plot = gg, dpi = 100, width = 21.0, height = 7.0)")))
 ##################################################
 
