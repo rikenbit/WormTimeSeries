@@ -50,31 +50,62 @@ stimtiming <- as.numeric(stim[,2])
 # dataframe for ggplot
 data.frame(
         TimeFrame = timeframe,
-        Nactivity= nactivity,
+        Nactivity = nactivity,
         StimTiming = stimtiming,
         stringsAsFactors = FALSE
 ) -> g
 
 # ggplot
 ##################################################
-# plot
-p_0 <- ggplot(data = g, mapping = aes(x = timeframe, y = nactivity, group = 1))
+# p_1 <- ggplot(data = g, mapping = aes(x = TimeFrame, y = Nactivity, group = 1)) +
+#     geom_point() +
+#     geom_line()
+# p_2 <- ggplot(data = g, mapping = aes(x = TimeFrame, y = StimTiming, group = 1)) +
+#     geom_point() +
+#     geom_line()
 
-## scale
-p_1_2 <- p_0 +
-    geom_point() +
-    geom_line()
+# sX <- scale_x_continuous(name = "TimeFrame(1frame/0.2sec)",    # 軸の名前を変える
+#                          breaks = seq(0, 6000, by=1000),     # 軸の区切りを0,2,4にする
+#                          #labels = c("zero","two","four"), # 区切りを名付ける
+#                          # limits = c(0,4)       # 0から4までしか表示しない
+#                         )
+# gg <- p_1 + 
+#     p_2 +
+#     sX
+
+
+# p_1_2 <- ggplot(data = g, aes(TimeFrame)) +
+#     geom_line(aes(y = Nactivity, colour = "Nactivity")) +
+#     geom_line(aes(y = StimTiming, colour = "StimTiming")) +
+#     scale_color_manual(values = c("black", "red"))
+# gg <- p_1_2 +
+#     sX
+
+p_1 <- ggplot(data = g, aes(TimeFrame)) +
+    geom_line(aes(y = Nactivity, colour = "Nactivity"))
+p_1_2 <- p_1 + geom_line(aes(y = StimTiming, colour = "StimTiming") ,size = 1.5)
+s_1 <- scale_color_manual(values = c("black", "red"))
 sX <- scale_x_continuous(name = "TimeFrame(1frame/0.2sec)",    # 軸の名前を変える
-                         breaks = seq(0, 6000, by=1000),     # 軸の区切りを0,2,4にする
+                         breaks = seq(0, 6000, by= 1000),     # 軸の区切りを0,2,4にする
                          #labels = c("zero","two","four"), # 区切りを名付ける
                          # limits = c(0,4)       # 0から4までしか表示しない
                         )
-## font size
-# theme(text = element_text(size = 24))
+# title <- ggtitle('celegans1_cell1_X1')
+eval(parse(text = paste0("title <- ggtitle('celegans",args_celegans,"_cell",args_cell,"_",celltype,"')")))
+t_1 <- theme(plot.title = element_text(size = 30, hjust = 0.5))
+t_2 <- theme(axis.title = element_text(size = 20))
+t_3 <- theme(legend.title = element_text(size = 28),
+			 legend.text = element_text(size = 20))
 
-gg <- p_1_2 + sX
+gg <- p_1_2 +
+    s_1 +
+    sX +
+    title +
+    t_1 +
+    t_2 +
+    t_3 +
+    labs(colour="each data")
 
-# ggsave(filename = 'output/WTS1/1_1_X1.png', plot = gg, dpi = 100, width = 7.0, height = 7.0)
-eval(parse(text = paste0("ggsave(filename = 'output/WTS1/",args_celegans,"_",args_cell,"_",celltype,".png', plot = gg, dpi = 100, width = 21.0, height = 7.0)")))
+# ggsave(filename = 'output/WTS1/celegans1/1_1_X1.png', plot = gg, dpi = 100, width = 7.0, height = 7.0)
+eval(parse(text = paste0("ggsave(filename = 'output/WTS1/celegans",args_celegans,"/",args_celegans,"_",args_cell,"_",celltype,".png', plot = gg, dpi = 100, width = 21.0, height = 7.0)")))
 ##################################################
-
