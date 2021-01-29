@@ -57,38 +57,12 @@ data.frame(
 
 # ggplot
 ##################################################
-# p_1 <- ggplot(data = g, mapping = aes(x = TimeFrame, y = Nactivity, group = 1)) +
-#     geom_point() +
-#     geom_line()
-# p_2 <- ggplot(data = g, mapping = aes(x = TimeFrame, y = StimTiming, group = 1)) +
-#     geom_point() +
-#     geom_line()
-
-# sX <- scale_x_continuous(name = "TimeFrame(1frame/0.2sec)",    # 軸の名前を変える
-#                          breaks = seq(0, 6000, by=1000),     # 軸の区切りを0,2,4にする
-#                          #labels = c("zero","two","four"), # 区切りを名付ける
-#                          # limits = c(0,4)       # 0から4までしか表示しない
-#                         )
-# gg <- p_1 + 
-#     p_2 +
-#     sX
-
-
-# p_1_2 <- ggplot(data = g, aes(TimeFrame)) +
-#     geom_line(aes(y = Nactivity, colour = "Nactivity")) +
-#     geom_line(aes(y = StimTiming, colour = "StimTiming")) +
-#     scale_color_manual(values = c("black", "red"))
-# gg <- p_1_2 +
-#     sX
-
 p_1 <- ggplot(data = g, aes(TimeFrame)) +
     geom_line(aes(y = Nactivity, colour = "Nactivity"))
 p_1_2 <- p_1 + geom_line(aes(y = StimTiming, colour = "StimTiming") ,size = 1.5)
 s_1 <- scale_color_manual(values = c("black", "red"))
 sX <- scale_x_continuous(name = "TimeFrame(1frame/0.2sec)",    # 軸の名前を変える
                          breaks = seq(0, 6000, by= 1000),     # 軸の区切りを0,2,4にする
-                         #labels = c("zero","two","four"), # 区切りを名付ける
-                         # limits = c(0,4)       # 0から4までしか表示しない
                         )
 # title <- ggtitle('celegans1_cell1_X1')
 eval(parse(text = paste0("title <- ggtitle('celegans",args_celegans,"_cell",args_cell,"_",celltype,"')")))
