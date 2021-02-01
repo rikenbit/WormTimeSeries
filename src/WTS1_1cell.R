@@ -55,12 +55,25 @@ data.frame(
         stringsAsFactors = FALSE
 ) -> g
 
+# rollmean
+# g %>% mutate(N_roll = roll_mean(Nactivity, n=501, align="center", fill=NA)) -> g_roll
+g %>% mutate(N_roll = roll_meanr(Nactivity, n = 51, align = "right", fill = NA)) -> g_roll
+# diff
+diff_value <- 50
+n_diff <- append(rep(NA, diff_value), diff(g$Nactivity, diff_value))
+g_roll %>% 
+    mutate(N_diff = n_diff) -> g_roll_diff
+
 # ggplot
 ##################################################
-p_1 <- ggplot(data = g, aes(TimeFrame)) +
+p_1 <- ggplot(data = g_roll_diff, aes(TimeFrame)) +
     geom_line(aes(y = Nactivity, colour = "Nactivity"))
-p_1_2 <- p_1 + geom_line(aes(y = StimTiming, colour = "StimTiming") ,size = 1.5)
-s_1 <- scale_color_manual(values = c("black", "red"))
+p_2 <- p_1 +
+         geom_line(aes(y = StimTiming, colour = "StimTiming") , size = 1.5, alpha = 0.7) +
+         geom_line(aes(y = N_roll, colour = "N_rollmean"), size = 1.5, alpha = 0.7) +
+         geom_line(aes(y = N_diff, colour = "N_diff"), size = 1.5, alpha = 0.4, linetype = "dotted")
+s_1 <- scale_color_manual(values = c("blue", "red" , "black", "green"))
+
 sX <- scale_x_continuous(name = "TimeFrame(1frame/0.2sec)",    # 軸の名前を変える
                          breaks = seq(0, 6000, by= 1000),     # 軸の区切りを0,2,4にする
                         )
@@ -71,7 +84,7 @@ t_2 <- theme(axis.title = element_text(size = 20))
 t_3 <- theme(legend.title = element_text(size = 28),
 			 legend.text = element_text(size = 20))
 
-gg <- p_1_2 +
+gg <- p_2 +
     s_1 +
     sX +
     title +
@@ -83,3 +96,5 @@ gg <- p_1_2 +
 # ggsave(filename = 'output/WTS1/celegans1/1_1_X1.png', plot = gg, dpi = 100, width = 7.0, height = 7.0)
 eval(parse(text = paste0("ggsave(filename = 'output/WTS1/celegans",args_celegans,"/",args_celegans,"_",args_cell,"_",celltype,".png', plot = gg, dpi = 100, width = 21.0, height = 7.0)")))
 ##################################################
+
+
