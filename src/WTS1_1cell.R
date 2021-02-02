@@ -11,9 +11,9 @@ source("src/functions_WTS1.R")
 ##################################################
 # testargs 
 test <- c("1","1")
-# select celegans 個体の指定
+# select celegans 個体番号の指定
 args_celegans <- test[1]
-# select cell 細胞の指定
+# select cell 細胞番号の指定
 args_cell <- test[2]
 ##################################################
 

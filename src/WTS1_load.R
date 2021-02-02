@@ -29,15 +29,35 @@ for(i in celegans){
 
 # export sample sheet
 ##################################################
-# count sample
-
-# count cell
-nrow(matrix_1)
-
+# 行列データをリストにまとめた
+matrix_list <- list()
+for (i in 1:15) {
+    eval(parse(text = paste0("matrix_list <- c(matrix_list, list(matrix_",i,"))")))
+}
+# 個体No.，細胞No.，細胞型名のデータフレーム作成
+n_sample <- c()
+n_cell <- c()
+celltype <- c()
+for (i in 1:15) {
+    # create Sample.number
+    # rep(celegans[1],nrow(matrix_list[[1]])) %>% as.character()
+    rep(celegans[i],nrow(matrix_list[[i]])) %>%
+        as.character() %>%
+            append(n_sample, .) -> n_sample
+    # create Cell.number
+    # seq(nrow(matrix_1))
+    seq(nrow(matrix_list[[i]])) %>%
+        as.character() %>%
+            append(n_cell, .) -> n_cell
+    # create Cell.type
+    rownames(matrix_list[[i]]) %>%
+            append(celltype, .) -> celltype
+}
 # create dataframe
 data.frame(
         Sample.number = n_sample,
         Cell.number = n_cell,
+        Cell.type = celltype,
         stringsAsFactors = FALSE
 ) -> sample_sheet
 
