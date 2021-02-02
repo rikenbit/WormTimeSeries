@@ -27,6 +27,23 @@ for(i in celegans){
 }
 ##################################################
 
+# export sample sheet
+##################################################
+# count sample
+
+# count cell
+nrow(matrix_1)
+
+# create dataframe
+data.frame(
+        Sample.number = n_sample,
+        Cell.number = n_cell,
+        stringsAsFactors = FALSE
+) -> sample_sheet
+
+# export
+write.csv(sample_sheet, "data/WTS1_sample_sheet.csv", row.names = FALSE)
+##################################################
 
 
 # load and export stimulation timing data

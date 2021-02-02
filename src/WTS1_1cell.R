@@ -72,11 +72,12 @@ p_2 <- p_1 +
          geom_line(aes(y = StimTiming, colour = "StimTiming") , size = 1.5, alpha = 0.7) +
          geom_line(aes(y = N_roll, colour = "N_rollmean"), size = 1.5, alpha = 0.7) +
          geom_line(aes(y = N_diff, colour = "N_diff"), size = 1.5, alpha = 0.4, linetype = "dotted")
-s_1 <- scale_color_manual(values = c("blue", "red" , "black", "green"))
 
+s_1 <- scale_color_manual(values = c("blue", "red" , "black", "green"))
 sX <- scale_x_continuous(name = "TimeFrame(1frame/0.2sec)",    # 軸の名前を変える
                          breaks = seq(0, 6000, by= 1000),     # 軸の区切りを0,2,4にする
                         )
+
 # title <- ggtitle('celegans1_cell1_X1')
 eval(parse(text = paste0("title <- ggtitle('celegans",args_celegans,"_cell",args_cell,"_",celltype,"')")))
 t_1 <- theme(plot.title = element_text(size = 30, hjust = 0.5))
