@@ -101,5 +101,3 @@ gg <- p_2 +
 # ggsave(filename = 'output/WTS1/celegans1/1_1_X1.png', plot = gg, dpi = 100, width = 7.0, height = 7.0)
 eval(parse(text=paste0("ggsave(filename = 'output/WTS1/celegans",args_celegans,"/",args_celegans,"_",args_cell,"_",celltype,".png', plot = gg, dpi = 100, width = 21.0, height = 7.0)")))
 ##################################################
-
-
