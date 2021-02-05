@@ -8,14 +8,14 @@ args_sample <- args[1]
 # select cell number 細胞番号の指定
 args_cell <- args[2]
 # select celltype 細胞型名の指定
-celltype <-  args[3]
+args_celltype <-  args[3]
 
 # neuron activity data(matrix)
 ##################################################
 # load('data/cleandata_mat/matrix_1.RData')
-eval(parse(text=paste0("load('data/cleandata_mat/matrix_",args_celegans,".RData')")))
+eval(parse(text=paste0("load('data/cleandata_mat/matrix_",args_sample,".RData')")))
 # n_matrix <- matrix_1
-eval(parse(text=paste0("n_matrix <- matrix_",args_celegans)))
+eval(parse(text=paste0("n_matrix <- matrix_",args_sample)))
 # Time
 timeframe <- as.numeric(colnames(n_matrix))
 # Neuron activity ：matrix  to 1cell dataframe
@@ -26,10 +26,10 @@ eval(parse(text=paste0("nactivity <- n_matrix[",args_cell,",]")))
 # stimulation timing data(dataframe)
 ##################################################
 # load('data/stimulation/stim_1.RData')
-eval(parse(text=paste0("load('data/stimulation/stim_",args_celegans,".RData')")))
+eval(parse(text=paste0("load('data/stimulation/stim_",args_sample,".RData')")))
 # StimTiming
 # stim <- stim_1
-eval(parse(text=paste0("stim <- stim_",args_celegans)))
+eval(parse(text=paste0("stim <- stim_",args_sample)))
 stimtiming <- as.numeric(stim[,2])
 ##################################################
 
@@ -67,7 +67,7 @@ sX <- scale_x_continuous(name = "TimeFrame(1frame/0.2sec)",    # 軸の名前を
                         )
 
 # title <- ggtitle('celegans1_cell1_X1')
-eval(parse(text=paste0("title <- ggtitle('celegans",args_celegans,"_cell",args_cell,"_",celltype,"')")))
+eval(parse(text=paste0("title <- ggtitle('celegans",args_sample,"_cell",args_cell,"_",args_celltype,"')")))
 t_1 <- theme(plot.title = element_text(size = 30, hjust = 0.5))
 t_2 <- theme(axis.title = element_text(size = 20))
 t_3 <- theme(legend.title = element_text(size = 28),
@@ -82,5 +82,5 @@ gg <- p_2 +
     t_3 +
     labs(colour="each data")
 
-eval(parse(text=paste0("ggsave(filename = 'output/WTS1/Samplenumber",args_sample,"/Cellnumber",args_cell,"_Celltype",celltype,".png', plot = gg, dpi = 100, width = 21.0, height = 7.0)")))
+eval(parse(text=paste0("ggsave(filename = 'output/WTS1/Samplenumber",args_sample,"/Cellnumber",args_cell,"_Celltype",args_celltype,".png', plot = gg, dpi = 100, width = 21.0, height = 7.0)")))
 ##################################################
