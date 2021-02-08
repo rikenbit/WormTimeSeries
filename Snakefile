@@ -3,16 +3,13 @@ from snakemake.utils import min_version
 from snakemake.utils import Paramspace
 
 
-min_version("5.3.2")
+# min_version("5.3.2")
 configfile: "config.yaml"
 
 N_SAMPLES = list(map(str, range(1, 16)))
 
 # read sample_sheet
 SAMPLE_SHEET = pd.read_csv(config['SAMPLE_SHEET'], dtype='string')
-# test 5行
-SAMPLE_SHEET = SAMPLE_SHEET[206:211]
-# test 5行
 
 # paramspace
 paramspace = Paramspace(SAMPLE_SHEET, filename_params=['Cellnumber', 'Celltype'], param_sep="")
