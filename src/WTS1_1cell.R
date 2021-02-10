@@ -82,5 +82,5 @@ gg <- p_2 +
     t_3 +
     labs(colour="each data")
 
-eval(parse(text=paste0("ggsave(filename = 'output/WTS1/Samplenumber",args_sample,"/Cellnumber",args_cell,"_Celltype",args_celltype,".png', plot = gg, dpi = 100, width = 21.0, height = 7.0)")))
+eval(parse(text=paste0("ggsave(filename = 'output/WTS1/SampleNumber",args_sample,"/CellNumber_",args_cell,"_CellType_",args_celltype,".png', plot = gg, dpi = 100, width = 21.0, height = 7.0)")))
 ##################################################

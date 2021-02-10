@@ -55,9 +55,9 @@ for (i in 1:15) {
 }
 # create dataframe
 data.frame(
-        Samplenumber = n_sample,
-        Cellnumber = n_cell,
-        Celltype = celltype,
+        SampleNumber = n_sample,
+        CellNumber = n_cell,
+        CellType = celltype,
         stringsAsFactors = FALSE
 ) -> sample_sheet
 

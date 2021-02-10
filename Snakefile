@@ -12,7 +12,7 @@ N_SAMPLES = list(map(str, range(1, 16)))
 SAMPLE_SHEET = pd.read_csv(config['SAMPLE_SHEET'], dtype='string')
 
 # paramspace
-paramspace = Paramspace(SAMPLE_SHEET, filename_params=['Cellnumber', 'Celltype'], param_sep="")
+paramspace = Paramspace(SAMPLE_SHEET, filename_params=['CellNumber', 'CellType'], param_sep="_")
 
 rule all:
 	input:
@@ -43,9 +43,9 @@ rule WTS1_1cell:
 	output:
 		f"output/WTS1/{paramspace.wildcard_pattern}.png"
 	params:
-		args1 = lambda w: w["Samplenumber"],
-		args2 = lambda w: w["Cellnumber"],
-		args3 = lambda w: w["Celltype"]
+		args1 = lambda w: w["SampleNumber"],
+		args2 = lambda w: w["CellNumber"],
+		args3 = lambda w: w["CellType"]
 		
 	benchmark:
 		f'benchmarks/WTS1/{paramspace.wildcard_pattern}.txt'
