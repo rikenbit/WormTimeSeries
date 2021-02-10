@@ -28,7 +28,7 @@
 #         'src/WTS1_load.sh >& {log}'
 # ###################################################
 
-# WTS1 dataload
+# WTS1 1cell plot
 ###################################################
 import pandas as pd
 from snakemake.utils import min_version
@@ -50,7 +50,6 @@ rule all:
 	input:
 		expand('output/WTS1/{params}.png', params = paramspace.instance_patterns)
 
-# WTS1 1cell plot
 rule WTS1_1cell:
 	# input:
 	# 	expand('data/cleandata_mat/matrix_{N}.RData', N=N_SAMPLES),
