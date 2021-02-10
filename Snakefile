@@ -1,3 +1,35 @@
+# WTS1 dataload 1rule
+# ###################################################
+# N_SAMPLES = list(map(str, range(1, 16)))
+# 
+# rule all:
+# 	input:
+# 		expand('data/cleandata_mat/matrix_{N}.RData', N=N_SAMPLES),
+#         expand('data/stimulation/stim_{N}.RData', N=N_SAMPLES),
+#         'data/WTS1_sample_sheet.csv'
+# 
+# rule WTS1_load:
+#     input:
+#         expand('data/cleandata/{N}_ratio.csv', N=N_SAMPLES),
+#         'data/stimulation_timing.csv'
+#     output:
+#         expand('data/cleandata_mat/matrix_{N}.RData', N=N_SAMPLES),
+#         expand('data/stimulation/stim_{N}.RData', N=N_SAMPLES),
+#         'data/WTS1_sample_sheet.csv'
+#     benchmark:
+#         'benchmarks/WTS1/WTS1_load.txt'
+#     conda:
+#         'envs/myenv_WTS1.yaml'
+#     resources:
+#         mem_gb=200
+#     log:
+#         'logs/WTS1/WTS1_load.log'
+#     shell:
+#         'src/WTS1_load.sh >& {log}'
+# ###################################################
+
+# WTS1 dataload
+###################################################
 import pandas as pd
 from snakemake.utils import min_version
 from snakemake.utils import Paramspace
@@ -18,28 +50,12 @@ rule all:
 	input:
 		expand('output/WTS1/{params}.png', params = paramspace.instance_patterns)
 
-# WTS1 dataload
-rule WTS1_load:
-    input:
-        expand('data/cleandata/{N}_ratio.csv', N=N_SAMPLES),
-        'data/stimulation_timing.csv'
-    output:
-        expand('data/cleandata_mat/matrix_{N}.RData', N=N_SAMPLES),
-        expand('data/stimulation/stim_{N}.RData', N=N_SAMPLES),
-        'data/WTS1_sample_sheet.csv'
-    benchmark:
-        'benchmarks/WTS1/WTS1_load.txt'
-    conda:
-        'envs/myenv_WTS1.yaml'
-    resources:
-        mem_gb=200
-    log:
-        'logs/WTS1/WTS1_load.log'
-    shell:
-        'src/WTS1_load.sh >& {log}'
-
 # WTS1 1cell plot
 rule WTS1_1cell:
+	# input:
+	# 	expand('data/cleandata_mat/matrix_{N}.RData', N=N_SAMPLES),
+ #        expand('data/stimulation/stim_{N}.RData', N=N_SAMPLES),
+ #        'data/WTS1_sample_sheet.csv'
 	output:
 		f"output/WTS1/{paramspace.wildcard_pattern}.png"
 	params:
@@ -57,3 +73,4 @@ rule WTS1_1cell:
 		f'logs/WTS1/{paramspace.wildcard_pattern}.log'
 	shell:
 		'src/WTS1_1cell.sh {params.args1} {params.args2} {params.args3} >& {log}'
+###################################################
