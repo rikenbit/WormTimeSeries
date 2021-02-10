@@ -66,8 +66,8 @@ sX <- scale_x_continuous(name = "TimeFrame(1frame/0.2sec)",    # 軸の名前を
                          breaks = seq(0, 6000, by= 1000),     # 軸の区切りを0,2,4にする
                         )
 
-# title <- ggtitle('celegans1_cell1_X1')
-eval(parse(text=paste0("title <- ggtitle('celegans",args_sample,"_cell",args_cell,"_",args_celltype,"')")))
+# title <- ggtitle('SampleNumber1_CellNumber1_X1')
+eval(parse(text=paste0("title <- ggtitle('SampleNumber",args_sample,"_CellNumber",args_cell,"_",args_celltype,"')")))
 t_1 <- theme(plot.title = element_text(size = 30, hjust = 0.5))
 t_2 <- theme(axis.title = element_text(size = 20))
 t_3 <- theme(legend.title = element_text(size = 28),
