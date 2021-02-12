@@ -1,4 +1,4 @@
-# WTS1 dataload 1rule
+# WTS1 dataload
 # ###################################################
 # N_SAMPLES = list(map(str, range(1, 16)))
 # 
