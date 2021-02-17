@@ -38,10 +38,12 @@ g$Nactivity %>%
 eval(parse(text=paste0("title <- ggtitle('SampleNumber",args_sample,"_CellNumber",args_cell,"_",args_celltype,"')")))
 # title theme
 t_1 <- theme(plot.title = element_text(size = 24, hjust = 0.5))
+t_2 <- theme(axis.title = element_text(size = 16))
 
 gg <- p_acf +
     title +
-    t_1
+    t_1+
+    t_2
 
-eval(parse(text=paste0("ggsave(filename = 'output/WTS2/SampleNumber_",args_sample,"/CellNumber_",args_cell,"_CellType_",args_celltype,".png', plot = gg, dpi = 100, width = 21.0, height = 7.0)")))
+eval(parse(text=paste0("ggsave(filename = 'output/WTS2/SampleNumber_",args_sample,"/CellNumber_",args_cell,"_CellType_",args_celltype,".png', plot = gg, dpi = 100, width = 7.0, height = 7.0)")))
 ##################################################
