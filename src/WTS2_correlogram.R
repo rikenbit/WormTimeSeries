@@ -32,7 +32,7 @@ data.frame(
 ) -> g
 ##################################################
 
-# ggAcf
+# ggAcf autocorrelation
 ##################################################
 g$Nactivity %>%
     ggAcf(lag.max = 50, type = c("correlation"), plot = TRUE) -> p_Acf
@@ -50,7 +50,7 @@ gg <- p_Acf +
 eval(parse(text=paste0("ggsave(filename = 'output/WTS2/SampleNumber_",args_sample,"/CellNumber_",args_cell,"_CellType_",args_celltype,"_Acf.png', plot = gg, dpi = 100, width = 7.0, height = 7.0)")))
 ##################################################
 
-# ggAcf partial
+# ggAcf Partial autocorrelation
 ##################################################
 g$Nactivity %>%
     ggAcf(lag.max = 50, type = c("partial"), plot = TRUE) -> p_pAcf

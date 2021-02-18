@@ -81,10 +81,16 @@ from snakemake.utils import Paramspace
 
 configfile: "config.yaml"
 
-N_SAMPLES = list(map(str, range(1, 16)))
-
 # read sample_sheet
 SAMPLE_SHEET = pd.read_csv(config['SAMPLE_SHEET'], dtype='string')
+# remove sample
+SAMPLE_SHEET = SAMPLE_SHEET[~SAMPLE_SHEET['SampleNumber'].isin(['7','12','13','14'])]
+SAMPLE_SHEET  = SAMPLE_SHEET .reset_index(drop=True)
+
+# test
+###################################################
+SAMPLE_SHEET = SAMPLE_SHEET[206:211]
+###################################################
 
 # paramspace
 paramspace = Paramspace(SAMPLE_SHEET, filename_params=['CellNumber', 'CellType'], param_sep="_")
