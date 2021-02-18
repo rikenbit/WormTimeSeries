@@ -1,22 +1,14 @@
 source("src/functions_WTS2.R")
 
-# # args setting
-# args <- commandArgs(trailingOnly = T)
-# # select animal number 個体番号の指定
-# args_sample <- args[1]
-# # select cell number 細胞番号の指定
-# args_cell <- args[2]
-# # select celltype 細胞型名の指定
-# args_celltype <- args[3]
-
-# test args
+# args setting
 ##################################################
+args <- commandArgs(trailingOnly = T)
 # select animal number 個体番号の指定
-args_sample <- c("1")
+args_sample <- args[1]
 # select cell number 細胞番号の指定
-args_cell <- c("1")
+args_cell <- args[2]
 # select celltype 細胞型名の指定
-args_celltype <-c("X1")
+args_celltype <- args[3]
 ##################################################
 
 # load
@@ -56,24 +48,6 @@ gg <- p_Acf +
     t_2
 
 eval(parse(text=paste0("ggsave(filename = 'output/WTS2/SampleNumber_",args_sample,"/CellNumber_",args_cell,"_CellType_",args_celltype,"_Acf.png', plot = gg, dpi = 100, width = 7.0, height = 7.0)")))
-##################################################
-
-# ggPacf
-##################################################
-g$Nactivity %>%
-    ggPacf(lag.max = 50, plot = TRUE) -> p_Pacf
-# title name
-eval(parse(text=paste0("title <- ggtitle('SampleNumber",args_sample,"_CellNumber",args_cell,"_",args_celltype,"_Pacf')")))
-# title theme
-t_1 <- theme(plot.title = element_text(size = 24, hjust = 0.5))
-t_2 <- theme(axis.title = element_text(size = 16))
-
-gg <- p_Pacf +
-    title +
-    t_1+
-    t_2
-
-eval(parse(text=paste0("ggsave(filename = 'output/WTS2/SampleNumber_",args_sample,"/CellNumber_",args_cell,"_CellType_",args_celltype,"_Pacf.png', plot = gg, dpi = 100, width = 7.0, height = 7.0)")))
 ##################################################
 
 # ggAcf partial
