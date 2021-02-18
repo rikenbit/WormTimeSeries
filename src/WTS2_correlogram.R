@@ -39,7 +39,7 @@ g$Nactivity %>%
 # title name
 eval(parse(text=paste0("title <- ggtitle('SampleNumber",args_sample,"_CellNumber",args_cell,"_",args_celltype,"_Acf')")))
 # title theme
-t_1 <- theme(plot.title = element_text(size = 24, hjust = 0.5))
+t_1 <- theme(plot.title = element_text(size = 20, hjust = 0.5))
 t_2 <- theme(axis.title = element_text(size = 16))
 
 gg <- p_Acf +
@@ -57,7 +57,7 @@ g$Nactivity %>%
 # title name
 eval(parse(text=paste0("title <- ggtitle('SampleNumber",args_sample,"_CellNumber",args_cell,"_",args_celltype,"_pAcf')")))
 # title theme
-t_1 <- theme(plot.title = element_text(size = 24, hjust = 0.5))
+t_1 <- theme(plot.title = element_text(size = 20, hjust = 0.5))
 t_2 <- theme(axis.title = element_text(size = 16))
 
 gg <- p_pAcf +

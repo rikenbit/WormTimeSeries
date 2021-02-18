@@ -97,11 +97,14 @@ paramspace = Paramspace(SAMPLE_SHEET, filename_params=['CellNumber', 'CellType']
 
 rule all:
 	input:
-		expand('output/WTS2/{params}.png', params = paramspace.instance_patterns)
+		expand('output/WTS2/{params}_Acf.png', params = paramspace.instance_patterns),
+		expand('output/WTS2/{params}_pAcf.png', params = paramspace.instance_patterns)
 
 rule WTS2_correlogram:
 	output:
-		f"output/WTS2/{paramspace.wildcard_pattern}.png"
+		# f"output/WTS2/{paramspace.wildcard_pattern}.png"
+		expand('output/WTS2/{params}_Acf.png', params = paramspace.wildcard_pattern),
+		expand('output/WTS2/{params}_pAcf.png', params = paramspace.wildcard_pattern)
 	params:
 		args1 = lambda w: w["SampleNumber"],
 		args2 = lambda w: w["CellNumber"],
