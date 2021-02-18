@@ -61,7 +61,7 @@ eval(parse(text=paste0("ggsave(filename = 'output/WTS2/SampleNumber_",args_sampl
 # ggPacf
 ##################################################
 g$Nactivity %>%
-    ggPacf(lag.max = 50, type = c("correlation"), plot = TRUE) -> p_Pacf
+    ggPacf(lag.max = 50, plot = TRUE) -> p_Pacf
 # title name
 eval(parse(text=paste0("title <- ggtitle('SampleNumber",args_sample,"_CellNumber",args_cell,"_",args_celltype,"_Pacf')")))
 # title theme
