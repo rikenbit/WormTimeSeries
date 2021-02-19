@@ -74,7 +74,50 @@
 # 		'src/WTS1_1cell.sh {params.args1} {params.args2} {params.args3} >& {log}'
 # ###################################################
 
-# WTS2 correlogram
+# # WTS2 correlogram
+# ###################################################
+# import pandas as pd
+# from snakemake.utils import Paramspace
+
+# configfile: "config.yaml"
+
+# # read sample_sheet
+# SAMPLE_SHEET = pd.read_csv(config['SAMPLE_SHEET'], dtype='string')
+# # remove sample
+# SAMPLE_SHEET = SAMPLE_SHEET[~SAMPLE_SHEET['SampleNumber'].isin(['7','12','13','14'])]
+# SAMPLE_SHEET  = SAMPLE_SHEET .reset_index(drop=True)
+
+# # paramspace
+# paramspace = Paramspace(SAMPLE_SHEET, filename_params=['CellNumber', 'CellType'], param_sep="_")
+
+# rule all:
+# 	input:
+# 		expand('output/WTS2/{params}_Acf.png', params = paramspace.instance_patterns),
+# 		expand('output/WTS2/{params}_pAcf.png', params = paramspace.instance_patterns)
+
+# rule WTS2_correlogram:
+# 	output:
+# 		# f"output/WTS2/{paramspace.wildcard_pattern}.png"
+# 		expand('output/WTS2/{params}_Acf.png', params = paramspace.wildcard_pattern),
+# 		expand('output/WTS2/{params}_pAcf.png', params = paramspace.wildcard_pattern)
+# 	params:
+# 		args1 = lambda w: w["SampleNumber"],
+# 		args2 = lambda w: w["CellNumber"],
+# 		args3 = lambda w: w["CellType"]
+		
+# 	benchmark:
+# 		f'benchmarks/WTS2/{paramspace.wildcard_pattern}.txt'
+# 	conda:
+# 		'envs/myenv_WTS2.yaml'
+# 	resources:
+# 		mem_gb=200
+# 	log:
+# 		f'logs/WTS2/{paramspace.wildcard_pattern}.log'
+# 	shell:
+# 		'src/WTS2_correlogram.sh {params.args1} {params.args2} {params.args3} >& {log}'
+# ###################################################
+
+# WTS2 correlogram τ500
 ###################################################
 import pandas as pd
 from snakemake.utils import Paramspace
@@ -87,32 +130,37 @@ SAMPLE_SHEET = pd.read_csv(config['SAMPLE_SHEET'], dtype='string')
 SAMPLE_SHEET = SAMPLE_SHEET[~SAMPLE_SHEET['SampleNumber'].isin(['7','12','13','14'])]
 SAMPLE_SHEET  = SAMPLE_SHEET .reset_index(drop=True)
 
+# test
+###################################################
+SAMPLE_SHEET = SAMPLE_SHEET[206:211]
+###################################################
+
 # paramspace
 paramspace = Paramspace(SAMPLE_SHEET, filename_params=['CellNumber', 'CellType'], param_sep="_")
 
 rule all:
 	input:
-		expand('output/WTS2/{params}_Acf.png', params = paramspace.instance_patterns),
-		expand('output/WTS2/{params}_pAcf.png', params = paramspace.instance_patterns)
+		expand('output/WTS2/ACFτ500/{params}_Acf.png', params = paramspace.instance_patterns),
+		expand('output/WTS2/ACFτ500/{params}_pAcf.png', params = paramspace.instance_patterns)
 
-rule WTS2_correlogram:
+rule WTS2_correlogram_τ500:
 	output:
-		# f"output/WTS2/{paramspace.wildcard_pattern}.png"
-		expand('output/WTS2/{params}_Acf.png', params = paramspace.wildcard_pattern),
-		expand('output/WTS2/{params}_pAcf.png', params = paramspace.wildcard_pattern)
+		# f"output/WTS2/ACFτ500/{paramspace.wildcard_pattern}.png"
+		expand('output/WTS2/ACFτ500/{params}_Acf.png', params = paramspace.wildcard_pattern),
+		expand('output/WTS2/ACFτ500/{params}_pAcf.png', params = paramspace.wildcard_pattern)
 	params:
 		args1 = lambda w: w["SampleNumber"],
 		args2 = lambda w: w["CellNumber"],
 		args3 = lambda w: w["CellType"]
 		
 	benchmark:
-		f'benchmarks/WTS2/{paramspace.wildcard_pattern}.txt'
+		f'benchmarks/WTS2/ACFτ500/{paramspace.wildcard_pattern}.txt'
 	conda:
 		'envs/myenv_WTS2.yaml'
 	resources:
 		mem_gb=200
 	log:
-		f'logs/WTS2/{paramspace.wildcard_pattern}.log'
+		f'logs/WTS2/ACFτ500/{paramspace.wildcard_pattern}.log'
 	shell:
 		'src/WTS2_correlogram.sh {params.args1} {params.args2} {params.args3} >& {log}'
 ###################################################

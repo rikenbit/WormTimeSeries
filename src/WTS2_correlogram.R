@@ -35,7 +35,8 @@ data.frame(
 # ggAcf autocorrelation
 ##################################################
 g$Nactivity %>%
-    ggAcf(lag.max = 50, type = c("correlation"), plot = TRUE) -> p_Acf
+    # ggAcf(lag.max = 50, type = c("correlation"), plot = TRUE) -> p_Acf
+    ggAcf(lag.max = 500, type = c("correlation"), plot = TRUE) -> p_Acf
 # title name
 eval(parse(text=paste0("title <- ggtitle('SampleNumber",args_sample,"_CellNumber",args_cell,"_",args_celltype,"_Acf')")))
 # title theme
@@ -44,16 +45,19 @@ t_2 <- theme(axis.title = element_text(size = 16))
 
 gg <- p_Acf +
     title +
-    t_1+
-    t_2
+    t_1 +
+    t_2 +
+    scale_x_continuous(breaks=seq(0,500,length=26),limits=c(0,500))
 
-eval(parse(text=paste0("ggsave(filename = 'output/WTS2/SampleNumber_",args_sample,"/CellNumber_",args_cell,"_CellType_",args_celltype,"_Acf.png', plot = gg, dpi = 100, width = 7.0, height = 7.0)")))
+# eval(parse(text=paste0("ggsave(filename = 'output/WTS2/SampleNumber_",args_sample,"/CellNumber_",args_cell,"_CellType_",args_celltype,"_Acf.png', plot = gg, dpi = 100, width = 7.0, height = 7.0)")))
+eval(parse(text=paste0("ggsave(filename = 'output/WTS2/ACFτ500/SampleNumber_",args_sample,"/CellNumber_",args_cell,"_CellType_",args_celltype,"_Acf.png', plot = gg, dpi = 100, width = 7.0, height = 7.0)")))
 ##################################################
 
 # ggAcf Partial autocorrelation
 ##################################################
 g$Nactivity %>%
-    ggAcf(lag.max = 50, type = c("partial"), plot = TRUE) -> p_pAcf
+    # ggAcf(lag.max = 50, type = c("partial"), plot = TRUE) -> p_pAcf
+    ggAcf(lag.max = 500, type = c("partial"), plot = TRUE) -> p_pAcf
 # title name
 eval(parse(text=paste0("title <- ggtitle('SampleNumber",args_sample,"_CellNumber",args_cell,"_",args_celltype,"_pAcf')")))
 # title theme
@@ -62,8 +66,10 @@ t_2 <- theme(axis.title = element_text(size = 16))
 
 gg <- p_pAcf +
     title +
-    t_1+
-    t_2
+    t_1 +
+    t_2 +
+    scale_x_continuous(breaks=seq(0,500,length=26),limits=c(0,500))
 
-eval(parse(text=paste0("ggsave(filename = 'output/WTS2/SampleNumber_",args_sample,"/CellNumber_",args_cell,"_CellType_",args_celltype,"_pAcf.png', plot = gg, dpi = 100, width = 7.0, height = 7.0)")))
+# eval(parse(text=paste0("ggsave(filename = 'output/WTS2/SampleNumber_",args_sample,"/CellNumber_",args_cell,"_CellType_",args_celltype,"_pAcf.png', plot = gg, dpi = 100, width = 7.0, height = 7.0)")))
+eval(parse(text=paste0("ggsave(filename = 'output/WTS2/ACFτ500/SampleNumber_",args_sample,"/CellNumber_",args_cell,"_CellType_",args_celltype,"_pAcf.png', plot = gg, dpi = 100, width = 14.0, height = 7.0)")))
 ##################################################
