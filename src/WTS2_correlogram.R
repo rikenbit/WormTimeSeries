@@ -50,7 +50,7 @@ gg <- p_Acf +
     scale_x_continuous(breaks=seq(0,500,length=26),limits=c(0,500))
 
 # eval(parse(text=paste0("ggsave(filename = 'output/WTS2/SampleNumber_",args_sample,"/CellNumber_",args_cell,"_CellType_",args_celltype,"_Acf.png', plot = gg, dpi = 100, width = 7.0, height = 7.0)")))
-eval(parse(text=paste0("ggsave(filename = 'output/WTS2/ACFτ500/SampleNumber_",args_sample,"/CellNumber_",args_cell,"_CellType_",args_celltype,"_Acf.png', plot = gg, dpi = 100, width = 7.0, height = 7.0)")))
+eval(parse(text=paste0("ggsave(filename = 'output/WTS2/ACFτ500/SampleNumber_",args_sample,"/CellNumber_",args_cell,"_CellType_",args_celltype,"_Acf.png', plot = gg, dpi = 300, width = 14.0, height = 7.0)")))
 ##################################################
 
 # ggAcf Partial autocorrelation
@@ -71,5 +71,5 @@ gg <- p_pAcf +
     scale_x_continuous(breaks=seq(0,500,length=26),limits=c(0,500))
 
 # eval(parse(text=paste0("ggsave(filename = 'output/WTS2/SampleNumber_",args_sample,"/CellNumber_",args_cell,"_CellType_",args_celltype,"_pAcf.png', plot = gg, dpi = 100, width = 7.0, height = 7.0)")))
-eval(parse(text=paste0("ggsave(filename = 'output/WTS2/ACFτ500/SampleNumber_",args_sample,"/CellNumber_",args_cell,"_CellType_",args_celltype,"_pAcf.png', plot = gg, dpi = 100, width = 14.0, height = 7.0)")))
+eval(parse(text=paste0("ggsave(filename = 'output/WTS2/ACFτ500/SampleNumber_",args_sample,"/CellNumber_",args_cell,"_CellType_",args_celltype,"_pAcf.png', plot = gg, dpi = 300, width = 14.0, height = 7.0)")))
 ##################################################

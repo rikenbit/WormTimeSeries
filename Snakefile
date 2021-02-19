@@ -130,10 +130,6 @@ SAMPLE_SHEET = pd.read_csv(config['SAMPLE_SHEET'], dtype='string')
 SAMPLE_SHEET = SAMPLE_SHEET[~SAMPLE_SHEET['SampleNumber'].isin(['7','12','13','14'])]
 SAMPLE_SHEET  = SAMPLE_SHEET .reset_index(drop=True)
 
-# test
-###################################################
-SAMPLE_SHEET = SAMPLE_SHEET[206:211]
-###################################################
 
 # paramspace
 paramspace = Paramspace(SAMPLE_SHEET, filename_params=['CellNumber', 'CellType'], param_sep="_")
