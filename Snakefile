@@ -74,7 +74,7 @@
 # 		'src/WTS1_1cell.sh {params.args1} {params.args2} {params.args3} >& {log}'
 # ###################################################
 
-# # WTS2 correlogram
+# # WTS2 correlogram τ50
 # ###################################################
 # import pandas as pd
 # from snakemake.utils import Paramspace

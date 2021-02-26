@@ -32,6 +32,9 @@ data.frame(
 ) -> g
 ##################################################
 
+# WTS2 correlogram τ500
+#####################################################################################
+
 # ggAcf autocorrelation
 ##################################################
 g$Nactivity %>%
@@ -73,3 +76,4 @@ gg <- p_pAcf +
 # eval(parse(text=paste0("ggsave(filename = 'output/WTS2/SampleNumber_",args_sample,"/CellNumber_",args_cell,"_CellType_",args_celltype,"_pAcf.png', plot = gg, dpi = 100, width = 7.0, height = 7.0)")))
 eval(parse(text=paste0("ggsave(filename = 'output/WTS2/ACFτ500/SampleNumber_",args_sample,"/CellNumber_",args_cell,"_CellType_",args_celltype,"_pAcf.png', plot = gg, dpi = 300, width = 14.0, height = 7.0)")))
 ##################################################
+#####################################################################################
