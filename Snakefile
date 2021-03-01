@@ -74,48 +74,48 @@
 # 		'src/WTS1_1cell.sh {params.args1} {params.args2} {params.args3} >& {log}'
 # ###################################################
 
-# WTS2 correlogram τ50
-###################################################
-import pandas as pd
-from snakemake.utils import Paramspace
+# # WTS2 correlogram τ50
+# ###################################################
+# import pandas as pd
+# from snakemake.utils import Paramspace
 
-configfile: "config.yaml"
+# configfile: "config.yaml"
 
-# read sample_sheet
-SAMPLE_SHEET = pd.read_csv(config['SAMPLE_SHEET'], dtype='string')
-# remove sample
-SAMPLE_SHEET = SAMPLE_SHEET[~SAMPLE_SHEET['SampleNumber'].isin(['7','12','13','14'])]
-SAMPLE_SHEET  = SAMPLE_SHEET .reset_index(drop=True)
+# # read sample_sheet
+# SAMPLE_SHEET = pd.read_csv(config['SAMPLE_SHEET'], dtype='string')
+# # remove sample
+# SAMPLE_SHEET = SAMPLE_SHEET[~SAMPLE_SHEET['SampleNumber'].isin(['7','12','13','14'])]
+# SAMPLE_SHEET  = SAMPLE_SHEET .reset_index(drop=True)
 
-# paramspace
-paramspace = Paramspace(SAMPLE_SHEET, filename_params=['CellNumber', 'CellType'], param_sep="_")
+# # paramspace
+# paramspace = Paramspace(SAMPLE_SHEET, filename_params=['CellNumber', 'CellType'], param_sep="_")
 
-rule all:
-	input:
-		expand('output/WTS2/ACFτ50/{params}_Acf.png', params = paramspace.instance_patterns),
-		expand('output/WTS2/ACFτ50/{params}_pAcf.png', params = paramspace.instance_patterns)
+# rule all:
+# 	input:
+# 		expand('output/WTS2/ACFτ50/{params}_Acf.png', params = paramspace.instance_patterns),
+# 		expand('output/WTS2/ACFτ50/{params}_pAcf.png', params = paramspace.instance_patterns)
 
-rule WTS2_correlogram_τ50:
-	output:
-		# f"output/WTS2/{paramspace.wildcard_pattern}.png"
-		expand('output/WTS2/ACFτ50/{params}_Acf.png', params = paramspace.wildcard_pattern),
-		expand('output/WTS2/ACFτ50/{params}_pAcf.png', params = paramspace.wildcard_pattern)
-	params:
-		args1 = lambda w: w["SampleNumber"],
-		args2 = lambda w: w["CellNumber"],
-		args3 = lambda w: w["CellType"]
+# rule WTS2_correlogram_τ50:
+# 	output:
+# 		# f"output/WTS2/{paramspace.wildcard_pattern}.png"
+# 		expand('output/WTS2/ACFτ50/{params}_Acf.png', params = paramspace.wildcard_pattern),
+# 		expand('output/WTS2/ACFτ50/{params}_pAcf.png', params = paramspace.wildcard_pattern)
+# 	params:
+# 		args1 = lambda w: w["SampleNumber"],
+# 		args2 = lambda w: w["CellNumber"],
+# 		args3 = lambda w: w["CellType"]
 		
-	benchmark:
-		f'benchmarks/WTS2/ACFτ50/{paramspace.wildcard_pattern}.txt'
-	conda:
-		'envs/myenv_WTS2.yaml'
-	resources:
-		mem_gb=200
-	log:
-		f'logs/WTS2/ACFτ50/{paramspace.wildcard_pattern}.log'
-	shell:
-		'src/WTS2_correlogram.sh {params.args1} {params.args2} {params.args3} >& {log}'
-###################################################
+# 	benchmark:
+# 		f'benchmarks/WTS2/ACFτ50/{paramspace.wildcard_pattern}.txt'
+# 	conda:
+# 		'envs/myenv_WTS2.yaml'
+# 	resources:
+# 		mem_gb=200
+# 	log:
+# 		f'logs/WTS2/ACFτ50/{paramspace.wildcard_pattern}.log'
+# 	shell:
+# 		'src/WTS2_correlogram.sh {params.args1} {params.args2} {params.args3} >& {log}'
+# ###################################################
 
 # # WTS2 correlogram τ500
 # ###################################################
@@ -160,3 +160,49 @@ rule WTS2_correlogram_τ50:
 # 	shell:
 # 		'src/WTS2_correlogram.sh {params.args1} {params.args2} {params.args3} >& {log}'
 # ###################################################
+
+# WTS2 correlogram stim τ50
+#####################################################################################
+import pandas as pd
+from snakemake.utils import Paramspace
+
+configfile: "config.yaml"
+
+# read sample_sheet
+SAMPLE_SHEET = pd.read_csv(config['SAMPLE_SHEET'], dtype='string')
+# remove sample
+SAMPLE_SHEET = SAMPLE_SHEET[~SAMPLE_SHEET['SampleNumber'].isin(['7','12','13','14'])]
+SAMPLE_SHEET  = SAMPLE_SHEET .reset_index(drop=True)
+
+# paramspace
+paramspace = Paramspace(SAMPLE_SHEET, filename_params=['CellNumber', 'CellType'], param_sep="_")
+
+rule all:
+	input:
+		expand('output/WTS2/ACFτ50_stim/ACF/{params}_BF.png', params = paramspace.instance_patterns),
+		expand('output/WTS2/ACFτ50_stim/ACF/{params}_AF.png', params = paramspace.instance_patterns),
+		expand('output/WTS2/ACFτ50_stim/pACF/{params}_BF.png', params = paramspace.instance_patterns),
+		expand('output/WTS2/ACFτ50_stim/pACF/{params}_AF.png', params = paramspace.instance_patterns)
+
+rule WTS2_correlogram_τ50:
+	output:
+		expand('output/WTS2/ACFτ50_stim/ACF/{params}_BF.png', params = paramspace.wildcard_pattern),
+		expand('output/WTS2/ACFτ50_stim/ACF/{params}_AF.png', params = paramspace.wildcard_pattern),
+		expand('output/WTS2/ACFτ50_stim/pACF/{params}_BF.png', params = paramspace.wildcard_pattern),
+		expand('output/WTS2/ACFτ50_stim/pACF/{params}_AF.png', params = paramspace.wildcard_pattern)
+	params:
+		args1 = lambda w: w["SampleNumber"],
+		args2 = lambda w: w["CellNumber"],
+		args3 = lambda w: w["CellType"]
+		
+	benchmark:
+		f'benchmarks/WTS2/ACFτ50_stim/{paramspace.wildcard_pattern}.txt'
+	conda:
+		'envs/myenv_WTS2.yaml'
+	resources:
+		mem_gb=200
+	log:
+		f'logs/WTS2/ACFτ50_stim/{paramspace.wildcard_pattern}.log'
+	shell:
+		'src/WTS2_correlogram.sh {params.args1} {params.args2} {params.args3} >& {log}'
+#####################################################################################

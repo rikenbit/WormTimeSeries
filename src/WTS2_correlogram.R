@@ -32,44 +32,44 @@ data.frame(
 ) -> g
 ##################################################
 
-# WTS2 correlogram τ50
-#####################################################################################
-# ggAcf autocorrelation
-##################################################
-g$Nactivity %>%
-    ggAcf(lag.max = 50, type = c("correlation"), plot = TRUE) -> p_Acf
-# title name
-eval(parse(text=paste0("title <- ggtitle('SampleNumber",args_sample,"_CellNumber",args_cell,"_",args_celltype,"_Acf')")))
-# title theme
-t_1 <- theme(plot.title = element_text(size = 20, hjust = 0.5))
-t_2 <- theme(axis.title = element_text(size = 16))
+# # WTS2 correlogram τ50
+# #####################################################################################
+# # ggAcf autocorrelation
+# ##################################################
+# g$Nactivity %>%
+#     ggAcf(lag.max = 50, type = c("correlation"), plot = TRUE) -> p_Acf
+# # title name
+# eval(parse(text=paste0("title <- ggtitle('SampleNumber",args_sample,"_CellNumber",args_cell,"_",args_celltype,"_Acf')")))
+# # title theme
+# t_1 <- theme(plot.title = element_text(size = 20, hjust = 0.5))
+# t_2 <- theme(axis.title = element_text(size = 16))
 
-gg <- p_Acf +
-    title +
-    t_1 +
-    t_2
+# gg <- p_Acf +
+#     title +
+#     t_1 +
+#     t_2
 
-eval(parse(text=paste0("ggsave(filename = 'output/WTS2/ACFτ50/SampleNumber_",args_sample,"/CellNumber_",args_cell,"_CellType_",args_celltype,"_Acf.png', plot = gg, dpi = 100, width = 7.0, height = 7.0)")))
-##################################################
+# eval(parse(text=paste0("ggsave(filename = 'output/WTS2/ACFτ50/SampleNumber_",args_sample,"/CellNumber_",args_cell,"_CellType_",args_celltype,"_Acf.png', plot = gg, dpi = 100, width = 7.0, height = 7.0)")))
+# ##################################################
 
-# ggAcf Partial autocorrelation
-##################################################
-g$Nactivity %>%
-    ggAcf(lag.max = 50, type = c("partial"), plot = TRUE) -> p_pAcf
-# title name
-eval(parse(text=paste0("title <- ggtitle('SampleNumber",args_sample,"_CellNumber",args_cell,"_",args_celltype,"_pAcf')")))
-# title theme
-t_1 <- theme(plot.title = element_text(size = 20, hjust = 0.5))
-t_2 <- theme(axis.title = element_text(size = 16))
+# # ggAcf Partial autocorrelation
+# ##################################################
+# g$Nactivity %>%
+#     ggAcf(lag.max = 50, type = c("partial"), plot = TRUE) -> p_pAcf
+# # title name
+# eval(parse(text=paste0("title <- ggtitle('SampleNumber",args_sample,"_CellNumber",args_cell,"_",args_celltype,"_pAcf')")))
+# # title theme
+# t_1 <- theme(plot.title = element_text(size = 20, hjust = 0.5))
+# t_2 <- theme(axis.title = element_text(size = 16))
 
-gg <- p_pAcf +
-    title +
-    t_1 +
-    t_2
+# gg <- p_pAcf +
+#     title +
+#     t_1 +
+#     t_2
 
-eval(parse(text=paste0("ggsave(filename = 'output/WTS2/ACFτ50/SampleNumber_",args_sample,"/CellNumber_",args_cell,"_CellType_",args_celltype,"_pAcf.png', plot = gg, dpi = 100, width = 7.0, height = 7.0)")))
-##################################################
-#####################################################################################
+# eval(parse(text=paste0("ggsave(filename = 'output/WTS2/ACFτ50/SampleNumber_",args_sample,"/CellNumber_",args_cell,"_CellType_",args_celltype,"_pAcf.png', plot = gg, dpi = 100, width = 7.0, height = 7.0)")))
+# ##################################################
+# #####################################################################################
 
 # # WTS2 correlogram τ500
 # #####################################################################################
@@ -111,3 +111,99 @@ eval(parse(text=paste0("ggsave(filename = 'output/WTS2/ACFτ50/SampleNumber_",ar
 # eval(parse(text=paste0("ggsave(filename = 'output/WTS2/ACFτ500/SampleNumber_",args_sample,"/CellNumber_",args_cell,"_CellType_",args_celltype,"_pAcf.png', plot = gg, dpi = 300, width = 14.0, height = 7.0)")))
 # ##################################################
 # #####################################################################################
+
+# WTS2 correlogram stim τ50
+#####################################################################################
+# stimulation timing data(dataframe)
+##################################################
+eval(parse(text=paste0("load('data/stimulation/stim_",args_sample,".RData')")))
+eval(parse(text=paste0("stim <- stim_",args_sample)))
+stimtiming <- as.numeric(stim[,2])
+##################################################
+# dataframe
+##################################################
+data.frame(
+        TimeFrame = timeframe,
+        Nactivity = nactivity,
+        StimTiming = stimtiming,
+        stringsAsFactors = FALSE
+) -> g
+##################################################
+# first stim TimeFrame
+##################################################
+g %>%
+    filter(StimTiming != 0) %>%
+        slice_head() %>%
+            .$TimeFrame -> stimtiming_AF
+stimtiming_BF <- stimtiming_AF -1
+head(g,eval(parse(text=paste0(stimtiming_BF)))) -> g_BF
+g %>%
+    .[eval(parse(text=paste0(stimtiming_AF))):nrow(g),]  -> g_AF
+##################################################
+# ggAcf autocorrelation BF
+##################################################
+g_BF$Nactivity %>%
+    ggAcf(lag.max = 50, type = c("correlation"), plot = TRUE) -> p_Acf
+# title name
+eval(parse(text=paste0("title <- ggtitle('SampleNumber",args_sample,"_CellNumber",args_cell,"_",args_celltype,"_Acf_BF')")))
+# title theme
+t_1 <- theme(plot.title = element_text(size = 20, hjust = 0.5))
+t_2 <- theme(axis.title = element_text(size = 16))
+gg <- p_Acf +
+    title +
+    t_1 +
+    t_2
+# ggsave
+eval(parse(text=paste0("ggsave(filename = 'output/WTS2/ACFτ50_stim/ACF/SampleNumber_",args_sample,"/CellNumber_",args_cell,"_CellType_",args_celltype,"_BF.png', plot = gg, dpi = 100, width = 7.0, height = 7.0)")))
+##################################################
+# ggAcf autocorrelation AF
+##################################################
+g_AF$Nactivity %>%
+    ggAcf(lag.max = 50, type = c("correlation"), plot = TRUE) -> p_Acf
+# title name
+eval(parse(text=paste0("title <- ggtitle('SampleNumber",args_sample,"_CellNumber",args_cell,"_",args_celltype,"_Acf_AF')")))
+# title theme
+t_1 <- theme(plot.title = element_text(size = 20, hjust = 0.5))
+t_2 <- theme(axis.title = element_text(size = 16))
+gg <- p_Acf +
+    title +
+    t_1 +
+    t_2
+# ggsave
+eval(parse(text=paste0("ggsave(filename = 'output/WTS2/ACFτ50_stim/ACF/SampleNumber_",args_sample,"/CellNumber_",args_cell,"_CellType_",args_celltype,"_AF.png', plot = gg, dpi = 100, width = 7.0, height = 7.0)")))
+##################################################
+# ggAcf Partial autocorrelation BF
+##################################################
+g_BF$Nactivity %>%
+    ggAcf(lag.max = 50, type = c("partial"), plot = TRUE) -> p_pAcf
+# title name
+eval(parse(text=paste0("title <- ggtitle('SampleNumber",args_sample,"_CellNumber",args_cell,"_",args_celltype,"_pAcf_BF')")))
+# title theme
+t_1 <- theme(plot.title = element_text(size = 20, hjust = 0.5))
+t_2 <- theme(axis.title = element_text(size = 16))
+
+gg <- p_pAcf +
+    title +
+    t_1 +
+    t_2
+
+eval(parse(text=paste0("ggsave(filename = 'output/WTS2/ACFτ50_stim/pACF/SampleNumber_",args_sample,"/CellNumber_",args_cell,"_CellType_",args_celltype,"_BF.png', plot = gg, dpi = 100, width = 7.0, height = 7.0)")))
+##################################################
+# ggAcf Partial autocorrelation AF
+##################################################
+g_AF$Nactivity %>%
+    ggAcf(lag.max = 50, type = c("partial"), plot = TRUE) -> p_pAcf
+# title name
+eval(parse(text=paste0("title <- ggtitle('SampleNumber",args_sample,"_CellNumber",args_cell,"_",args_celltype,"_pAcf_AF')")))
+# title theme
+t_1 <- theme(plot.title = element_text(size = 20, hjust = 0.5))
+t_2 <- theme(axis.title = element_text(size = 16))
+
+gg <- p_pAcf +
+    title +
+    t_1 +
+    t_2
+
+eval(parse(text=paste0("ggsave(filename = 'output/WTS2/ACFτ50_stim/pACF/SampleNumber_",args_sample,"/CellNumber_",args_cell,"_CellType_",args_celltype,"_AF.png', plot = gg, dpi = 100, width = 7.0, height = 7.0)")))
+##################################################
+#####################################################################################
