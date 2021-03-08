@@ -94,3 +94,54 @@ for(i in celegans){
     eval(parse(text=paste0("save(stim_",i,", file ='data/stimulation/stim_",i,".RData')")))
 }
 ##################################################
+
+# raw CFP
+####################################################################################
+# Neuron Activity Data
+##################################################
+#List_Number_to_Samplename.csvを使って，読み込むエクセルを指定
+#ファイル名一覧取得
+path <- 'data/raw/'
+NeuronList <- list.files(path, pattern='.xlsx') 
+
+# animalname 7char
+str_sub(NeuronList[1], start = 1, end = 7) <- read.xlsx(NeuronList[1], sheet = 'pi_k_Ch2', rowNames = TRUE, colNames =TRUE)
+
+df_test <- read.xlsx("data/raw/180712e_4d_catv10_190824045149_edited_retrack=4847.xlsx",
+                 sheet = "pi_k_Ch2", #読み込むシート名を指定できる。sheet = 1，のように番号でシートを指定することもできる。
+                 rowNames = TRUE, #一行目を行名として扱う
+                 colNames =TRUE) #一列目を列名として扱う
+
+str_sub(NeuronList[i], start = 1, end = 7) <- read.xlsx(NeuronList[i], sheet = 'pi_k_Ch2', rowNames = TRUE, colNames =TRUE)
+
+
+str_sub(NeuronList[1], start = 1, end = 7) %>% assign(sprintf(.), 1) 
+
+eval(parse(text=paste0("assign('",str_sub(NeuronList[1], start = 1, end = 7),"',1)")))
+
+# ファイル名一覧取得
+path <- 'data/raw/'
+NeuronList <- list.files(path, pattern='.xlsx')
+# 読み込みオブジェクト用意（動的）
+for (i in 1:3) {
+  # v_name <- str_sub(NeuronList[i], start = 1, end = 7)
+  eval(parse(text=paste0("v_name <- str_sub(NeuronList[",i,"], start = 1, end = 7)")))
+  assign(v_name, i) #作成した変数名(v1,v2,v3)にnを格納
+}
+
+for (n in 1:3) {
+  v_name <- c(str_sub(NeuronList[n], start = 1, end = 7)) #変数名作成(v1,v2,v3)
+  assign(v_name, n) #作成した変数名(v1,v2,v3)にnを格納
+}
+# 読み込み
+
+
+##################################################
+# Sample Sheet
+##################################################
+##################################################
+# Stimulation Data
+##################################################
+##################################################
+
+####################################################################################
