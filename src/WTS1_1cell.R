@@ -84,3 +84,82 @@ gg <- p_2 +
 
 eval(parse(text=paste0("ggsave(filename = 'output/WTS1/SampleNumber_",args_sample,"/CellNumber_",args_cell,"_CellType_",args_celltype,".png', plot = gg, dpi = 100, width = 21.0, height = 7.0)")))
 ##################################################
+
+
+# raw CFP
+####################################################################################
+# args setting
+##################################################
+# args <- commandArgs(trailingOnly = T)
+# # select animal number 個体番号の指定
+# args_sample <- args[1]
+# # select cell number 細胞番号の指定
+# args_cell <- args[2]
+# # select celltype 細胞型名の指定
+# args_celltype <- args[3]
+
+# select animal number 個体番号の指定
+args_sample <- c("1")
+# select cell number 細胞番号の指定
+args_cell <- c("1")
+# select celltype 細胞型名の指定
+args_celltype <-c("X1")
+##################################################
+
+# Neuron Activity Data
+##################################################
+datapath <- "data/raw/CFP"
+# outputpath <- paste(datapath, 'ReadData_1.RData', sep = '/')
+eval(parse(text=paste0("outputpath <- paste(datapath, 'ReadData_",args_sample,".RData', sep = '/')")))
+load(outputpath)
+# ReadData_1[,1] %>% as.numeric() -> nactivity
+eval(parse(text=paste0("ReadData_",args_sample,"[,",args_cell,"] %>% as.numeric() -> nactivity")))
+#TimeFrame
+# rownames(ReadData_1) %>% as.numeric() -> timeframe
+eval(parse(text=paste0("rownames(ReadData_",args_sample,") %>% as.numeric() -> timeframe")))
+##################################################
+
+# Stimulation Data
+##################################################
+datapath <- "data/stimulation"
+# outputpath <- paste(datapath, 'Stim_1.RData', sep = '/')
+eval(parse(text=paste0("outputpath <- paste(datapath, 'Stim_",args_sample,".RData', sep = '/')")))
+load(outputpath)
+# Stim_1 %>% as.numeric() -> stimtiming
+eval(parse(text=paste0("Stim_",args_sample," %>% as.numeric() -> stimtiming")))
+##################################################
+# mCherry
+##################################################
+datapath <- "data/raw/mCherry"
+# outputpath <- paste(datapath, 'mCherry_1.RData', sep = '/')
+eval(parse(text=paste0("outputpath <- paste(datapath, 'mCherry_",args_sample,".RData', sep = '/')")))
+load(outputpath)
+# mCherry_1[,1] %>% as.numeric() -> mcherry
+eval(parse(text=paste0("mCherry_",args_sample,"[,",args_cell,"] %>% as.numeric() -> mcherry")))
+##################################################
+# Position
+##################################################
+datapath <- "data/raw/Position"
+# outputpath <- paste(datapath, 'Position_1.RData', sep = '/')
+eval(parse(text=paste0("outputpath <- paste(datapath, 'Position_",args_sample,".RData', sep = '/')")))
+load(outputpath)
+# Position_1$MoveX %>% as.numeric() -> position
+eval(parse(text=paste0("Position_",args_sample,"$MoveX %>% as.numeric() -> position")))
+##################################################
+
+# dataframe for ggplot
+##################################################
+data.frame(
+        TimeFrame = timeframe,
+        Nactivity = nactivity,
+        StimTiming = stimtiming,
+        mCherry = mcherry,
+        Position = position,
+        stringsAsFactors = FALSE
+) -> g
+##################################################
+
+## ggplot
+##################################################
+#ggplotでグラフを重ねず，縦に並べる方法を調べる
+##################################################
