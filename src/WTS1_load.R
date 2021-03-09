@@ -100,9 +100,9 @@ source("src/functions_WTS1.R")
 # Neuron Activity Data
 ##################################################
 # config
-path <- "data/raw"
+path <- "data"
 excelsheet <- "pi_k_Ch2"
-outputfilename <- "CFP"
+outputdir <- "raw_CFP"
 
 # input file list
 n_filename <- list.files(path, pattern=".xlsx") 
@@ -111,8 +111,8 @@ seq(length(n_filename)) %>%
 
 # export
 for(i in 1:length(n_filename)){
-    #outputpath <- paste(path, outputfilename, 'ReadData_1.RData', sep = '/')
-    eval(parse(text=paste0("outputpath <- paste(path, outputfilename, 'ReadData_",i,".RData', sep = '/')")))
+    #outputpath <- paste(path, outputdir, 'ReadData_1.RData', sep = '/')
+    eval(parse(text=paste0("outputpath <- paste(path, outputdir, 'ReadData_",i,".RData', sep = '/')")))
     #ReadData_1 <- ReadDataList[[1]]
     eval(parse(text=paste0("ReadData_",i," <- ReadDataList[[",i,"]]")))
     #save(ReadData_1, file = outputpath)
@@ -123,7 +123,9 @@ for(i in 1:length(n_filename)){
 # Sample Sheet
 ##################################################
 # config
-path <- "data/raw"
+path <- "data"
+outputdir <- "raw_CFP"
+
 n_sample <- c()
 n_cell <- c()
 celltype <- c()
@@ -150,15 +152,15 @@ data.frame(
 
 # export
 # write.csv(sample_sheet, "data/WTS1_sample_sheet.csv", row.names=FALSE)
-sample_sheet_path <- paste(path, outputfilename, 'WTS1_sample_sheet.csv', sep = '/')
+sample_sheet_path <- paste(path, outputdir, 'WTS1_sample_sheet.csv', sep = '/')
 write.csv(sample_sheet, sample_sheet_path, row.names=FALSE)
 ##################################################
 
 # Number_to_Animalname
 ##################################################
 # config
-path <- "data/raw"
-outputfilename <- "CFP"
+path <- "data"
+outputdir <- "raw_CFP"
 
 samplenumber <- seq(length(n_filename))
 animalname <- c()
@@ -174,16 +176,16 @@ data.frame(
 ) -> AnimalName
 
 # export
-AnimalName_path <- paste(path, outputfilename, 'AnimalName.csv', sep = '/')
+AnimalName_path <- paste(path, outputdir, 'AnimalName.csv', sep = '/')
 write.csv(AnimalName, AnimalName_path, row.names=FALSE)
 ##################################################
 
 # mCherry
 ##################################################
 # config
-path <- "data/raw"
+path <- "data"
 excelsheet <- "pi_k_Ch1"
-outputfilename <- "mCherry"
+outputdir <- "mCherry"
 
 # input file list
 n_filename <- list.files(path, pattern=".xlsx") 
@@ -193,8 +195,8 @@ seq(length(n_filename)) %>%
 
 # export
 for(i in 1:length(n_filename)){
-    #outputpath <- paste(path, outputfilename, 'mCherry_1.RData', sep = '/')
-    eval(parse(text=paste0("outputpath <- paste(path, outputfilename, 'mCherry_",i,".RData', sep = '/')")))
+    #outputpath <- paste(path, outputdir, 'mCherry_1.RData', sep = '/')
+    eval(parse(text=paste0("outputpath <- paste(path, outputdir, 'mCherry_",i,".RData', sep = '/')")))
     #mCherry_1 <- mCherryList[[1]]
     eval(parse(text=paste0("mCherry_",i," <- mCherryList[[",i,"]]")))
     #save(mCherry_1, file = outputpath)
@@ -204,10 +206,10 @@ for(i in 1:length(n_filename)){
 # Position
 ##################################################
 # config
-path <- "data/raw"
+path <- "data"
 excelsheet <- "Sheet1"
-outputfilename <- "Position"
-# outputpath <- paste(path, outputfilename, sep = '/')
+outputdir <- "Position"
+# outputpath <- paste(path, outputdir, sep = '/')
 
 # input file list
 n_filename <- list.files(path, pattern=".xlsx") 
@@ -217,8 +219,8 @@ seq(length(n_filename)) %>%
 
 # export
 for(i in 1:length(n_filename)){
-    #outputpath <- paste(path, outputfilename, 'Position_1.RData', sep = '/')
-    eval(parse(text=paste0("outputpath <- paste(path, outputfilename, 'Position_",i,".RData', sep = '/')")))
+    #outputpath <- paste(path, outputdir, 'Position_1.RData', sep = '/')
+    eval(parse(text=paste0("outputpath <- paste(path, outputdir, 'Position_",i,".RData', sep = '/')")))
     #Position_1 <- PositionList[[1]]
     eval(parse(text=paste0("Position_",i," <- PositionList[[",i,"]]")))
     #save(Position_1, file = outputpath)
