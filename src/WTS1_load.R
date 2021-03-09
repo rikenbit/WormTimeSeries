@@ -103,9 +103,10 @@ source("src/functions_WTS1.R")
 path <- "data"
 excelsheet <- "pi_k_Ch2"
 outputdir <- "raw_CFP"
+inputdir <- "data/raw"
 
 # input file list
-n_filename <- list.files(path, pattern=".xlsx") 
+n_filename <- list.files(inputdir, pattern=".xlsx") 
 seq(length(n_filename)) %>%
     map(., xlsx_to_ReadData)  -> ReadDataList
 

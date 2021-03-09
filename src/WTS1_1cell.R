@@ -4,27 +4,21 @@ source("src/functions_WTS1.R")
 ####################################################################################
 # args setting
 ##################################################
-# args <- commandArgs(trailingOnly = T)
-# # select animal number 個体番号の指定
-# args_sample <- args[1]
-# # select cell number 細胞番号の指定
-# args_cell <- args[2]
-# # select celltype 細胞型名の指定
-# args_celltype <- args[3]
-
+args <- commandArgs(trailingOnly = T)
 # select animal number 個体番号の指定
-args_sample <- c("1")
+args_sample <- args[1]
 # select cell number 細胞番号の指定
-args_cell <- c("1")
+args_cell <- args[2]
 # select celltype 細胞型名の指定
-args_celltype <-c("X1")
+args_celltype <- args[3]
+# select datadir ディレクトリ 名の指定
+args_datadir <- args[4]
 ##################################################
 
 # Neuron Activity Data
 ##################################################
 path <- "data"
-inputdir <- "raw_CFP"
-
+inputdir <- args_datadir
 # inputpath <- paste(path, inputdir, 'ReadData_1.RData', sep = '/')
 eval(parse(text=paste0("inputpath <- paste(path, inputdir, 'ReadData_",args_sample,".RData', sep = '/')")))
 load(inputpath)
@@ -40,29 +34,28 @@ eval(parse(text=paste0("rownames(ReadData_",args_sample,") %>% as.numeric() -> t
 ##################################################
 path <- "data"
 inputdir <- "stimulation"
-
 # inputpath <- paste(datapath, 'Stim_1.RData', sep = '/')
 eval(parse(text=paste0("inputpath <- paste(path, inputdir, 'Stim_",args_sample,".RData', sep = '/')")))
 load(inputpath)
 # Stim_1 %>% as.numeric() -> stimtiming
 eval(parse(text=paste0("Stim_",args_sample," %>% as.numeric() -> stimtiming")))
 ##################################################
+
 # mCherry
 ##################################################
 path <- "data"
 inputdir <- "mCherry"
-
 # inputpath <- paste(path, inputdir, 'mCherry_1.RData', sep = '/')
 eval(parse(text=paste0("inputpath <- paste(path, inputdir, 'mCherry_",args_sample,".RData', sep = '/')")))
 load(inputpath)
 # mCherry_1[,1] %>% as.numeric() -> mcherry
 eval(parse(text=paste0("mCherry_",args_sample,"[,",args_cell,"] %>% as.numeric() -> mcherry")))
 ##################################################
+
 # Position
 ##################################################
 path <- "data"
 inputdir <- "Position"
-
 # inputpath <- paste(path, inputdir, 'Position_1.RData', sep = '/')
 eval(parse(text=paste0("inputpath <- paste(path, inputdir, 'Position_",args_sample,".RData', sep = '/')")))
 load(inputpath)
@@ -91,7 +84,7 @@ g_roll %>%
     mutate(N_diff = n_diff) -> g_roll_diff
 ##################################################
 
-## ggplot
+# ggplot
 ##################################################
 ###########
 p_1 <- ggplot(data = g_roll_diff, aes(TimeFrame))
@@ -116,7 +109,7 @@ s_4 <- scale_color_manual(values = c("red"))
 s_5 <- scale_color_manual(values = c("blue"))
 ###########
 ###########
-outputdir <- "raw_CFP"
+outputdir <- args_datadir
 # title <- ggtitle('SampleNumber1_CellNumber1_X1_raw_CFP')
 eval(parse(text=paste0("title <- ggtitle('SampleNumber",args_sample,"_CellNumber",args_cell,"_",args_celltype,"_",outputdir,"')")))
 t_1 <- theme(plot.title = element_text(size = 30, hjust = 0.5))
@@ -151,16 +144,14 @@ gg5 <- p_5 +
     t_2 +
     t_3 +
     labs(colour="each data")
-# gg <- gg2 + gg3 + gg4 + gg5 + plot_layout(ncol = 1)
 gg <- gg2 + gg3 + gg4 + gg5 + plot_layout(ncol = 1, heights = c(2, 1, 1, 1))
-
 ###########
 ##################################################
 
-## ggsave
+# ggsave
 ##################################################
 path <- "output/WTS1/plot"
-outputdir <- "raw_CFP"
+outputdir <- args_datadir
 # outputpath <- paste(path, outputdir, 'SampleNumber_",args_sample,"', 'CellNumber_",args_cell,"_CellType_",args_celltype,".png', sep = '/')
 eval(parse(text=paste0("outputpath <- paste(path, outputdir, 'SampleNumber_",args_sample,"', 'CellNumber_",args_cell,"_CellType_",args_celltype,".png', sep = '/')")))
 ggsave(filename = outputpath, plot = gg, dpi = 100, width = 28.0, height = 21.0)

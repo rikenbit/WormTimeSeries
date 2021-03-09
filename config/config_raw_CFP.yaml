@@ -1,0 +1,3 @@
+# Sample sheets
+SAMPLE_SHEET: data/raw_CFP/WTS1_sample_sheet.csv
+DATA_DIR: raw_CFP
