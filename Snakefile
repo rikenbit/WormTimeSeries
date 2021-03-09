@@ -1,21 +1,25 @@
 # # WTS1 dataload
 # ###################################################
-# N_SAMPLES = list(map(str, range(1, 16)))
-
+# N_SAMPLES = list(map(str, range(1, 29)))
+# N_DATA = ["raw_CFP", "raw_YFP", "normalize_1", "normalize_2", "normalize_3", "normalize_4"]
 # rule all:
 # 	input:
-# 		expand('data/cleandata_mat/matrix_{N}.RData', N=N_SAMPLES),
-#         expand('data/stimulation/stim_{N}.RData', N=N_SAMPLES),
-#         'data/WTS1_sample_sheet.csv'
+# 		expand('data/{D}/ReadData_{N}.RData', N=N_SAMPLES, D=N_DATA),
+#         expand('data/{D}/WTS1_sample_sheet.csv', D=N_DATA),
+#         expand('data/{D}/AnimalName.csv', D=N_DATA),
+#         expand('data/mCherry/mCherry_{N}.RData', N=N_SAMPLES),
+#         expand('data/Position/Position_{N}.RData', N=N_SAMPLES),
+#         expand('data/stimulation/stim_{N}.RData', N=N_SAMPLES)
+
 
 # rule WTS1_load:
-#     input:
-#         expand('data/cleandata/{N}_ratio.csv', N=N_SAMPLES),
-#         'data/stimulation_timing.csv'
 #     output:
-#         expand('data/cleandata_mat/matrix_{N}.RData', N=N_SAMPLES),
-#         expand('data/stimulation/stim_{N}.RData', N=N_SAMPLES),
-#         'data/WTS1_sample_sheet.csv'
+#         expand('data/{D}/ReadData_{N}.RData', N=N_SAMPLES, D=N_DATA),
+#         expand('data/{D}/WTS1_sample_sheet.csv', D=N_DATA),
+#         expand('data/{D}/AnimalName.csv', D=N_DATA),
+#         expand('data/mCherry/mCherry_{N}.RData', N=N_SAMPLES),
+#         expand('data/Position/Position_{N}.RData', N=N_SAMPLES),
+#         expand('data/stimulation/stim_{N}.RData', N=N_SAMPLES)
 #     benchmark:
 #         'benchmarks/WTS1/WTS1_load.txt'
 #     conda:
@@ -26,52 +30,6 @@
 #         'logs/WTS1/WTS1_load.log'
 #     shell:
 #         'src/WTS1_load.sh >& {log}'
-# ###################################################
-
-# # WTS1 plot
-# ###################################################
-# import pandas as pd
-# # from snakemake.utils import min_version
-# from snakemake.utils import Paramspace
-
-
-# # min_version("5.3.2")
-# configfile: "config.yaml"
-
-# N_SAMPLES = list(map(str, range(1, 16)))
-
-# # read sample_sheet
-# SAMPLE_SHEET = pd.read_csv(config['SAMPLE_SHEET'], dtype='string')
-
-# # paramspace
-# paramspace = Paramspace(SAMPLE_SHEET, filename_params=['CellNumber', 'CellType'], param_sep="_")
-
-# rule all:
-# 	input:
-# 		expand('output/WTS1/{params}.png', params = paramspace.instance_patterns)
-
-# rule WTS1_1cell:
-# 	# input:
-# 	# 	expand('data/cleandata_mat/matrix_{N}.RData', N=N_SAMPLES),
-#  #        expand('data/stimulation/stim_{N}.RData', N=N_SAMPLES),
-#  #        'data/WTS1_sample_sheet.csv'
-# 	output:
-# 		f"output/WTS1/{paramspace.wildcard_pattern}.png"
-# 	params:
-# 		args1 = lambda w: w["SampleNumber"],
-# 		args2 = lambda w: w["CellNumber"],
-# 		args3 = lambda w: w["CellType"]
-		
-# 	benchmark:
-# 		f'benchmarks/WTS1/{paramspace.wildcard_pattern}.txt'
-# 	conda:
-# 		'envs/myenv_WTS1.yaml'
-# 	resources:
-# 		mem_gb=200
-# 	log:
-# 		f'logs/WTS1/{paramspace.wildcard_pattern}.log'
-# 	shell:
-# 		'src/WTS1_1cell.sh {params.args1} {params.args2} {params.args3} >& {log}'
 # ###################################################
 
 # WTS1 plot raw_CFP
@@ -88,13 +46,6 @@ configfile: "config/config_raw_CFP.yaml"
 SAMPLE_SHEET = pd.read_csv(config['SAMPLE_SHEET'], dtype='string')
 
 DATA_DIR = config['DATA_DIR']
-
-# test
-##############
-SAMPLE_SHEET = SAMPLE_SHEET[191:195]
-print(SAMPLE_SHEET)
-print(DATA_DIR)
-##############
 
 # paramspace
 paramspace = Paramspace(SAMPLE_SHEET, filename_params=['CellNumber', 'CellType'], param_sep="_")
@@ -122,6 +73,48 @@ rule WTS1_1cell:
     shell:
         'src/WTS1_1cell.sh {params.args1} {params.args2} {params.args3} {params.args4} >& {log}'
 ###################################################
+
+# # WTS1 plot raw_YFP
+# ###################################################
+# import pandas as pd
+# # from snakemake.utils import min_version
+# from snakemake.utils import Paramspace
+
+
+# # min_version("5.3.2")
+# configfile: "config/config_raw_YFP.yaml"
+
+# # read sample_sheet
+# SAMPLE_SHEET = pd.read_csv(config['SAMPLE_SHEET'], dtype='string')
+
+# DATA_DIR = config['DATA_DIR']
+
+# # paramspace
+# paramspace = Paramspace(SAMPLE_SHEET, filename_params=['CellNumber', 'CellType'], param_sep="_")
+
+# rule all:
+#     input:
+#         expand('output/WTS1/plot/{DATA_DIR}/{params}.png', params = paramspace.instance_patterns, DATA_DIR = DATA_DIR)
+
+# rule WTS1_1cell:
+#     output:
+#         f"output/WTS1/plot/{DATA_DIR}/{paramspace.wildcard_pattern}.png"
+#     params:
+#         args1 = lambda w: w["SampleNumber"],
+#         args2 = lambda w: w["CellNumber"],
+#         args3 = lambda w: w["CellType"],
+#         args4 = DATA_DIR
+#     benchmark:
+#         f'benchmarks/WTS1/{paramspace.wildcard_pattern}.txt'
+#     conda:
+#         'envs/myenv_WTS1.yaml'
+#     resources:
+#         mem_gb=200
+#     log:
+#         f'logs/WTS1/{paramspace.wildcard_pattern}.log'
+#     shell:
+#         'src/WTS1_1cell.sh {params.args1} {params.args2} {params.args3} {params.args4} >& {log}'
+# ###################################################
 
 # # WTS2 correlogram τ50
 # ###################################################
