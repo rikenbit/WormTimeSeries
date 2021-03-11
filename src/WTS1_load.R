@@ -4,11 +4,13 @@ source("src/functions_WTS1.R")
 ####################################################################################
 args <- commandArgs(trailingOnly = T)
 args_data <- args[1]
+args_sheet <- args[2]
 # Neuron Activity Data
 ##################################################
 # config
 path <- "data"
-excelsheet <- "pi_k_Ch2"
+# excelsheet <- "pi_k_Ch2"
+excelsheet <- args_sheet
 outputdir <- args_data
 inputdir <- "data/raw"
 
