@@ -4,23 +4,25 @@ source("src/functions_WTS1.R")
 ##################################################
 args <- commandArgs(trailingOnly = T)
 args_data <- args[1]
-args_sheet <- args[2]
 ##################################################
 
 # Neuron Activity Data
 ##################################################
 # config
 path <- "data"
-# excelsheet <- "pi_k_Ch2"
-excelsheet <- args_sheet
+datadir <- paste("idx", args_data, sep = '')
 outputdir <- args_data
-inputdir <- "data/raw"
+inputdir <- paste(path, datadir, sep = '/')
 
 # export
-n_filename <- list.files(inputdir, pattern=".xlsx") 
+n_filename <- list.files(inputdir, pattern="_ratio.csv")
 for(i in 1:length(n_filename)){
-    fullpath <- paste(inputdir, n_filename[i], sep = '/')
-    ReadData <- read.xlsx(fullpath, sheet = excelsheet, rowNames = TRUE, colNames =TRUE)
+    # fullpath <- paste(inputdir, n_filename[i], sep = '/')
+    # ReadData <- read_csv(fullpath)
+    # ReadData <- as.data.frame(ReadData)
+    paste(inputdir, n_filename[1], sep = '/') %>%
+        read_csv() %>% # tibble形式でロード
+            as.data.frame() -> ReadData #dataframeに変換
     #ReadData_1 <- ReadDataList[[1]]
     eval(parse(text=paste0("ReadData_",i," <- ReadData")))
     #outputpath <- paste(path, outputdir, 'ReadData_1.RData', sep = '/')
@@ -28,7 +30,6 @@ for(i in 1:length(n_filename)){
     #save(ReadData_1, file = outputpath)
     eval(parse(text=paste0("save(ReadData_",i,", file = outputpath)")))
 }
-
 ##################################################
 
 # Sample Sheet

@@ -1,107 +1,162 @@
-# WTS1 load raw
-###################################################
-N_SAMPLES = list(map(str, range(1, 29)))
-
-rule all:
-    input:
-        expand('data/raw_CFP/ReadData_{N}.RData', N=N_SAMPLES),
-        expand('data/raw_CFP/WTS1_sample_sheet.csv'),
-        expand('data/raw_CFP/AnimalName.csv'),
-        expand('data/raw_YFP/ReadData_{N}.RData', N=N_SAMPLES),
-        expand('data/raw_YFP/WTS1_sample_sheet.csv'),
-        expand('data/raw_YFP/AnimalName.csv'),
-        expand('data/mCherry/mCherry_{N}.RData', N=N_SAMPLES),
-        expand('data/Position/Position_{N}.RData', N=N_SAMPLES),
-        expand('data/stimulation/stim_{N}.RData', N=N_SAMPLES)
-
-rule WTS1_load_raw_CFP:
-    output:
-        expand('data/raw_CFP/ReadData_{N}.RData', N=N_SAMPLES),
-        expand('data/raw_CFP/WTS1_sample_sheet.csv'),
-        expand('data/raw_CFP/AnimalName.csv'),
-    params:
-        args1 = "raw_CFP",
-        args2 = "pi_k_Ch2"
-    benchmark:
-        'benchmarks/WTS1/load/raw_CFP.txt'
-    conda:
-        'envs/myenv_WTS1.yaml'
-    resources:
-        mem_gb=200
-    log:
-        'logs/WTS1/load/raw_CFP.log'
-    shell:
-        'src/WTS1_load_raw_n.sh {params.args1} {params.args2} >& {log}'
-
-# WTS1 load raw YFP
-rule WTS1_load_raw_YFP:
-    output:
-        expand('data/raw_YFP/ReadData_{N}.RData', N=N_SAMPLES),
-        expand('data/raw_YFP/WTS1_sample_sheet.csv'),
-        expand('data/raw_YFP/AnimalName.csv'),
-    params:
-        args1 = "raw_YFP",
-        args2 = "pi_k_Ch3"
-    benchmark:
-        'benchmarks/WTS1/load/raw_YFP.txt'
-    conda:
-        'envs/myenv_WTS1.yaml'
-    resources:
-        mem_gb=200
-    log:
-        'logs/WTS1/load/raw_YFP.log'
-    shell:
-        'src/WTS1_load_raw_n.sh {params.args1} {params.args2} >& {log}'
-
-# WTS1 load raw other
-rule WTS1_load_raw_other:
-    output:
-        expand('data/mCherry/mCherry_{N}.RData', N=N_SAMPLES),
-        expand('data/Position/Position_{N}.RData', N=N_SAMPLES),
-        expand('data/stimulation/stim_{N}.RData', N=N_SAMPLES)
-    benchmark:
-        'benchmarks/WTS1/load/raw_other.txt'
-    conda:
-        'envs/myenv_WTS1.yaml'
-    resources:
-        mem_gb=200
-    log:
-        'logs/WTS1/load/raw_other.log'
-    shell:
-        'src/WTS1_load_raw_other.sh >& {log}'
-###################################################
-
-# # WTS1 load normalize
+# # WTS1 load raw
 # ###################################################
 # N_SAMPLES = list(map(str, range(1, 29)))
-# N_DATA_N = ["normalize_1", "normalize_2", "normalize_3", "normalize_4"]
+
 # rule all:
 #     input:
-#         expand('data/{D}/ReadData_{N}.RData', N=N_SAMPLES, D=N_DATA_N,
-#         expand('data/{D}/WTS1_sample_sheet.csv', D=N_DATA_N,
-#         expand('data/{D}/AnimalName.csv', D=N_DATA_N,
+#         expand('data/raw_CFP/ReadData_{N}.RData', N=N_SAMPLES),
+#         expand('data/raw_CFP/WTS1_sample_sheet.csv'),
+#         expand('data/raw_CFP/AnimalName.csv'),
+#         expand('data/raw_YFP/ReadData_{N}.RData', N=N_SAMPLES),
+#         expand('data/raw_YFP/WTS1_sample_sheet.csv'),
+#         expand('data/raw_YFP/AnimalName.csv'),
 #         expand('data/mCherry/mCherry_{N}.RData', N=N_SAMPLES),
 #         expand('data/Position/Position_{N}.RData', N=N_SAMPLES),
 #         expand('data/stimulation/stim_{N}.RData', N=N_SAMPLES)
 
-# rule WTS1_load:
+# rule WTS1_load_raw_CFP:
 #     output:
-#         expand('data/{D}/ReadData_{N}.RData', N=N_SAMPLES, D=N_DATA_N,
-#         expand('data/{D}/WTS1_sample_sheet.csv', D=N_DATA_N,
-#         expand('data/{D}/AnimalName.csv', D=N_DATA_N,
-#         expand('data/mCherry/mCherry_{N}.RData', N=N_SAMPLES),
-#         expand('data/Position/Position_{N}.RData', N=N_SAMPLES),
-#         expand('data/stimulation/stim_{N}.RData', N=N_SAMPLES)
+#         expand('data/raw_CFP/ReadData_{N}.RData', N=N_SAMPLES),
+#         expand('data/raw_CFP/WTS1_sample_sheet.csv'),
+#         expand('data/raw_CFP/AnimalName.csv'),
+#     params:
+#         args1 = "raw_CFP",
+#         args2 = "pi_k_Ch2"
 #     benchmark:
-#         'benchmarks/WTS1/{params.args1}/WTS1_load.txt'
+#         'benchmarks/WTS1/load/raw_CFP.txt'
 #     conda:
 #         'envs/myenv_WTS1.yaml'
 #     resources:
 #         mem_gb=200
 #     log:
-#         'logs/WTS1/{params.args1}/WTS1_load.log'
+#         'logs/WTS1/load/raw_CFP.log'
 #     shell:
-#         'src/WTS1_load.sh {params.args1} >& {log}'
+#         'src/WTS1_load_raw_n.sh {params.args1} {params.args2} >& {log}'
+
+# # WTS1 load raw YFP
+# rule WTS1_load_raw_YFP:
+#     output:
+#         expand('data/raw_YFP/ReadData_{N}.RData', N=N_SAMPLES),
+#         expand('data/raw_YFP/WTS1_sample_sheet.csv'),
+#         expand('data/raw_YFP/AnimalName.csv'),
+#     params:
+#         args1 = "raw_YFP",
+#         args2 = "pi_k_Ch3"
+#     benchmark:
+#         'benchmarks/WTS1/load/raw_YFP.txt'
+#     conda:
+#         'envs/myenv_WTS1.yaml'
+#     resources:
+#         mem_gb=200
+#     log:
+#         'logs/WTS1/load/raw_YFP.log'
+#     shell:
+#         'src/WTS1_load_raw_n.sh {params.args1} {params.args2} >& {log}'
+
+# # WTS1 load raw other
+# rule WTS1_load_raw_other:
+#     output:
+#         expand('data/mCherry/mCherry_{N}.RData', N=N_SAMPLES),
+#         expand('data/Position/Position_{N}.RData', N=N_SAMPLES),
+#         expand('data/stimulation/stim_{N}.RData', N=N_SAMPLES)
+#     benchmark:
+#         'benchmarks/WTS1/load/raw_other.txt'
+#     conda:
+#         'envs/myenv_WTS1.yaml'
+#     resources:
+#         mem_gb=200
+#     log:
+#         'logs/WTS1/load/raw_other.log'
+#     shell:
+#         'src/WTS1_load_raw_other.sh >& {log}'
+# ###################################################
+
+# # WTS1 load normalize
+# ###################################################
+# N_SAMPLES = list(map(str, range(1, 29)))
+# rule all:
+#     input:
+#         expand('data/normalize_1/ReadData_{N}.RData', N=N_SAMPLES),
+#         expand('data/normalize_1/WTS1_sample_sheet.csv'),
+#         expand('data/normalize_1/AnimalName.csv'),
+#         expand('data/normalize_2/ReadData_{N}.RData', N=N_SAMPLES),
+#         expand('data/normalize_2/WTS1_sample_sheet.csv'),
+#         expand('data/normalize_2/AnimalName.csv'),
+#         expand('data/normalize_3/ReadData_{N}.RData', N=N_SAMPLES),
+#         expand('data/normalize_3/WTS1_sample_sheet.csv'),
+#         expand('data/normalize_3/AnimalName.csv'),
+#         expand('data/normalize_4/ReadData_{N}.RData', N=N_SAMPLES),
+#         expand('data/normalize_4/WTS1_sample_sheet.csv'),
+#         expand('data/normalize_4/AnimalName.csv')
+
+# rule WTS1_load_normalize_1:
+#     output:
+#         expand('data/normalize_1/ReadData_{N}.RData', N=N_SAMPLES),
+#         expand('data/normalize_1/WTS1_sample_sheet.csv'),
+#         expand('data/normalize_1/AnimalName.csv'),
+#     params:
+#         args1 = "normalize_1"
+#     benchmark:
+#         'benchmarks/WTS1/load/normalize_1.txt'
+#     conda:
+#         'envs/myenv_WTS1.yaml'
+#     resources:
+#         mem_gb=200
+#     log:
+#         'logs/WTS1/load/normalize_1.log'
+#     shell:
+#         'src/WTS1_load_normalize_n.sh {params.args1} >& {log}'
+# rule WTS1_load_normalize_2:
+#     output:
+#         expand('data/normalize_2/ReadData_{N}.RData', N=N_SAMPLES),
+#         expand('data/normalize_2/WTS1_sample_sheet.csv'),
+#         expand('data/normalize_2/AnimalName.csv'),
+#     params:
+#         args1 = "normalize_2"
+#     benchmark:
+#         'benchmarks/WTS1/load/normalize_2.txt'
+#     conda:
+#         'envs/myenv_WTS1.yaml'
+#     resources:
+#         mem_gb=200
+#     log:
+#         'logs/WTS1/load/normalize_2.log'
+#     shell:
+#         'src/WTS1_load_normalize_n.sh {params.args1} >& {log}'
+# rule WTS1_load_normalize_3:
+#     output:
+#         expand('data/normalize_3/ReadData_{N}.RData', N=N_SAMPLES),
+#         expand('data/normalize_3/WTS1_sample_sheet.csv'),
+#         expand('data/normalize_3/AnimalName.csv'),
+#     params:
+#         args1 = "normalize_3"
+#     benchmark:
+#         'benchmarks/WTS1/load/normalize_3.txt'
+#     conda:
+#         'envs/myenv_WTS1.yaml'
+#     resources:
+#         mem_gb=200
+#     log:
+#         'logs/WTS1/load/normalize_3.log'
+#     shell:
+#         'src/WTS1_load_normalize_n.sh {params.args1} >& {log}'
+# rule WTS1_load_normalize_4:
+#     output:
+#         expand('data/normalize_4/ReadData_{N}.RData', N=N_SAMPLES),
+#         expand('data/normalize_4/WTS1_sample_sheet.csv'),
+#         expand('data/normalize_4/AnimalName.csv'),
+#     params:
+#         args1 = "normalize_4"
+#     benchmark:
+#         'benchmarks/WTS1/load/normalize_4.txt'
+#     conda:
+#         'envs/myenv_WTS1.yaml'
+#     resources:
+#         mem_gb=200
+#     log:
+#         'logs/WTS1/load/normalize_4.log'
+#     shell:
+#         'src/WTS1_load_normalize_n.sh {params.args1} >& {log}'
 # ###################################################
 
 # # WTS1 plot raw_CFP

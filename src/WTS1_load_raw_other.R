@@ -58,8 +58,8 @@ StimData_Edit <- StimData[7:6006,]
 # export
 for(i in 1:ncol(StimData_Edit)){
   # stim_1 <- StimData_Edit[,1]
-  eval(parse(text=paste0("Stim_",i," <- StimData_Edit[,",i,"]")))
-  eval(parse(text=paste0("save(Stim_",i,", file = 'data/stimulation/Stim_",i,".RData')")))
+  eval(parse(text=paste0("stim_",i," <- StimData_Edit[,",i,"]")))
+  eval(parse(text=paste0("save(stim_",i,", file = 'data/stimulation/stim_",i,".RData')")))
 }
 
 # Number_to_Animalname

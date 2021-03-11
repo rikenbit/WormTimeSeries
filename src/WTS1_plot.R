@@ -13,6 +13,12 @@ args_cell <- args[2]
 args_celltype <- args[3]
 # select datadir ディレクトリ 名の指定
 args_datadir <- args[4]
+###test###
+args_sample <- c("1")
+args_cell <- c("1")
+args_celltype <-c("102")
+args_datadir <- c("raw_CFP")
+######
 ##################################################
 
 # Neuron Activity Data
@@ -22,8 +28,8 @@ inputdir <- args_datadir
 # inputpath <- paste(path, inputdir, 'ReadData_1.RData', sep = '/')
 eval(parse(text=paste0("inputpath <- paste(path, inputdir, 'ReadData_",args_sample,".RData', sep = '/')")))
 load(inputpath)
-# ReadData_1[,1] %>% as.numeric() -> nactivity
-eval(parse(text=paste0("ReadData_",args_sample,"[,",args_cell,"] %>% as.numeric() -> nactivity")))
+# ReadData_1[,'102'] %>% as.numeric() -> nactivity
+eval(parse(text=paste0("ReadData_",args_sample,"[,'",args_celltype,"'] %>% as.numeric() -> nactivity")))
 
 #TimeFrame
 # rownames(ReadData_1) %>% as.numeric() -> timeframe
@@ -49,7 +55,8 @@ inputdir <- "mCherry"
 eval(parse(text=paste0("inputpath <- paste(path, inputdir, 'mCherry_",args_sample,".RData', sep = '/')")))
 load(inputpath)
 # mCherry_1[,1] %>% as.numeric() -> mcherry
-eval(parse(text=paste0("mCherry_",args_sample,"[,",args_cell,"] %>% as.numeric() -> mcherry")))
+# mCherry_1[,'102'] %>% as.numeric() -> mcherry
+eval(parse(text=paste0("mCherry_",args_sample,"[,'",args_celltype,"'] %>% as.numeric() -> mcherry")))
 ##################################################
 
 # Position
@@ -109,9 +116,8 @@ s_4 <- scale_color_manual(values = c("red"))
 s_5 <- scale_color_manual(values = c("blue"))
 ###########
 ###########
-outputdir <- args_datadir
 # title <- ggtitle('SampleNumber1_CellNumber1_X1_raw_CFP')
-eval(parse(text=paste0("title <- ggtitle('SampleNumber",args_sample,"_CellNumber",args_cell,"_",args_celltype,"_",outputdir,"')")))
+eval(parse(text=paste0("title <- ggtitle('SampleNumber",args_sample,"_CellNumber",args_cell,"_",args_celltype,"_",args_datadir,"')")))
 t_1 <- theme(plot.title = element_text(size = 30, hjust = 0.5))
 t_2 <- theme(axis.title = element_text(size = 20))
 t_3 <- theme(legend.title = element_text(size = 28),
@@ -151,8 +157,7 @@ gg <- gg2 + gg3 + gg4 + gg5 + plot_layout(ncol = 1, heights = c(2, 1, 1, 1))
 # ggsave
 ##################################################
 path <- "output/WTS1/plot"
-outputdir <- args_datadir
-# outputpath <- paste(path, outputdir, 'SampleNumber_",args_sample,"', 'CellNumber_",args_cell,"_CellType_",args_celltype,".png', sep = '/')
-eval(parse(text=paste0("outputpath <- paste(path, outputdir, 'SampleNumber_",args_sample,"', 'CellNumber_",args_cell,"_CellType_",args_celltype,".png', sep = '/')")))
+# outputpath <- paste(path, args_datadir, 'SampleNumber_",args_sample,"', 'CellNumber_",args_cell,"_CellType_",args_celltype,".png', sep = '/')
+eval(parse(text=paste0("outputpath <- paste(path, args_datadir, 'SampleNumber_",args_sample,"', 'CellNumber_",args_cell,"_CellType_",args_celltype,".png', sep = '/')")))
 ggsave(filename = outputpath, plot = gg, dpi = 100, width = 28.0, height = 21.0)
 ##################################################
