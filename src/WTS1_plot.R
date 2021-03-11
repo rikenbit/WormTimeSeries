@@ -13,12 +13,6 @@ args_cell <- args[2]
 args_celltype <- args[3]
 # select datadir ディレクトリ 名の指定
 args_datadir <- args[4]
-###test###
-args_sample <- c("1")
-args_cell <- c("1")
-args_celltype <-c("102")
-args_datadir <- c("raw_CFP")
-######
 ##################################################
 
 # Neuron Activity Data
