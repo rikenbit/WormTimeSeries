@@ -1,7 +1,5 @@
 source("src/functions_WTS1.R")
 
-# raw CFP
-####################################################################################
 # args setting
 ##################################################
 args <- commandArgs(trailingOnly = T)
@@ -39,6 +37,8 @@ eval(parse(text=paste0("inputpath <- paste(path, inputdir, 'stim_",args_sample,"
 load(inputpath)
 # stim_1 %>% as.numeric() -> stimtiming
 eval(parse(text=paste0("stim_",args_sample," %>% as.numeric() -> stimtiming")))
+# cut TimeFrame
+stimtiming[1:length(timeframe)] -> stimtiming
 ##################################################
 
 # mCherry
@@ -51,6 +51,8 @@ load(inputpath)
 # mCherry_1[,1] %>% as.numeric() -> mcherry
 # mCherry_1[,'102'] %>% as.numeric() -> mcherry
 eval(parse(text=paste0("mCherry_",args_sample,"[,'",args_celltype,"'] %>% as.numeric() -> mcherry")))
+# cut TimeFrame
+mcherry[1:length(timeframe)] -> mcherry
 ##################################################
 
 # Position
@@ -62,6 +64,8 @@ eval(parse(text=paste0("inputpath <- paste(path, inputdir, 'Position_",args_samp
 load(inputpath)
 # Position_1$MoveX %>% as.numeric() -> position
 eval(parse(text=paste0("Position_",args_sample,"$MoveX %>% as.numeric() -> position")))
+# cut TimeFrame
+position[1:length(timeframe)] -> position
 ##################################################
 
 # dataframe for ggplot
@@ -87,7 +91,6 @@ g_roll %>%
 
 # ggplot
 ##################################################
-###########
 p_1 <- ggplot(data = g_roll_diff, aes(TimeFrame))
 p_2 <- p_1 +
         geom_line(aes(y = Nactivity, colour = "Nactivity"), size = 0.5) +
@@ -99,25 +102,25 @@ p_4 <- p_1 +
          geom_line(aes(y = mCherry, colour = "mCherry") , size = 1.5)
 p_5 <- p_1 +        
          geom_line(aes(y = Position, colour = "Position") , size = 1.5)
-###########
-###########
+
+
 sX <- scale_x_continuous(name = "TimeFrame(1frame/0.2sec)",    # 軸の名前を変える
-                         breaks = seq(0, 6000, by= 1000),     # 軸の区切りを0,2,4にする
+                         breaks = seq(0, length(timeframe), by= 1000),     # 軸の区切りを0,2,4にする
                         )
 s_2 <- scale_color_manual(values = c("orange", "green", "black"))
 s_3 <- scale_color_manual(values = c("purple"))
 s_4 <- scale_color_manual(values = c("red"))
 s_5 <- scale_color_manual(values = c("blue"))
-###########
-###########
+
+
 # title <- ggtitle('SampleNumber1_CellNumber1_X1_raw_CFP')
 eval(parse(text=paste0("title <- ggtitle('SampleNumber",args_sample,"_CellNumber",args_cell,"_",args_celltype,"_",args_datadir,"')")))
 t_1 <- theme(plot.title = element_text(size = 30, hjust = 0.5))
 t_2 <- theme(axis.title = element_text(size = 20))
 t_3 <- theme(legend.title = element_text(size = 28),
              legend.text = element_text(size = 20))
-###########
-###########
+
+
 gg2 <- p_2 +
     s_2 +
     sX +
@@ -145,7 +148,6 @@ gg5 <- p_5 +
     t_3 +
     labs(colour="each data")
 gg <- gg2 + gg3 + gg4 + gg5 + plot_layout(ncol = 1, heights = c(2, 1, 1, 1))
-###########
 ##################################################
 
 # ggsave

@@ -207,13 +207,13 @@ rule WTS1_plot_CFP:
         args3 = lambda w: w["CellType"],
         args4 = DATA_DIR_CFP
     benchmark:
-        f'benchmarks/WTS1/plot/{paramspace_CFP.wildcard_pattern}.txt'
+        f'benchmarks/WTS1/plot/{DATA_DIR_CFP}/{paramspace_CFP.wildcard_pattern}.txt'
     conda:
         'envs/myenv_WTS1.yaml'
     resources:
         mem_gb=200
     log:
-        f'logs/WTS1/plot/{paramspace_CFP.wildcard_pattern}.log'
+        f'logs/WTS1/plot/{DATA_DIR_CFP}/{paramspace_CFP.wildcard_pattern}.log'
     shell:
         'src/WTS1_1cell.sh {params.args1} {params.args2} {params.args3} {params.args4} >& {log}'
 rule WTS1_plot_YFP:
@@ -225,13 +225,13 @@ rule WTS1_plot_YFP:
         args3 = lambda w: w["CellType"],
         args4 = DATA_DIR_YFP
     benchmark:
-        f'benchmarks/WTS1/plot/{paramspace_YFP.wildcard_pattern}.txt'
+        f'benchmarks/WTS1/plot/{DATA_DIR_YFP}/{paramspace_YFP.wildcard_pattern}.txt'
     conda:
         'envs/myenv_WTS1.yaml'
     resources:
         mem_gb=200
     log:
-        f'logs/WTS1/plot/{paramspace_YFP.wildcard_pattern}.log'
+        f'logs/WTS1/plot/{DATA_DIR_YFP}/{paramspace_YFP.wildcard_pattern}.log'
     shell:
         'src/WTS1_1cell.sh {params.args1} {params.args2} {params.args3} {params.args4} >& {log}'
 rule WTS1_plot_normalize_1:
@@ -243,13 +243,13 @@ rule WTS1_plot_normalize_1:
         args3 = lambda w: w["CellType"],
         args4 = DATA_DIR_normalize_1
     benchmark:
-        f'benchmarks/WTS1/plot/{paramspace_normalize_1.wildcard_pattern}.txt'
+        f'benchmarks/WTS1/plot/{DATA_DIR_normalize_1}/{paramspace_normalize_1.wildcard_pattern}.txt'
     conda:
         'envs/myenv_WTS1.yaml'
     resources:
         mem_gb=200
     log:
-        f'logs/WTS1/plot/{paramspace_normalize_1.wildcard_pattern}.log'
+        f'logs/WTS1/plot/{DATA_DIR_normalize_1}/{paramspace_normalize_1.wildcard_pattern}.log'
     shell:
         'src/WTS1_1cell.sh {params.args1} {params.args2} {params.args3} {params.args4} >& {log}'
 rule WTS1_plot_normalize_2:
@@ -261,13 +261,13 @@ rule WTS1_plot_normalize_2:
         args3 = lambda w: w["CellType"],
         args4 = DATA_DIR_normalize_2
     benchmark:
-        f'benchmarks/WTS1/plot/{paramspace_normalize_2.wildcard_pattern}.txt'
+        f'benchmarks/WTS1/plot/{DATA_DIR_normalize_2}/{paramspace_normalize_2.wildcard_pattern}.txt'
     conda:
         'envs/myenv_WTS1.yaml'
     resources:
         mem_gb=200
     log:
-        f'logs/WTS1/plot/{paramspace_normalize_2.wildcard_pattern}.log'
+        f'logs/WTS1/plot/{DATA_DIR_normalize_2}/{paramspace_normalize_2.wildcard_pattern}.log'
     shell:
         'src/WTS1_1cell.sh {params.args1} {params.args2} {params.args3} {params.args4} >& {log}'
 rule WTS1_plot_normalize_3:
@@ -279,13 +279,13 @@ rule WTS1_plot_normalize_3:
         args3 = lambda w: w["CellType"],
         args4 = DATA_DIR_normalize_3
     benchmark:
-        f'benchmarks/WTS1/plot/{paramspace_normalize_3.wildcard_pattern}.txt'
+        f'benchmarks/WTS1/plot/{DATA_DIR_normalize_3}/{paramspace_normalize_3.wildcard_pattern}.txt'
     conda:
         'envs/myenv_WTS1.yaml'
     resources:
         mem_gb=200
     log:
-        f'logs/WTS1/plot/{paramspace_normalize_3.wildcard_pattern}.log'
+        f'logs/WTS1/plot/{DATA_DIR_normalize_3}/{paramspace_normalize_3.wildcard_pattern}.log'
     shell:
         'src/WTS1_1cell.sh {params.args1} {params.args2} {params.args3} {params.args4} >& {log}'
 rule WTS1_plot_normalize_4:
@@ -297,13 +297,13 @@ rule WTS1_plot_normalize_4:
         args3 = lambda w: w["CellType"],
         args4 = DATA_DIR_normalize_4
     benchmark:
-        f'benchmarks/WTS1/plot/{paramspace_normalize_4.wildcard_pattern}.txt'
+        f'benchmarks/WTS1/plot/{DATA_DIR_normalize_4}/{paramspace_normalize_4.wildcard_pattern}.txt'
     conda:
         'envs/myenv_WTS1.yaml'
     resources:
         mem_gb=200
     log:
-        f'logs/WTS1/plot/{paramspace_normalize_4.wildcard_pattern}.log'
+        f'logs/WTS1/plot/{DATA_DIR_normalize_4}/{paramspace_normalize_4.wildcard_pattern}.log'
     shell:
         'src/WTS1_1cell.sh {params.args1} {params.args2} {params.args3} {params.args4} >& {log}'
 ###################################################
