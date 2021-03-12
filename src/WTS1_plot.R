@@ -70,15 +70,6 @@ position[1:length(timeframe)] -> position
 
 # dataframe for ggplot
 ##################################################
-# test
-###
-print(length(timeframe))
-print(length(nactivity))
-print(length(stimtiming))
-print(length(mcherry))
-print(length(position))
-###
-
 data.frame(
         TimeFrame = timeframe,
         Nactivity = nactivity,
