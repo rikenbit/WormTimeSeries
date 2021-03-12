@@ -20,7 +20,7 @@ for(i in 1:length(n_filename)){
     # fullpath <- paste(inputdir, n_filename[i], sep = '/')
     # ReadData <- read_csv(fullpath)
     # ReadData <- as.data.frame(ReadData)
-    paste(inputdir, n_filename[1], sep = '/') %>%
+    paste(inputdir, n_filename[i], sep = '/') %>%
         read_csv() %>% # tibble形式でロード
             as.data.frame() -> ReadData #dataframeに変換
     #ReadData_1 <- ReadDataList[[1]]

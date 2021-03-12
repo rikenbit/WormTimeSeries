@@ -28,7 +28,6 @@ for(i in 1:length(n_filename)){
     #save(ReadData_1, file = outputpath)
     eval(parse(text=paste0("save(ReadData_",i,", file = outputpath)")))
 }
-
 ##################################################
 
 # Sample Sheet
