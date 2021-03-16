@@ -11,6 +11,8 @@ args_cell <- args[2]
 args_celltype <- args[3]
 # select datadir ディレクトリ 名の指定
 args_datadir <- args[4]
+# outputファイル名
+args_output <- args[5]
 ##################################################
 
 # Neuron Activity Data
@@ -152,8 +154,5 @@ gg <- gg2 + gg3 + gg4 + gg5 + plot_layout(ncol = 1, heights = c(2, 1, 1, 1))
 
 # ggsave
 ##################################################
-path <- "output/WTS1/plot"
-# outputpath <- paste(path, args_datadir, 'SampleNumber_",args_sample,"', 'CellNumber_",args_cell,"_CellType_",args_celltype,".png', sep = '/')
-eval(parse(text=paste0("outputpath <- paste(path, args_datadir, 'SampleNumber_",args_sample,"', 'CellNumber_",args_cell,"_CellType_",args_celltype,".png', sep = '/')")))
-ggsave(filename = outputpath, plot = gg, dpi = 100, width = 28.0, height = 21.0)
+ggsave(filename = args_output, plot = gg, dpi = 100, width = 20.0, height = 15.0)
 ##################################################

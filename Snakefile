@@ -159,154 +159,251 @@
 #         'src/WTS1_load_normalize_n.sh {params.args1} >& {log}'
 # ###################################################
 
-# WTS1 plot
-###################################################
-import pandas as pd
-# from snakemake.utils import min_version
-from snakemake.utils import Paramspace
+# # WTS1 plot CFP
+# ###################################################
+# import pandas as pd
+# from snakemake.utils import Paramspace
 
-# min_version("5.3.2")
-configfile: "config.yaml"
+# configfile: "config.yaml"
+# DATA_DIR = config['DATA_DIR_CFP']
+# SAMPLE_SHEET = pd.read_csv(config['SAMPLE_SHEET_CFP'], dtype='string')
 
-# read sample_sheet
-DATA_DIR_CFP = config['DATA_DIR_CFP']
-SAMPLE_SHEET_CFP = pd.read_csv(config['SAMPLE_SHEET_CFP'], dtype='string')
-paramspace_CFP = Paramspace(SAMPLE_SHEET_CFP, filename_params=['CellNumber', 'CellType'], param_sep="_")
-DATA_DIR_YFP = config['DATA_DIR_YFP']
-SAMPLE_SHEET_YFP = pd.read_csv(config['SAMPLE_SHEET_YFP'], dtype='string')
-paramspace_YFP = Paramspace(SAMPLE_SHEET_YFP, filename_params=['CellNumber', 'CellType'], param_sep="_")
-DATA_DIR_normalize_1 = config['DATA_DIR_normalize_1']
-SAMPLE_SHEET_normalize_1 = pd.read_csv(config['SAMPLE_SHEET_normalize_1'], dtype='string')
-paramspace_normalize_1 = Paramspace(SAMPLE_SHEET_normalize_1, filename_params=['CellNumber', 'CellType'], param_sep="_")
-DATA_DIR_normalize_2 = config['DATA_DIR_normalize_2']
-SAMPLE_SHEET_normalize_2 = pd.read_csv(config['SAMPLE_SHEET_normalize_2'], dtype='string')
-paramspace_normalize_2 = Paramspace(SAMPLE_SHEET_normalize_2, filename_params=['CellNumber', 'CellType'], param_sep="_")
-DATA_DIR_normalize_3 = config['DATA_DIR_normalize_3']
-SAMPLE_SHEET_normalize_3 = pd.read_csv(config['SAMPLE_SHEET_normalize_3'], dtype='string')
-paramspace_normalize_3 = Paramspace(SAMPLE_SHEET_normalize_3, filename_params=['CellNumber', 'CellType'], param_sep="_")
-DATA_DIR_normalize_4 = config['DATA_DIR_normalize_4']
-SAMPLE_SHEET_normalize_4 = pd.read_csv(config['SAMPLE_SHEET_normalize_4'], dtype='string')
-paramspace_normalize_4 = Paramspace(SAMPLE_SHEET_normalize_4, filename_params=['CellNumber', 'CellType'], param_sep="_")
+# paramspace = Paramspace(SAMPLE_SHEET, filename_params=['CellNumber', 'CellType'], param_sep="_")
 
-rule all:
-    input:
-        expand('output/WTS1/plot/{DATA_DIR}/{params}.png', params = paramspace_CFP.instance_patterns, DATA_DIR = DATA_DIR_CFP),
-        expand('output/WTS1/plot/{DATA_DIR}/{params}.png', params = paramspace_YFP.instance_patterns, DATA_DIR = DATA_DIR_YFP),
-        expand('output/WTS1/plot/{DATA_DIR}/{params}.png', params = paramspace_normalize_1.instance_patterns, DATA_DIR = DATA_DIR_normalize_1),
-        expand('output/WTS1/plot/{DATA_DIR}/{params}.png', params = paramspace_normalize_2.instance_patterns, DATA_DIR = DATA_DIR_normalize_2),
-        expand('output/WTS1/plot/{DATA_DIR}/{params}.png', params = paramspace_normalize_3.instance_patterns, DATA_DIR = DATA_DIR_normalize_3),
-        expand('output/WTS1/plot/{DATA_DIR}/{params}.png', params = paramspace_normalize_4.instance_patterns, DATA_DIR = DATA_DIR_normalize_4)
+# rule all:
+#     input:
+#         expand('output/WTS1/plot/{DATA_DIR}/{params}.png', params = paramspace.instance_patterns, DATA_DIR = DATA_DIR)
 
+# rule WTS1_plot_CFP:
+#     input:
+#         expand('data/{DATA_DIR}/ReadData_{Sample}.RData', Sample = paramspace["SampleNumber"], DATA_DIR = DATA_DIR),
+#         expand('data/stimulation/stim_{Sample}.RData', Sample = paramspace["SampleNumber"]),
+#         expand('data/mCherry/mCherry_{Sample}.RData', Sample = paramspace["SampleNumber"]),
+#         expand('data/mCherry/mCherry_{Sample}.RData', Sample = paramspace["SampleNumber"]),
+#         expand('data/Position/Position_{Sample}.RData', Sample = paramspace["SampleNumber"])
+#     output:
+#         f"output/WTS1/plot/{DATA_DIR}/{paramspace.wildcard_pattern}.png"
+#     params:
+#         args1 = lambda w: w["SampleNumber"],
+#         args2 = lambda w: w["CellNumber"],
+#         args3 = lambda w: w["CellType"],
+#         args4 = {DATA_DIR}
+#     benchmark:
+#         f'benchmarks/WTS1/plot/{DATA_DIR}/{paramspace.wildcard_pattern}.txt'
+#     conda:
+#         'envs/myenv_WTS1.yaml'
+#     resources:
+#         mem_gb=200
+#     log:
+#         f'logs/WTS1/plot/{DATA_DIR}/{paramspace.wildcard_pattern}.log'
+#     shell:
+#         'src/WTS1_plot.sh {params.args1} {params.args2} {params.args3} {params.args4} {output} >& {log}'
+# ###################################################
 
-rule WTS1_plot_CFP:
-    output:
-        f"output/WTS1/plot/{DATA_DIR_CFP}/{paramspace_CFP.wildcard_pattern}.png"
-    params:
-        args1 = lambda w: w["SampleNumber"],
-        args2 = lambda w: w["CellNumber"],
-        args3 = lambda w: w["CellType"],
-        args4 = DATA_DIR_CFP
-    benchmark:
-        f'benchmarks/WTS1/plot/{DATA_DIR_CFP}/{paramspace_CFP.wildcard_pattern}.txt'
-    conda:
-        'envs/myenv_WTS1.yaml'
-    resources:
-        mem_gb=200
-    log:
-        f'logs/WTS1/plot/{DATA_DIR_CFP}/{paramspace_CFP.wildcard_pattern}.log'
-    shell:
-        'src/WTS1_plot.sh {params.args1} {params.args2} {params.args3} {params.args4} >& {log}'
-rule WTS1_plot_YFP:
-    output:
-        f"output/WTS1/plot/{DATA_DIR_YFP}/{paramspace_YFP.wildcard_pattern}.png"
-    params:
-        args1 = lambda w: w["SampleNumber"],
-        args2 = lambda w: w["CellNumber"],
-        args3 = lambda w: w["CellType"],
-        args4 = DATA_DIR_YFP
-    benchmark:
-        f'benchmarks/WTS1/plot/{DATA_DIR_YFP}/{paramspace_YFP.wildcard_pattern}.txt'
-    conda:
-        'envs/myenv_WTS1.yaml'
-    resources:
-        mem_gb=200
-    log:
-        f'logs/WTS1/plot/{DATA_DIR_YFP}/{paramspace_YFP.wildcard_pattern}.log'
-    shell:
-        'src/WTS1_plot.sh {params.args1} {params.args2} {params.args3} {params.args4} >& {log}'
-rule WTS1_plot_normalize_1:
-    output:
-        f"output/WTS1/plot/{DATA_DIR_normalize_1}/{paramspace_normalize_1.wildcard_pattern}.png"
-    params:
-        args1 = lambda w: w["SampleNumber"],
-        args2 = lambda w: w["CellNumber"],
-        args3 = lambda w: w["CellType"],
-        args4 = DATA_DIR_normalize_1
-    benchmark:
-        f'benchmarks/WTS1/plot/{DATA_DIR_normalize_1}/{paramspace_normalize_1.wildcard_pattern}.txt'
-    conda:
-        'envs/myenv_WTS1.yaml'
-    resources:
-        mem_gb=200
-    log:
-        f'logs/WTS1/plot/{DATA_DIR_normalize_1}/{paramspace_normalize_1.wildcard_pattern}.log'
-    shell:
-        'src/WTS1_plot.sh {params.args1} {params.args2} {params.args3} {params.args4} >& {log}'
-rule WTS1_plot_normalize_2:
-    output:
-        f"output/WTS1/plot/{DATA_DIR_normalize_2}/{paramspace_normalize_2.wildcard_pattern}.png"
-    params:
-        args1 = lambda w: w["SampleNumber"],
-        args2 = lambda w: w["CellNumber"],
-        args3 = lambda w: w["CellType"],
-        args4 = DATA_DIR_normalize_2
-    benchmark:
-        f'benchmarks/WTS1/plot/{DATA_DIR_normalize_2}/{paramspace_normalize_2.wildcard_pattern}.txt'
-    conda:
-        'envs/myenv_WTS1.yaml'
-    resources:
-        mem_gb=200
-    log:
-        f'logs/WTS1/plot/{DATA_DIR_normalize_2}/{paramspace_normalize_2.wildcard_pattern}.log'
-    shell:
-        'src/WTS1_plot.sh {params.args1} {params.args2} {params.args3} {params.args4} >& {log}'
-rule WTS1_plot_normalize_3:
-    output:
-        f"output/WTS1/plot/{DATA_DIR_normalize_3}/{paramspace_normalize_3.wildcard_pattern}.png"
-    params:
-        args1 = lambda w: w["SampleNumber"],
-        args2 = lambda w: w["CellNumber"],
-        args3 = lambda w: w["CellType"],
-        args4 = DATA_DIR_normalize_3
-    benchmark:
-        f'benchmarks/WTS1/plot/{DATA_DIR_normalize_3}/{paramspace_normalize_3.wildcard_pattern}.txt'
-    conda:
-        'envs/myenv_WTS1.yaml'
-    resources:
-        mem_gb=200
-    log:
-        f'logs/WTS1/plot/{DATA_DIR_normalize_3}/{paramspace_normalize_3.wildcard_pattern}.log'
-    shell:
-        'src/WTS1_plot.sh {params.args1} {params.args2} {params.args3} {params.args4} >& {log}'
-rule WTS1_plot_normalize_4:
-    output:
-        f"output/WTS1/plot/{DATA_DIR_normalize_4}/{paramspace_normalize_4.wildcard_pattern}.png"
-    params:
-        args1 = lambda w: w["SampleNumber"],
-        args2 = lambda w: w["CellNumber"],
-        args3 = lambda w: w["CellType"],
-        args4 = DATA_DIR_normalize_4
-    benchmark:
-        f'benchmarks/WTS1/plot/{DATA_DIR_normalize_4}/{paramspace_normalize_4.wildcard_pattern}.txt'
-    conda:
-        'envs/myenv_WTS1.yaml'
-    resources:
-        mem_gb=200
-    log:
-        f'logs/WTS1/plot/{DATA_DIR_normalize_4}/{paramspace_normalize_4.wildcard_pattern}.log'
-    shell:
-        'src/WTS1_plot.sh {params.args1} {params.args2} {params.args3} {params.args4} >& {log}'
-###################################################
+# # WTS1 plot YFP
+# ###################################################
+# import pandas as pd
+# from snakemake.utils import Paramspace
+
+# configfile: "config.yaml"
+# DATA_DIR = config['DATA_DIR_YFP']
+# SAMPLE_SHEET = pd.read_csv(config['SAMPLE_SHEET_YFP'], dtype='string')
+
+# paramspace = Paramspace(SAMPLE_SHEET, filename_params=['CellNumber', 'CellType'], param_sep="_")
+
+# rule all:
+#     input:
+#         expand('output/WTS1/plot/{DATA_DIR}/{params}.png', params = paramspace.instance_patterns, DATA_DIR = DATA_DIR)
+
+# rule WTS1_plot_YFP:
+#     input:
+#         expand('data/{DATA_DIR}/ReadData_{Sample}.RData', Sample = paramspace["SampleNumber"], DATA_DIR = DATA_DIR),
+#         expand('data/stimulation/stim_{Sample}.RData', Sample = paramspace["SampleNumber"]),
+#         expand('data/mCherry/mCherry_{Sample}.RData', Sample = paramspace["SampleNumber"]),
+#         expand('data/mCherry/mCherry_{Sample}.RData', Sample = paramspace["SampleNumber"]),
+#         expand('data/Position/Position_{Sample}.RData', Sample = paramspace["SampleNumber"])
+#     output:
+#         f"output/WTS1/plot/{DATA_DIR}/{paramspace.wildcard_pattern}.png"
+#     params:
+#         args1 = lambda w: w["SampleNumber"],
+#         args2 = lambda w: w["CellNumber"],
+#         args3 = lambda w: w["CellType"],
+#         args4 = {DATA_DIR}
+#     benchmark:
+#         f'benchmarks/WTS1/plot/{DATA_DIR}/{paramspace.wildcard_pattern}.txt'
+#     conda:
+#         'envs/myenv_WTS1.yaml'
+#     resources:
+#         mem_gb=200
+#     log:
+#         f'logs/WTS1/plot/{DATA_DIR}/{paramspace.wildcard_pattern}.log'
+#     shell:
+#         'src/WTS1_plot.sh {params.args1} {params.args2} {params.args3} {params.args4} {output} >& {log}'
+# ###################################################
+
+# # WTS1 plot normalize_1
+# ###################################################
+# import pandas as pd
+# from snakemake.utils import Paramspace
+
+# configfile: "config.yaml"
+# DATA_DIR = config['DATA_DIR_normalize_1']
+# SAMPLE_SHEET = pd.read_csv(config['SAMPLE_SHEET_normalize_1'], dtype='string')
+
+# paramspace = Paramspace(SAMPLE_SHEET, filename_params=['CellNumber', 'CellType'], param_sep="_")
+
+# rule all:
+#     input:
+#         expand('output/WTS1/plot/{DATA_DIR}/{params}.png', params = paramspace.instance_patterns, DATA_DIR = DATA_DIR)
+
+# rule WTS1_plot_normalize_1:
+#     input:
+#         expand('data/{DATA_DIR}/ReadData_{Sample}.RData', Sample = paramspace["SampleNumber"], DATA_DIR = DATA_DIR),
+#         expand('data/stimulation/stim_{Sample}.RData', Sample = paramspace["SampleNumber"]),
+#         expand('data/mCherry/mCherry_{Sample}.RData', Sample = paramspace["SampleNumber"]),
+#         expand('data/mCherry/mCherry_{Sample}.RData', Sample = paramspace["SampleNumber"]),
+#         expand('data/Position/Position_{Sample}.RData', Sample = paramspace["SampleNumber"])
+#     output:
+#         f"output/WTS1/plot/{DATA_DIR}/{paramspace.wildcard_pattern}.png"
+#     params:
+#         args1 = lambda w: w["SampleNumber"],
+#         args2 = lambda w: w["CellNumber"],
+#         args3 = lambda w: w["CellType"],
+#         args4 = {DATA_DIR}
+#     benchmark:
+#         f'benchmarks/WTS1/plot/{DATA_DIR}/{paramspace.wildcard_pattern}.txt'
+#     conda:
+#         'envs/myenv_WTS1.yaml'
+#     resources:
+#         mem_gb=200
+#     log:
+#         f'logs/WTS1/plot/{DATA_DIR}/{paramspace.wildcard_pattern}.log'
+#     shell:
+#         'src/WTS1_plot.sh {params.args1} {params.args2} {params.args3} {params.args4} {output} >& {log}'
+# ###################################################
+
+# # WTS1 plot normalize_2
+# ###################################################
+# import pandas as pd
+# from snakemake.utils import Paramspace
+
+# configfile: "config.yaml"
+# DATA_DIR = config['DATA_DIR_normalize_2']
+# SAMPLE_SHEET = pd.read_csv(config['SAMPLE_SHEET_normalize_2'], dtype='string')
+
+# paramspace = Paramspace(SAMPLE_SHEET, filename_params=['CellNumber', 'CellType'], param_sep="_")
+
+# rule all:
+#     input:
+#         expand('output/WTS1/plot/{DATA_DIR}/{params}.png', params = paramspace.instance_patterns, DATA_DIR = DATA_DIR)
+
+# rule WTS1_plot_normalize_2:
+#     input:
+#         expand('data/{DATA_DIR}/ReadData_{Sample}.RData', Sample = paramspace["SampleNumber"], DATA_DIR = DATA_DIR),
+#         expand('data/stimulation/stim_{Sample}.RData', Sample = paramspace["SampleNumber"]),
+#         expand('data/mCherry/mCherry_{Sample}.RData', Sample = paramspace["SampleNumber"]),
+#         expand('data/mCherry/mCherry_{Sample}.RData', Sample = paramspace["SampleNumber"]),
+#         expand('data/Position/Position_{Sample}.RData', Sample = paramspace["SampleNumber"])
+#     output:
+#         f"output/WTS1/plot/{DATA_DIR}/{paramspace.wildcard_pattern}.png"
+#     params:
+#         args1 = lambda w: w["SampleNumber"],
+#         args2 = lambda w: w["CellNumber"],
+#         args3 = lambda w: w["CellType"],
+#         args4 = {DATA_DIR}
+#     benchmark:
+#         f'benchmarks/WTS1/plot/{DATA_DIR}/{paramspace.wildcard_pattern}.txt'
+#     conda:
+#         'envs/myenv_WTS1.yaml'
+#     resources:
+#         mem_gb=200
+#     log:
+#         f'logs/WTS1/plot/{DATA_DIR}/{paramspace.wildcard_pattern}.log'
+#     shell:
+#         'src/WTS1_plot.sh {params.args1} {params.args2} {params.args3} {params.args4} {output} >& {log}'
+# ###################################################
+
+# # WTS1 plot normalize_3
+# ###################################################
+# import pandas as pd
+# from snakemake.utils import Paramspace
+
+# configfile: "config.yaml"
+# DATA_DIR = config['DATA_DIR_normalize_3']
+# SAMPLE_SHEET = pd.read_csv(config['SAMPLE_SHEET_normalize_3'], dtype='string')
+
+# paramspace = Paramspace(SAMPLE_SHEET, filename_params=['CellNumber', 'CellType'], param_sep="_")
+
+# rule all:
+#     input:
+#         expand('output/WTS1/plot/{DATA_DIR}/{params}.png', params = paramspace.instance_patterns, DATA_DIR = DATA_DIR)
+
+# rule WTS1_plot_normalize_3:
+#     input:
+#         expand('data/{DATA_DIR}/ReadData_{Sample}.RData', Sample = paramspace["SampleNumber"], DATA_DIR = DATA_DIR),
+#         expand('data/stimulation/stim_{Sample}.RData', Sample = paramspace["SampleNumber"]),
+#         expand('data/mCherry/mCherry_{Sample}.RData', Sample = paramspace["SampleNumber"]),
+#         expand('data/mCherry/mCherry_{Sample}.RData', Sample = paramspace["SampleNumber"]),
+#         expand('data/Position/Position_{Sample}.RData', Sample = paramspace["SampleNumber"])
+#     output:
+#         f"output/WTS1/plot/{DATA_DIR}/{paramspace.wildcard_pattern}.png"
+#     params:
+#         args1 = lambda w: w["SampleNumber"],
+#         args2 = lambda w: w["CellNumber"],
+#         args3 = lambda w: w["CellType"],
+#         args4 = {DATA_DIR}
+#     benchmark:
+#         f'benchmarks/WTS1/plot/{DATA_DIR}/{paramspace.wildcard_pattern}.txt'
+#     conda:
+#         'envs/myenv_WTS1.yaml'
+#     resources:
+#         mem_gb=200
+#     log:
+#         f'logs/WTS1/plot/{DATA_DIR}/{paramspace.wildcard_pattern}.log'
+#     shell:
+#         'src/WTS1_plot.sh {params.args1} {params.args2} {params.args3} {params.args4} {output} >& {log}'
+# ###################################################
+
+# # WTS1 plot normalize_4
+# ###################################################
+# import pandas as pd
+# from snakemake.utils import Paramspace
+
+# configfile: "config.yaml"
+# DATA_DIR = config['DATA_DIR_normalize_4']
+# SAMPLE_SHEET = pd.read_csv(config['SAMPLE_SHEET_normalize_4'], dtype='string')
+
+# paramspace = Paramspace(SAMPLE_SHEET, filename_params=['CellNumber', 'CellType'], param_sep="_")
+
+# rule all:
+#     input:
+#         expand('output/WTS1/plot/{DATA_DIR}/{params}.png', params = paramspace.instance_patterns, DATA_DIR = DATA_DIR)
+
+# rule WTS1_plot_normalize_4:
+#     input:
+#         expand('data/{DATA_DIR}/ReadData_{Sample}.RData', Sample = paramspace["SampleNumber"], DATA_DIR = DATA_DIR),
+#         expand('data/stimulation/stim_{Sample}.RData', Sample = paramspace["SampleNumber"]),
+#         expand('data/mCherry/mCherry_{Sample}.RData', Sample = paramspace["SampleNumber"]),
+#         expand('data/mCherry/mCherry_{Sample}.RData', Sample = paramspace["SampleNumber"]),
+#         expand('data/Position/Position_{Sample}.RData', Sample = paramspace["SampleNumber"])
+#     output:
+#         f"output/WTS1/plot/{DATA_DIR}/{paramspace.wildcard_pattern}.png"
+#     params:
+#         args1 = lambda w: w["SampleNumber"],
+#         args2 = lambda w: w["CellNumber"],
+#         args3 = lambda w: w["CellType"],
+#         args4 = {DATA_DIR}
+#     benchmark:
+#         f'benchmarks/WTS1/plot/{DATA_DIR}/{paramspace.wildcard_pattern}.txt'
+#     conda:
+#         'envs/myenv_WTS1.yaml'
+#     resources:
+#         mem_gb=200
+#     log:
+#         f'logs/WTS1/plot/{DATA_DIR}/{paramspace.wildcard_pattern}.log'
+#     shell:
+#         'src/WTS1_plot.sh {params.args1} {params.args2} {params.args3} {params.args4} {output} >& {log}'
+# ###################################################
 
 # # WTS2 correlogram τ50
 # ###################################################
