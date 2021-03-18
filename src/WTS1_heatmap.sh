@@ -13,4 +13,4 @@ SLURM_RESTART_COUNT=2
 
 echo $@
 echo $CONDA_PREFIX
-$CONDA_PREFIX/bin/Rscript src/WTS1_load.R $@
+$CONDA_PREFIX/bin/Rscript src/WTS1_heatmap.R $@
