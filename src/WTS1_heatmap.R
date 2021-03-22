@@ -28,31 +28,77 @@ eval(parse(text=paste0("ReadData <- ReadData_",args_sample)))
 ReadData %>%
     rowid_to_column("timeframe") %>%
         pivot_longer(-timeframe, names_to = "celltype", values_to = "nactivity") -> df
-
+#### clustering####
+# load igraphdata
+load("data/igraph/Fig1_HNS.RData")
+# node information convert dataframe
+ig_Fig1_HNS %>% 
+    igraph::as_data_frame(., what="vertices") -> df_node
+# remove space from colnames
+df_node %>% 
+    names() %>% 
+        str_replace_all(., c(" " = "")) -> names(df_node)
+# add node information
+merge(df, df_node, by.x = "celltype", by.y = "name",all.x = TRUE) -> df_merged
+df_merged %>% .$NeuronType %>% unique() %>% na.omit() -> NeuronType_Name
 #### ggplot####
-ghm <- ggplot(df, aes(x = timeframe, y = celltype, fill = nactivity))
-ghm <- ghm + geom_tile()
-ghm <- ghm + theme_bw()
-ghm <- ghm + theme(plot.background = element_blank(),
-                   panel.grid.minor = element_blank(),
-                   panel.grid.major = element_blank(),
-                   panel.background = element_blank(),
-                   axis.line = element_blank(),
-                   axis.ticks = element_blank(),
-                   strip.background = element_rect(fill = "white", colour = "white"),
-                   axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
-ghm <- ghm + scale_fill_gradientn("value", colours = rev(brewer.pal(9, "Spectral")), na.value = "white")
-ghm <- ghm + xlab("timeframe") + ylab("celltype")
+# hit NA
+df_merged %>% 
+    filter(.,is.na(NeuronType)) -> df_onegroup
+groupname <- "other"
+ghm <- ggplot_ghm(df_onegroup) + ggtitle("NeuronActivity") +theme(plot.title = element_text(size = 30, hjust = 0.5))
+# each NeuronType cell count
+df_merged %>%
+    filter(.,is.na(NeuronType)) %>% 
+      .$celltype %>%
+          unique() %>% length() -> NeuronType_length
 
-title <- ggtitle("NeuronActivity")
-t_1 <- theme(plot.title = element_text(size = 30, hjust = 0.5))
-sX <- scale_x_continuous(name = "TimeFrame(1frame/0.2sec)",    # 軸の名前を変える
-                         breaks = seq(0, nrow(ReadData), by= 1000),     # 軸の区切りを0,2,4にする
-)
-ghm <- ghm +
-    title +
-    t_1 +
-    sX
+# hit Neuron Type
+for (i in 1:length(NeuronType_Name)) {
+    df_merged %>% 
+        filter(.,NeuronType==NeuronType_Name[i]) -> df_onegroup
+    df_onegroup$celltype %>%
+        unique() %>% length() %>%
+            c(NeuronType_length,.) -> NeuronType_length
+    groupname <- NeuronType_Name[i]
+    ghm <- ghm / ggplot_ghm(df_onegroup)
+}
+########################
+
+#### mCherry####
+#### load####
+# Neuron Activityデータのtimeframeの範囲で，mCherryのtimeframeを取得
+eval(parse(text=paste0("rownames(ReadData_",args_sample,") %>% as.numeric() -> timeframe")))
+path <- "data"
+inputdir <- "mCherry"
+# inputpath <- paste(path, inputdir, 'mCherry_1.RData', sep = '/')
+eval(parse(text=paste0("inputpath <- paste(path, inputdir, 'mCherry_",args_sample,".RData', sep = '/')")))
+load(inputpath)
+# cut TimeFrame
+# mCherry_1[1:length(timeframe),] -> mCherry
+eval(parse(text=paste0("mCherry_",args_sample,"[1:length(timeframe),] -> mCherry")))
+#### convert wider to longer####
+mCherry %>%
+  rowid_to_column("timeframe") %>%
+      pivot_longer(-timeframe, names_to = "celltype", values_to = "mCherry") -> df
+#### clustering####
+# add node information
+merge(df, df_node, by.x = "celltype", by.y = "name",all.x = TRUE) -> df_merged
+df_merged %>% .$NeuronType %>% unique() %>% na.omit() -> NeuronType_Name
+#### ggplot####
+# hit NA
+df_merged %>% 
+    filter(.,is.na(NeuronType)) -> df_onegroup
+groupname <- "other"
+ghm_m <- ggplot_ghm_m(df_onegroup) + ggtitle("mCherry") +theme(plot.title = element_text(size = 30, hjust = 0.5))
+
+# hit Neuron Type
+for (i in 1:length(NeuronType_Name)) {
+    df_merged %>% 
+        filter(.,NeuronType==NeuronType_Name[i]) -> df_onegroup
+    groupname <- NeuronType_Name[i]
+    ghm_m <- ghm_m / ggplot_ghm_m(df_onegroup)
+}
 ########################
 
 #### Stimulation & Position####
@@ -119,48 +165,11 @@ gg5 <- p_5 +
   labs(colour="each data")
 ########################
 
-#### mCherry####
-#### load####
-eval(parse(text=paste0("rownames(ReadData_",args_sample,") %>% as.numeric() -> timeframe")))
-path <- "data"
-inputdir <- "mCherry"
-
-# inputpath <- paste(path, inputdir, 'mCherry_1.RData', sep = '/')
-eval(parse(text=paste0("inputpath <- paste(path, inputdir, 'mCherry_",args_sample,".RData', sep = '/')")))
-load(inputpath)
-# cut TimeFrame
-eval(parse(text=paste0("mCherry_1[",args_sample,":length(timeframe),] -> mCherry")))
-
-mCherry %>%
-  rowid_to_column("timeframe") %>%
-      pivot_longer(-timeframe, names_to = "celltype", values_to = "mcherry") -> df
-
-#### ggplot####
-ghm_m <- ggplot(df, aes(x = timeframe, y = celltype, fill = mcherry))
-ghm_m <- ghm_m + geom_tile()
-ghm_m <- ghm_m + theme_bw()
-ghm_m <- ghm_m + theme(plot.background = element_blank(),
-                   panel.grid.minor = element_blank(),
-                   panel.grid.major = element_blank(),
-                   panel.background = element_blank(),
-                   axis.line = element_blank(),
-                   axis.ticks = element_blank(),
-                   strip.background = element_rect(fill = "white", colour = "white"),
-                   axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
-ghm_m <- ghm_m + scale_fill_gradientn("value", colours = rev(brewer.pal(9, "Spectral")), na.value = "white")
-ghm_m <- ghm_m + xlab("timeframe") + ylab("celltype")
-title <- ggtitle("mCherry")
-t_1 <- theme(plot.title = element_text(size = 30, hjust = 0.5))
-sX <- scale_x_continuous(name = "TimeFrame(1frame/0.2sec)",    # 軸の名前を変える
-                         breaks = seq(0, nrow(ReadData), by= 1000),     # 軸の区切りを0,2,4にする
-)
-ghm_m <- ghm_m +
-  title +
-  t_1 +
-  sX
-########################
-
 #### patchwork####
-ggp <- (gg3 + plot_spacer()) / (gg5 + plot_spacer()) / (ghm + ghm_m) + plot_layout(heights = c(1, 1, 5))
-ggsave(filename = args_output, plot = ggp, dpi = 100, width = 30.0, height = 30.0)
+ggp <- (gg3 + plot_spacer()) /
+    (gg5 + plot_spacer()) / 
+    (ghm + plot_layout(heights = NeuronType_length) | 
+       ghm_m + plot_layout(heights = NeuronType_length)) + 
+    plot_layout(heights = c(1, 1, 5))
+ggsave(filename = args_output, plot = ggp, dpi = 100, width = 30.0, height = 40.0)
 ########################
