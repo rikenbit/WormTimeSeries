@@ -5,15 +5,14 @@ source("src/functions_WTS1.R")
 # args <- commandArgs(trailingOnly = T)
 
 # select animal number 個体番号の指定
-args_sample <- c("1")
-# select cell number 細胞番号の指定
-args_cell <- c("1")
-# select celltype 細胞型名の指定
-args_celltype <- c("102")
+# args_sample <- c("1")
+args_sample <- args[1]
 # select datadir ディレクトリ 名の指定
-args_datadir <- c("raw_CFP")
+# args_datadir <- c("raw_CFP")
+args_datadir <- args[2]
 # outputファイル名
-args_output <- c("output/WTS1/heatmap/raw_CFP/SampleNumber_1.png")
+# args_output <- c("output/WTS1/heatmap/raw_CFP/SampleNumber_1.png")
+args_output <- args[3]
 
 #### Neuron Activity####
 #### load matrix####

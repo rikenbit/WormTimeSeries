@@ -405,6 +405,32 @@
 #         'src/WTS1_plot.sh {params.args1} {params.args2} {params.args3} {params.args4} {output} >& {log}'
 # ###################################################
 
+# WTS1 heatmap
+###################################################
+# DATA_DIR = ["raw_CFP", "raw_YFP", "normalize_1", "normalize_2", "normalize_3", "normalize_4"]
+DATA_DIR = ["raw_CFP"]
+# SAMPLES = list(map(str, range(1, 29)))
+SAMPLES = list(map(str, range(1, 3)))
+
+rule all:
+    input:
+        expand('output/WTS1/heatmap/{DATA_DIR}/SampleNumber_{SAMPLES}.png', DATA_DIR = DATA_DIR, SAMPLES = SAMPLES)
+
+rule heatmap:
+    output:
+            'output/WTS1/heatmap/{DATA_DIR}/SampleNumber_{SAMPLES}.png'
+    benchmark:
+            'benchmarks/WTS1/heatmap/{DATA_DIR}/SampleNumber_{SAMPLES}.txt'
+    conda:
+            'envs/myenv.yaml'
+    resources:
+            mem_gb=200
+    log:
+            'logs/WTS1/heatmap/{DATA_DIR}/SampleNumber_{SAMPLES}.log'
+    shell:
+            'src/WTS1_heatmap.sh {wildcards.SAMPLES} {wildcards.DATA_DIR} {output} >& {log}'
+###################################################
+
 # # WTS2 correlogram τ50
 # ###################################################
 # import pandas as pd
