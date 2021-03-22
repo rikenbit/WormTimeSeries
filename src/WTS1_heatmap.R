@@ -1,9 +1,8 @@
 source("src/functions_WTS1.R")
 
-#### test 1data 1sample ####
-#### test args####
+#### test 1data All 28sample ####
+#### args####
 args <- commandArgs(trailingOnly = T)
-
 # select animal number 個体番号の指定
 args_sample <- args[1]
 # select datadir ディレクトリ 名の指定
