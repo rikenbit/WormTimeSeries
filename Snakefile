@@ -409,8 +409,7 @@
 ###################################################
 # DATA_DIR = ["raw_CFP", "raw_YFP", "normalize_1", "normalize_2", "normalize_3", "normalize_4"]
 DATA_DIR = ["raw_CFP"]
-# SAMPLES = list(map(str, range(1, 29)))
-SAMPLES = list(map(str, range(1, 3)))
+SAMPLES = list(map(str, range(1, 29)))
 
 rule all:
     input:
