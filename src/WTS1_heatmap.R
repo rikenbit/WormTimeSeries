@@ -2,7 +2,7 @@ source("src/functions_WTS1.R")
 
 #### test 1data 1sample ####
 #### test args####
-# args <- commandArgs(trailingOnly = T)
+args <- commandArgs(trailingOnly = T)
 
 # select animal number 個体番号の指定
 # args_sample <- c("1")

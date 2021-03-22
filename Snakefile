@@ -422,7 +422,7 @@ rule heatmap:
     benchmark:
             'benchmarks/WTS1/heatmap/{DATA_DIR}/SampleNumber_{SAMPLES}.txt'
     conda:
-            'envs/myenv.yaml'
+            'envs/myenv_WTS1.yaml'
     resources:
             mem_gb=200
     log:
