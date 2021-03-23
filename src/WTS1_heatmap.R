@@ -1,6 +1,6 @@
 source("src/functions_WTS1.R")
 
-#### test 1data All 28sample ####
+#### 6data All 28sample ####
 #### args####
 args <- commandArgs(trailingOnly = T)
 # select animal number 個体番号の指定
@@ -9,6 +9,7 @@ args_sample <- args[1]
 args_datadir <- args[2]
 # outputファイル名
 args_output <- args[3]
+########################
 
 #### Neuron Activity####
 #### load matrix####
@@ -16,14 +17,13 @@ path <- "data"
 inputdir <- args_datadir
 eval(parse(text=paste0("inputpath <- paste(path, inputdir, 'ReadData_",args_sample,".RData', sep = '/')")))
 load(inputpath)
-
-#### convert wider to longer####
 # ReadData <- ReadData_1
 eval(parse(text=paste0("ReadData <- ReadData_",args_sample)))
+#### convert wider to longer####
 ReadData %>%
     rowid_to_column("timeframe") %>%
         pivot_longer(-timeframe, names_to = "celltype", values_to = "nactivity") -> df
-#### clustering####
+#### merge igraph####
 # load igraphdata
 load("data/igraph/Fig1_HNS.RData")
 # node information convert dataframe
@@ -36,27 +36,57 @@ df_node %>%
 # add node information
 merge(df, df_node, by.x = "celltype", by.y = "name",all.x = TRUE) -> df_merged
 df_merged %>% .$NeuronType %>% unique() %>% na.omit() -> NeuronType_Name
-#### ggplot####
-# hit NA
+#### hit NA####
+# create group df
 df_merged %>% 
     filter(.,is.na(NeuronType)) -> df_onegroup
+# filter matrix
+df_onegroup %>% 
+    .$celltype %>% 
+        unique()-> v_celltype
+ReadData[,v_celltype] %>% 
+    as.matrix() -> ReadData_f
+# clustering
+ReadData_f %>%
+    heatmap(., Rowv = NA, scale = "none", 
+            hclustfun = function(x) { hclust(x, method = "ward.D2")}) -> clr
+# reorder
+celltype.idx <- colnames(ReadData_f)[clr$colInd]
+df_onegroup$celltype <- factor(df_onegroup$celltype, levels = celltype.idx)
+# ggplot
 groupname <- "other"
 ghm <- ggplot_ghm(df_onegroup) + ggtitle("NeuronActivity") +theme(plot.title = element_text(size = 30, hjust = 0.5))
-# each NeuronType cell count
+# NeuronType length NA
 df_merged %>%
     filter(.,is.na(NeuronType)) %>% 
       .$celltype %>%
           unique() %>% length() -> NeuronType_length
 
-# hit Neuron Type
+#### hit Neuron Type#### 
 for (i in 1:length(NeuronType_Name)) {
+    # create group df
     df_merged %>% 
         filter(.,NeuronType==NeuronType_Name[i]) -> df_onegroup
+    # filter matrix
+    df_onegroup %>% 
+        .$celltype %>% 
+            unique()-> v_celltype
+    ReadData[,v_celltype] %>% 
+        as.matrix() -> ReadData_f
+    # clustering
+    ReadData_f %>%
+        heatmap(., Rowv = NA, scale = "none", 
+                hclustfun = function(x) { hclust(x, method = "ward.D2")}) -> clr
+    # reorder
+    celltype.idx <- colnames(ReadData_f)[clr$colInd]
+    df_onegroup$celltype <- factor(df_onegroup$celltype, levels = celltype.idx)
+    # ggplot
+    groupname <- NeuronType_Name[i]
+    ghm <- ghm / ggplot_ghm(df_onegroup)
+    # NeuronType length
     df_onegroup$celltype %>%
         unique() %>% length() %>%
             c(NeuronType_length,.) -> NeuronType_length
-    groupname <- NeuronType_Name[i]
-    ghm <- ghm / ggplot_ghm(df_onegroup)
 }
 ########################
 
@@ -76,23 +106,61 @@ eval(parse(text=paste0("mCherry_",args_sample,"[1:length(timeframe),] -> mCherry
 mCherry %>%
   rowid_to_column("timeframe") %>%
       pivot_longer(-timeframe, names_to = "celltype", values_to = "mCherry") -> df
-#### clustering####
+#### merge igraph####
 # add node information
 merge(df, df_node, by.x = "celltype", by.y = "name",all.x = TRUE) -> df_merged
 df_merged %>% .$NeuronType %>% unique() %>% na.omit() -> NeuronType_Name
-#### ggplot####
-# hit NA
+#### hit NA####
+# create group df
 df_merged %>% 
-    filter(.,is.na(NeuronType)) -> df_onegroup
+  filter(.,is.na(NeuronType)) -> df_onegroup
+# filter matrix
+df_onegroup %>% 
+  .$celltype %>% 
+  unique()-> v_celltype
+ReadData[,v_celltype] %>% 
+  as.matrix() -> ReadData_f
+# clustering
+ReadData_f %>%
+  heatmap(., Rowv = NA, scale = "none", 
+          hclustfun = function(x) { hclust(x, method = "ward.D2")}) -> clr
+# reorder
+celltype.idx <- colnames(ReadData_f)[clr$colInd]
+df_onegroup$celltype <- factor(df_onegroup$celltype, levels = celltype.idx)
+# ggplot
 groupname <- "other"
 ghm_m <- ggplot_ghm_m(df_onegroup) + ggtitle("mCherry") +theme(plot.title = element_text(size = 30, hjust = 0.5))
+# NeuronType length NA
+df_merged %>%
+  filter(.,is.na(NeuronType)) %>% 
+  .$celltype %>%
+  unique() %>% length() -> NeuronType_length
 
-# hit Neuron Type
+#### hit Neuron Type#### 
 for (i in 1:length(NeuronType_Name)) {
-    df_merged %>% 
-        filter(.,NeuronType==NeuronType_Name[i]) -> df_onegroup
-    groupname <- NeuronType_Name[i]
-    ghm_m <- ghm_m / ggplot_ghm_m(df_onegroup)
+  # create group df
+  df_merged %>% 
+    filter(.,NeuronType==NeuronType_Name[i]) -> df_onegroup
+  # filter matrix
+  df_onegroup %>% 
+    .$celltype %>% 
+    unique()-> v_celltype
+  ReadData[,v_celltype] %>% 
+    as.matrix() -> ReadData_f
+  # clustering
+  ReadData_f %>%
+    heatmap(., Rowv = NA, scale = "none", 
+            hclustfun = function(x) { hclust(x, method = "ward.D2")}) -> clr
+  # reorder
+  celltype.idx <- colnames(ReadData_f)[clr$colInd]
+  df_onegroup$celltype <- factor(df_onegroup$celltype, levels = celltype.idx)
+  # ggplot
+  groupname <- NeuronType_Name[i]
+  ghm_m <- ghm_m / ggplot_ghm_m(df_onegroup)
+  # NeuronType length
+  df_onegroup$celltype %>%
+    unique() %>% length() %>%
+    c(NeuronType_length,.) -> NeuronType_length
 }
 ########################
 
