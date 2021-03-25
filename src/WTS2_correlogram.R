@@ -33,11 +33,11 @@ args_Acf <- c("Acf")
 # select animal number 個体番号の指定
 args_sample <- c("1")
 # select cell number 細胞番号の指定
-args_cell <- c("1")
+args_cell <- c("87")
 # select celltype 細胞型名の指定
-args_celltype <- c("102")
+args_celltype <- c("ADAR")
 # outputファイル名
-args_output <- c("output/WTS2/correlogram/raw_CFP/all/50/Acf/SampleNumber_1/CellNumber_1_CellType_102.png")
+args_output <- c("output/WTS2/correlogram/raw_CFP/all/50/Acf/SampleNumber_1/CellNumber_87_CellType_ADAR.png")
 ########################
 
 #### load NeuronActivity####
@@ -59,7 +59,8 @@ load(inputpath)
 # stim <- stim_1
 eval(parse(text=paste0("stim <- stim_",args_sample)))
 stim %>% 
-    as.numeric() -> stimtiming
+    .[1:length(nactivity)] %>% 
+        as.numeric() -> stimtiming
 
 #### dataframe####
 data.frame(
@@ -87,11 +88,11 @@ p_type <- switch(args_Acf,
               "pAcf" = "partial",
               stop("Only can use Acf, pAcf")
 )
-
 # calculate Acf
 g_TF$Nactivity %>%
   ggAcf(lag.max = args_τ, type = p_type, plot = TRUE) -> p
 
+#### ggplot####
 # title name
 # titlename <- raw_CFP_SampleNumber1_102_Acf_all_stim124_τ50
 eval(parse(text=paste0("titlename <- paste(args_data,
@@ -102,7 +103,6 @@ eval(parse(text=paste0("titlename <- paste(args_data,
                         'stim",stim_after,"',
                         'τ",args_τ,"', sep = '_')")))
 title <- ggtitle(titlename)
-
 # title theme
 t_1 <- theme(plot.title = element_text(size = 18, hjust = 0.5))
 t_2 <- theme(axis.title = element_text(size = 16))
@@ -110,6 +110,5 @@ gg <- p +
   title +
   t_1 +
   t_2
-
 # ggsave
 ggsave(filename = args_output, plot = gg, dpi = 100, width = 7.0, height = 7.0)
