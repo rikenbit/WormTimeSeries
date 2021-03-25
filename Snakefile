@@ -505,13 +505,13 @@ rule correlogram:
     benchmark:
         f'benchmarks/WTS2/correlogram/{paramspace.wildcard_pattern}.txt'
     conda:
-        'envs/myenv_WTS1.yaml'
+        'envs/myenv_WTS2.yaml'
     resources:
         mem_gb=200
     log:
         f'logs/WTS2/correlogram/{paramspace.wildcard_pattern}.log'
     shell:
-        'src/WTS1_plot.sh {params.args1} {params.args2} {params.args3} {params.args4} {params.args5} {params.args6} {params.args7} {output} >& {log}'
+        'src/WTS2_correlogram.sh {params.args1} {params.args2} {params.args3} {params.args4} {params.args5} {params.args6} {params.args7} {output} >& {log}'
 ###################################################
 
 # # WTS2 correlogram
