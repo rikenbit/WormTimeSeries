@@ -2,43 +2,43 @@ source("src/functions_WTS2.R")
 
 #### 6data 3TF 28sample 200cell ####
 
-# #### args####
-# args <- commandArgs(trailingOnly = T)
-# # select data データの指定
-# args_data <- args[1]
-# # select timeframe 時系列区間の指定
-# args_TF <- args[2]
-# # select τ（ラグ） ラグの間隔の指定
-# args_τ <- args[3]
-# # select Acf 自己相関の指定
-# args_Acf <- args[4]
-# # select animal number 個体番号の指定
-# args_sample <- args[5]
-# # select cell number 細胞番号の指定
-# args_cell <- args[6]
-# # select celltype 細胞型名の指定
-# args_celltype <- args[7]
-# # outputファイル名
-# args_output <- args[8]
-# ########################
-#### test####
+#### args####
+args <- commandArgs(trailingOnly = T)
 # select data データの指定
-args_data <- c("raw_CFP")
+args_data <- args[1]
 # select timeframe 時系列区間の指定
-args_TF <- c("all")
+args_TF <- args[2]
 # select τ（ラグ） ラグの間隔の指定
-args_τ <- c("50")
+args_τ <- args[3]
 # select Acf 自己相関の指定
-args_Acf <- c("Acf")
+args_Acf <- args[4]
 # select animal number 個体番号の指定
-args_sample <- c("1")
+args_sample <- args[5]
 # select cell number 細胞番号の指定
-args_cell <- c("87")
+args_cell <- args[6]
 # select celltype 細胞型名の指定
-args_celltype <- c("ADAR")
+args_celltype <- args[7]
 # outputファイル名
-args_output <- c("output/WTS2/correlogram/raw_CFP/all/50/Acf/SampleNumber_1/CellNumber_87_CellType_ADAR.png")
+args_output <- args[8]
 ########################
+# #### test####
+# # select data データの指定
+# args_data <- c("raw_CFP")
+# # select timeframe 時系列区間の指定
+# args_TF <- c("all")
+# # select τ（ラグ） ラグの間隔の指定
+# args_τ <- c("50")
+# # select Acf 自己相関の指定
+# args_Acf <- c("Acf")
+# # select animal number 個体番号の指定
+# args_sample <- c("1")
+# # select cell number 細胞番号の指定
+# args_cell <- c("87")
+# # select celltype 細胞型名の指定
+# args_celltype <- c("ADAR")
+# # outputファイル名
+# args_output <- c("output/WTS2/correlogram/raw_CFP/all/50/Acf/SampleNumber_1/CellNumber_87_CellType_ADAR.png")
+# ########################
 
 #### load NeuronActivity####
 # inputpath <- paste('data', args_data, 'ReadData_1.RData', sep = '/')
