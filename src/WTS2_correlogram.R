@@ -8,8 +8,8 @@ args <- commandArgs(trailingOnly = T)
 args_data <- args[1]
 # select timeframe 時系列区間の指定
 args_TF <- args[2]
-# select τ（ラグ） ラグの間隔の指定
-args_τ <- args[3]
+# select lag（ラグ） ラグの間隔の指定
+args_lag <- args[3]
 # select Acf 自己相関の指定
 args_Acf <- args[4]
 # select animal number 個体番号の指定
@@ -20,14 +20,14 @@ args_cell <- args[6]
 args_celltype <- args[7]
 # outputファイル名
 args_output <- args[8]
-########################
+#######################
 # #### test####
 # # select data データの指定
 # args_data <- c("raw_CFP")
 # # select timeframe 時系列区間の指定
 # args_TF <- c("all")
-# # select τ（ラグ） ラグの間隔の指定
-# args_τ <- c("50")
+# # select lag（ラグ） ラグの間隔の指定
+# args_lag <- c("50")
 # # select Acf 自己相関の指定
 # args_Acf <- c("Acf")
 # # select animal number 個体番号の指定
@@ -90,25 +90,26 @@ p_type <- switch(args_Acf,
 )
 # calculate Acf
 g_TF$Nactivity %>%
-  ggAcf(lag.max = args_τ, type = p_type, plot = TRUE) -> p
+  # ggAcf(lag.max = args_lag, type = p_type, plot = TRUE) -> p
+  ggAcf(lag.max = 300, type = p_type, plot = TRUE) -> p
 
 #### ggplot####
 # title name
-# titlename <- raw_CFP_SampleNumber1_102_Acf_all_stim124_τ50
+# titlename <- raw_CFP_SampleNumber1_102_Acf_all_stim124_lag50
 eval(parse(text=paste0("titlename <- paste(args_data,
                        'SampleNumber",args_sample,"',
                         args_celltype,
                         args_Acf,
                         args_TF,
                         'stim",stim_after,"',
-                        'τ",args_τ,"', sep = '_')")))
+                        'lag",args_lag,"', sep = '_')")))
 title <- ggtitle(titlename)
 # title theme
-t_1 <- theme(plot.title = element_text(size = 18, hjust = 0.5))
+t_1 <- theme(plot.title = element_text(size = 16, hjust = 0.5))
 t_2 <- theme(axis.title = element_text(size = 16))
 gg <- p +
   title +
   t_1 +
   t_2
 # ggsave
-ggsave(filename = args_output, plot = gg, dpi = 100, width = 7.0, height = 7.0)
+ggsave(filename = args_output, plot = gg, dpi = 100, width = 10.0, height = 7.0)
