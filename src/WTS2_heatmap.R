@@ -63,21 +63,10 @@ ReadData %>%
 #### first stim TimeFrame####
 
 #### Acf/Ccf####
-# Acf
-g_all$Nactivity %>% acf(plot = FALSE,
-                        lag.max = 1, 
-                        type = c("correlation")) -> acf_lag1
-g_all_cell %>%
-    filter(.,celltype==g_all_cell$celltype[1]) %>%
-        .$nactivity -> x
-g_all_cell %>%
-    filter(.,celltype==g_all_cell$celltype[2]) %>%
-        .$nactivity -> y
-#Ccf  
-ccf(x, y, plot = FALSE, lag.max = 1, type = c("correlation")) -> ccf_lag1
-ggCcf(x, y, lag.max = 10, type = c("correlation"))  -> p
-
-# ACF/CCF by sapply
+# ccf(x, y, plot = FALSE, lag.max = 1, type = c("correlation"))
+# g_all$Nactivity %>% acf(plot = FALSE,
+#                         lag.max = 1, 
+#                         type = c("correlation")) -> acf_lag1
 ####sample data####
 mat <- matrix(rnorm(100), ncol=10)
 mat[sample(1:length(mat), 10)] <- NA 
@@ -85,6 +74,20 @@ mat[sample(1:length(mat), 10)] <- NA
 res <- sapply(1:ncol(mat), function(x) {
   sapply(1:ncol(mat), function(z){
     resTmp <- ccf(x = mat[, x], y = mat[, z], plot=F, na.action = na.pass, lag.max = 1)
+    # str(resTmp)
+    resTmp$acf[which.max(abs(resTmp$acf))]
+  })
+})
+res <- sapply(1:ncol(mat), function(x) {
+  sapply(1:ncol(mat), function(z){
+    resTmp <- ccf(x = mat[, x], y = mat[, z], plot=F, na.action = na.contiguous, lag.max = 1)
+    # str(resTmp)
+    resTmp$acf[which.max(abs(resTmp$acf))]
+  })
+})
+res <- sapply(1:ncol(mat), function(x) {
+  sapply(1:ncol(mat), function(z){
+    resTmp <- ccf(x = mat[, x], y = mat[, z], plot=F, na.action = na.fail, lag.max = 1)
     # str(resTmp)
     resTmp$acf[which.max(abs(resTmp$acf))]
   })
