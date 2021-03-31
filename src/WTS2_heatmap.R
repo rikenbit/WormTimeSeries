@@ -72,26 +72,36 @@ mat <- matrix(rnorm(100), ncol=10)
 mat[sample(1:length(mat), 10)] <- NA 
 
 res <- sapply(1:ncol(mat), function(x) {
-  sapply(1:ncol(mat), function(z){
-    resTmp <- ccf(x = mat[, x], y = mat[, z], plot=F, na.action = na.pass, lag.max = 1)
-    # str(resTmp)
-    resTmp$acf[which.max(abs(resTmp$acf))]
+    sapply(1:ncol(mat), function(z){
+        resTmp <- ccf(x = mat[, x], y = mat[, z], plot=F, na.action = na.contiguous, lag.max = 1)
+        resTmp$acf[which.max(abs(resTmp$acf))]
   })
 })
-res <- sapply(1:ncol(mat), function(x) {
-  sapply(1:ncol(mat), function(z){
-    resTmp <- ccf(x = mat[, x], y = mat[, z], plot=F, na.action = na.contiguous, lag.max = 1)
-    # str(resTmp)
-    resTmp$acf[which.max(abs(resTmp$acf))]
-  })
-})
-res <- sapply(1:ncol(mat), function(x) {
-  sapply(1:ncol(mat), function(z){
-    resTmp <- ccf(x = mat[, x], y = mat[, z], plot=F, na.action = na.fail, lag.max = 1)
-    # str(resTmp)
-    resTmp$acf[which.max(abs(resTmp$acf))]
-  })
-})
+
+# x.seq <- 1:3
+# y.seq <- 1:4
+# outer(x.seq, 
+#       y.seq,
+#       function(x,y){
+#           x*y
+#       }
+# )
+# x.seq <- 1:ncol(mat)
+# y.seq <- 1:ncol(mat)
+# outer(1:ncol(mat), 
+#       1:ncol(mat),
+#       function(x,y){
+#           print(x*y)
+#           print(mat[, x])
+#           print(mat[, y])
+#           Sys.sleep(5)
+#           ccf(mat[, x],  mat[, y], plot=F, na.action = na.contiguous, lag.max = 1)
+#           resTmp$acf[which.max(abs(resTmp$acf))]
+#       }
+# )
+# ccf(mat[, 1],  mat[, 1], plot=F, na.action = na.contiguous, lag.max = 1)
+
+
 #### real data####
 
 
