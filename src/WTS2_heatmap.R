@@ -46,28 +46,10 @@ eval(parse(text=paste0("inputpath <- paste('data', args_data, 'ReadData_",args_s
 load(inputpath)
 # ReadData <- ReadData_1
 eval(parse(text=paste0("ReadData <- ReadData_",args_sample)))
-# TimeFrame
-timeframe <- as.numeric(rownames(ReadData))
-# NeuronActivity 
-eval(parse(text=paste0("nactivity <- ReadData[,'",args_celltype,"']")))
-
-#### dataframe####
-data.frame(
-  TimeFrame = timeframe,
-  Nactivity = nactivity,
-  # StimTiming = stimtiming,
-  stringsAsFactors = FALSE
-) -> g_all
-ReadData %>%
-  rowid_to_column("timeframe") %>%
-  pivot_longer(-timeframe, names_to = "celltype", values_to = "nactivity") -> g_all_cell
+mat <- as.matrix(ReadData)
+rownames(mat) <- rownames(ReadData)
 #### first stim TimeFrame####
 
-#### Acf/Ccf####
-# ccf(x, y, plot = FALSE, lag.max = 1, type = c("correlation"))
-# g_all$Nactivity %>% acf(plot = FALSE,
-#                         lag.max = 1, 
-#                         type = c("correlation")) -> acf_lag1
 ####sample dat CCF value fix####
 mat <- matrix(rnorm(100), ncol=10)
 mat[sample(1:length(mat), 10)] <- NA 
@@ -98,9 +80,11 @@ res_fix_if <- sapply(1:ncol(mat), function(x) {
 ########
 
 #### real data####
-args_lag <- as.numeric(c("3"))
-
-res_fix_if <- sapply(1:ncol(mat), function(x) {
+####test####
+args_lag <- as.numeric(c("1"))
+mat <-mat[1:10,1:10]
+########
+CCF_ACF_mat <- sapply(1:ncol(mat), function(x) {
     sapply(1:ncol(mat), function(z){
         if(x!=z){
             resTmp <- ccf(x = mat[, x],
@@ -121,6 +105,4 @@ res_fix_if <- sapply(1:ncol(mat), function(x) {
         # print(resTmp$acf[which.max(resTmp$lag)])
     })
 })
-
-
 #### ggplot####
