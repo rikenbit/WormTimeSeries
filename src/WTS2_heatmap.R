@@ -50,40 +50,11 @@ mat <- as.matrix(ReadData)
 rownames(mat) <- rownames(ReadData)
 #### first stim TimeFrame####
 
-####sample dat CCF value fix####
-mat <- matrix(rnorm(100), ncol=10)
-mat[sample(1:length(mat), 10)] <- NA 
-# args_lag <- c("5")
-args_lag <- as.numeric(c("3"))
-
-res_fix_if <- sapply(1:ncol(mat), function(x) {
-    sapply(1:ncol(mat), function(z){
-        if(x!=z){
-          resTmp <- ccf(x = mat[, x],
-                        y = mat[, z], plot=F, 
-                        na.action = na.contiguous, 
-                        lag.max = args_lag)
-          resTmp$acf[which.max(resTmp$lag)]
-        } else{
-          resTmp <- acf(x = mat[, 1], 
-                        plot=F, 
-                        na.action = na.contiguous, 
-                        lag.max = args_lag)
-          resTmp$acf[which.max(resTmp$lag)]
-        }
-        # print(resTmp)
-        # print(resTmp$lag)
-        # print(which.max(resTmp$lag))
-        # print(resTmp$acf[which.max(resTmp$lag)])
-    })
-})
-########
-
 #### real data####
-####test####
+#test
 args_lag <- as.numeric(c("1"))
-mat <-mat[1:10,1:10]
-########
+mat <-mat[1:6000,1:10]
+#
 CCF_ACF_mat <- sapply(1:ncol(mat), function(x) {
     sapply(1:ncol(mat), function(z){
         if(x!=z){
@@ -99,10 +70,36 @@ CCF_ACF_mat <- sapply(1:ncol(mat), function(x) {
                           lag.max = args_lag)
             resTmp$acf[which.max(resTmp$lag)]
         }
-        # print(resTmp)
-        # print(resTmp$lag)
-        # print(which.max(resTmp$lag))
-        # print(resTmp$acf[which.max(resTmp$lag)])
     })
 })
+# 行をSender 列をReceiverに転値する
+CCF_ACF_mat <- t(CCF_ACF_mat)
+rownames(CCF_ACF_mat) <- colnames(mat)
+colnames(CCF_ACF_mat) <- colnames(mat)
+# matrix to dataframe
+CCF_ACF_df <- data.frame(CCF_ACF_mat)
+#colnamesとrownames
+rownames(CCF_ACF_df) <- colnames(mat)
+colnames(CCF_ACF_df) <- colnames(mat)
+# convert wider to longer
+CCF_ACF_df %>%
+    rownames_to_column("cell_Sender") %>%
+        pivot_longer(-cell_Sender, names_to = "cell_Receiver", values_to = "CCF_ACF") -> df
+    
 #### ggplot####
+# ghm <- ggplot(df, aes(x = cell_Receiver, y = cell_Sender, fill = CCF_ACF))
+# ghm <- ghm + geom_tile()
+
+ghm <- ggplot_ghm(df) + ggtitle(args_sample) +theme(plot.title = element_text(size = 30, hjust = 0.5))
+#### reorder#### 
+# CCF_ACF_mat %>%
+#     heatmap(., scale = "none", 
+#             hclustfun = function(x) {hclust(x, method = "ward.D2")})-> clr
+
+
+# cell_Receiver.idx <- colnames(CCF_ACF_mat)[clr$colInd]
+# df$cell_Receiver <- factor(df$cell_Receiver, levels = cell_Receiver.idx)
+# 
+# cell_Sender.idx <- colnames(CCF_ACF_mat)[clr$rowInd]
+# df$cell_Sender <- factor(df$cell_Sender, levels = cell_Sender.idx)
+#### ラグごとにアニメーションにするので並び替えしない####
