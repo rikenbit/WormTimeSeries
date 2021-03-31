@@ -7,7 +7,7 @@ source("src/functions_WTS2.R")
 # # select timeframe 時系列区間の指定
 # args_TF <- args[2]
 # # select lag（ラグ） ラグの間隔の指定
-# args_lag <- args[3]
+# args_lag <- as.numeric(args[3])
 # # select Acf 自己相関の指定
 # args_Acf <- args[4]
 # # select animal number 個体番号の指定
@@ -26,7 +26,8 @@ args_data <- c("normalize_1")
 # select timeframe 時系列区間の指定
 args_TF <- c("all")
 # select lag（ラグ） ラグの間隔の指定
-args_lag <- c("300")
+# args_lag <- c("300")
+args_lag <- as.numeric(c("300"))
 # select Acf 自己相関の指定
 args_Acf <- c("Acf")
 # select animal number 個体番号の指定
@@ -67,43 +68,59 @@ ReadData %>%
 # g_all$Nactivity %>% acf(plot = FALSE,
 #                         lag.max = 1, 
 #                         type = c("correlation")) -> acf_lag1
-####sample data####
+####sample dat CCF value fix####
 mat <- matrix(rnorm(100), ncol=10)
 mat[sample(1:length(mat), 10)] <- NA 
+# args_lag <- c("5")
+args_lag <- as.numeric(c("3"))
 
-res <- sapply(1:ncol(mat), function(x) {
+res_fix_if <- sapply(1:ncol(mat), function(x) {
     sapply(1:ncol(mat), function(z){
-        resTmp <- ccf(x = mat[, x], y = mat[, z], plot=F, na.action = na.contiguous, lag.max = 1)
-        resTmp$acf[which.max(abs(resTmp$acf))]
-  })
+        if(x!=z){
+          resTmp <- ccf(x = mat[, x],
+                        y = mat[, z], plot=F, 
+                        na.action = na.contiguous, 
+                        lag.max = args_lag)
+          resTmp$acf[which.max(resTmp$lag)]
+        } else{
+          resTmp <- acf(x = mat[, 1], 
+                        plot=F, 
+                        na.action = na.contiguous, 
+                        lag.max = args_lag)
+          resTmp$acf[which.max(resTmp$lag)]
+        }
+        # print(resTmp)
+        # print(resTmp$lag)
+        # print(which.max(resTmp$lag))
+        # print(resTmp$acf[which.max(resTmp$lag)])
+    })
 })
-
-# x.seq <- 1:3
-# y.seq <- 1:4
-# outer(x.seq, 
-#       y.seq,
-#       function(x,y){
-#           x*y
-#       }
-# )
-# x.seq <- 1:ncol(mat)
-# y.seq <- 1:ncol(mat)
-# outer(1:ncol(mat), 
-#       1:ncol(mat),
-#       function(x,y){
-#           print(x*y)
-#           print(mat[, x])
-#           print(mat[, y])
-#           Sys.sleep(5)
-#           ccf(mat[, x],  mat[, y], plot=F, na.action = na.contiguous, lag.max = 1)
-#           resTmp$acf[which.max(abs(resTmp$acf))]
-#       }
-# )
-# ccf(mat[, 1],  mat[, 1], plot=F, na.action = na.contiguous, lag.max = 1)
-
+########
 
 #### real data####
+args_lag <- as.numeric(c("3"))
 
+res_fix_if <- sapply(1:ncol(mat), function(x) {
+    sapply(1:ncol(mat), function(z){
+        if(x!=z){
+            resTmp <- ccf(x = mat[, x],
+                          y = mat[, z], plot=F, 
+                          na.action = na.contiguous, 
+                          lag.max = args_lag)
+            resTmp$acf[which.max(resTmp$lag)]
+        } else{
+            resTmp <- acf(x = mat[, 1], 
+                          plot=F, 
+                          na.action = na.contiguous, 
+                          lag.max = args_lag)
+            resTmp$acf[which.max(resTmp$lag)]
+        }
+        # print(resTmp)
+        # print(resTmp$lag)
+        # print(which.max(resTmp$lag))
+        # print(resTmp$acf[which.max(resTmp$lag)])
+    })
+})
 
 
 #### ggplot####
