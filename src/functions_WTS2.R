@@ -2,11 +2,11 @@
 ##################################################
 library(tidyverse)
 library(forecast)
-library(patchwork)
-library(reshape2)
 library(RColorBrewer)
 library(viridis)
-library(igraph)
+# library(patchwork)
+# library(reshape2)
+# library(igraph)
 ##################################################
 ggplot_ghm = function(x) {
 	ghm <- ggplot(df, aes(x = cell_Receiver, y = cell_Sender, fill = CCF_ACF))

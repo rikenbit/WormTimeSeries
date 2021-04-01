@@ -429,181 +429,213 @@
 #             'src/WTS1_heatmap.sh {wildcards.SAMPLES} {wildcards.DATA_DIR} {output} >& {log}'
 # ###################################################
 
-# WTS2 correlogram
-# raw_CFP
-###################################################
-import pandas as pd
-from snakemake.utils import Paramspace
+# # WTS2 correlogram
+# ###################################################
+# import pandas as pd
+# from snakemake.utils import Paramspace
 
-configfile: "config.yaml"
-# DATA = ["raw_CFP", "raw_YFP", "normalize_1", "normalize_2", "normalize_3", "normalize_4"]
-raw_CFP = pd.read_csv(config['raw_CFP'], dtype='string')
-raw_CFP['Data'] = 'raw_CFP'
-raw_YFP = pd.read_csv(config['raw_YFP'], dtype='string')
-raw_YFP['Data'] = 'raw_YFP'
-normalize_1 = pd.read_csv(config['normalize_1'], dtype='string')
-normalize_1['Data'] = 'normalize_1'
-normalize_2 = pd.read_csv(config['normalize_2'], dtype='string')
-normalize_2['Data'] = 'normalize_2'
-normalize_3 = pd.read_csv(config['normalize_3'], dtype='string')
-normalize_3['Data'] = 'normalize_3'
-normalize_4 = pd.read_csv(config['normalize_4'], dtype='string')
-normalize_4['Data'] = 'normalize_4'
-df_Data = pd.concat([raw_CFP, raw_YFP, normalize_1, normalize_2, normalize_3, normalize_4], axis=0)
+# configfile: "config.yaml"
+# # DATA = ["raw_CFP", "raw_YFP", "normalize_1", "normalize_2", "normalize_3", "normalize_4"]
+# raw_CFP = pd.read_csv(config['raw_CFP'], dtype='string')
+# raw_CFP['Data'] = 'raw_CFP'
+# raw_YFP = pd.read_csv(config['raw_YFP'], dtype='string')
+# raw_YFP['Data'] = 'raw_YFP'
+# normalize_1 = pd.read_csv(config['normalize_1'], dtype='string')
+# normalize_1['Data'] = 'normalize_1'
+# normalize_2 = pd.read_csv(config['normalize_2'], dtype='string')
+# normalize_2['Data'] = 'normalize_2'
+# normalize_3 = pd.read_csv(config['normalize_3'], dtype='string')
+# normalize_3['Data'] = 'normalize_3'
+# normalize_4 = pd.read_csv(config['normalize_4'], dtype='string')
+# normalize_4['Data'] = 'normalize_4'
+# df_Data = pd.concat([raw_CFP, raw_YFP, normalize_1, normalize_2, normalize_3, normalize_4], axis=0)
 
-# TimeFrame = ["all", "before", "after"]
-TF_all = df_Data.copy()
-TF_all['TF'] = 'all'
-TF_before = df_Data.copy()
-TF_before['TF'] = 'before'
-TF_after = df_Data.copy()
-TF_after['TF'] = 'after'
+# # TimeFrame = ["all", "before", "after"]
+# TF_all = df_Data.copy()
+# TF_all['TF'] = 'all'
+# TF_before = df_Data.copy()
+# TF_before['TF'] = 'before'
+# TF_after = df_Data.copy()
+# TF_after['TF'] = 'after'
 
-df_TF = pd.concat([TF_all,TF_before,TF_after], axis=0)
+# df_TF = pd.concat([TF_all,TF_before,TF_after], axis=0)
 
-# LAG_MAX = ["50", "100"]
-LAG_50 = df_TF.copy()
-LAG_50['LAG'] = '50'
-LAG_300 = df_TF.copy()
-LAG_300['LAG'] = '300'
+# # LAG_MAX = ["50", "100"]
+# LAG_50 = df_TF.copy()
+# LAG_50['LAG'] = '50'
+# LAG_300 = df_TF.copy()
+# LAG_300['LAG'] = '300'
 
-df_LAG = pd.concat([LAG_50,LAG_300], axis=0)
-# ACF = ["Acf","pAcf"]
-ACF_Acf = df_LAG.copy()
-ACF_Acf['ACF'] = 'Acf'
-ACF_pAcf = df_LAG.copy()
-ACF_pAcf['ACF'] = 'pAcf'
+# df_LAG = pd.concat([LAG_50,LAG_300], axis=0)
+# # ACF = ["Acf","pAcf"]
+# ACF_Acf = df_LAG.copy()
+# ACF_Acf['ACF'] = 'Acf'
+# ACF_pAcf = df_LAG.copy()
+# ACF_pAcf['ACF'] = 'pAcf'
 
-df_ACF = pd.concat([ACF_Acf,ACF_pAcf], axis=0)
-df = df_ACF.reset_index(drop=True)
-df = df.reindex(columns=['Data', 'TF', 'LAG', 'ACF', 'SampleNumber','CellNumber', 'CellType'])
-# paramspace = Paramspace(df, filename_params=['CellNumber', 'CellType'], param_sep="_")
-# #### test####
+# df_ACF = pd.concat([ACF_Acf,ACF_pAcf], axis=0)
+# df = df_ACF.reset_index(drop=True)
+# df = df.reindex(columns=['Data', 'TF', 'LAG', 'ACF', 'SampleNumber','CellNumber', 'CellType'])
+# # paramspace = Paramspace(df, filename_params=['CellNumber', 'CellType'], param_sep="_")
+# # #### test####
+# # df_test = df.copy()
+# # df_test = df_test[df_test['Data'].isin(['normalize_1']) & df_test['TF'].isin(['before']) & df_test['LAG'].isin(['300']) & df_test['ACF'].isin(['Acf']) & df_test['SampleNumber'].isin(['13']) & df_test['CellType'].isin(['ASER'])]
+# # paramspace = Paramspace(df_test, filename_params=['CellNumber', 'CellType'], param_sep="_")
+# # #### test####
+# ### filter####
 # df_test = df.copy()
-# df_test = df_test[df_test['Data'].isin(['normalize_1']) & df_test['TF'].isin(['before']) & df_test['LAG'].isin(['300']) & df_test['ACF'].isin(['Acf']) & df_test['SampleNumber'].isin(['13']) & df_test['CellType'].isin(['ASER'])]
+# df_test = df_test[df_test['Data'].isin(['normalize_1'])  & df_test['LAG'].isin(['300']) & ~df_test['SampleNumber'].isin(['3','8','20','25'])]
 # paramspace = Paramspace(df_test, filename_params=['CellNumber', 'CellType'], param_sep="_")
+# ### filter####
+
+# rule all:
+#     input:
+#     	# output/WTS2/correlogram/raw_CFP/all/50/Acf/SampleNumber_1/CellNumber_87_CellType_ADAR.png
+#         expand('output/WTS2/correlogram/{params}.png', params = paramspace.instance_patterns)
+# rule correlogram:
+#     output:
+#     	# f"output/WTS2/correlogram/{DATA_DIR}/{TimeFrame}/{LAG_MAX}/{ACF}/{paramspace.wildcard_pattern}.png"
+#     	expand('output/WTS2/correlogram/{params}.png', params = paramspace.wildcard_pattern)
+#     params:
+#     	args1 = lambda w: w["Data"],
+#     	args2 = lambda w: w["TF"],
+#     	args3 = lambda w: w["LAG"],
+#     	args4 = lambda w: w["ACF"],
+#         args5 = lambda w: w["SampleNumber"],
+#         args6 = lambda w: w["CellNumber"],
+#         args7 = lambda w: w["CellType"]
+#     benchmark:
+#         f'benchmarks/WTS2/correlogram/{paramspace.wildcard_pattern}.txt'
+#     conda:
+#         'envs/myenv_WTS2.yaml'
+#     resources:
+#         mem_gb=200
+#     log:
+#         f'logs/WTS2/correlogram/{paramspace.wildcard_pattern}.log'
+#     shell:
+#         'src/WTS2_correlogram.sh {params.args1} {params.args2} {params.args3} {params.args4} {params.args5} {params.args6} {params.args7} {output} >& {log}'
+# ###################################################
+
+# # WTS2 heatmap normalize_1
+# ###################################################
+# import pandas as pd
+# from snakemake.utils import Paramspace
+
+# configfile: "config.yaml"
+
+# # DATA = ["raw_CFP", "raw_YFP", "normalize_1", "normalize_2", "normalize_3", "normalize_4"]
+# # normalize_1 = pd.read_csv(config['normalize_1'], dtype='string')
+# # normalize_1['Data'] = 'normalize_1'
+# # normalize_2 = pd.read_csv(config['normalize_2'], dtype='string')
+# # normalize_2['Data'] = 'normalize_2'
+# # normalize_3 = pd.read_csv(config['normalize_3'], dtype='string')
+# # normalize_3['Data'] = 'normalize_3'
+# # normalize_4 = pd.read_csv(config['normalize_4'], dtype='string')
+# # normalize_4['Data'] = 'normalize_4'
+# # df_Data = pd.concat([raw_CFP, raw_YFP, normalize_1, normalize_2, normalize_3, normalize_4], axis=0)
+# df_Data = pd.read_csv(config['normalize_1'], dtype='string')
+# df_Data['Data'] = 'normalize_1'
+
+# # TimeFrame = ["all", "before", "after"]
+# TF_all = df_Data.copy()
+# TF_all['TF'] = 'all'
+# TF_before = df_Data.copy()
+# TF_before['TF'] = 'before'
+# TF_after = df_Data.copy()
+# TF_after['TF'] = 'after'
+
+# df_TF = pd.concat([TF_all,TF_before,TF_after], axis=0)
+
+# # LAG_MAX = ["50", "300"]
+# LAG_1 = df_TF.copy()
+# LAG_1['LAG'] = '1'
+# df_LAG = LAG_1.copy()
+# lag = list(map(str, range(2, 301)))
+# for lags in lag:
+# 	LAG_N = df_TF.copy()
+# 	LAG_N['LAG'] = lags
+# 	df_LAG = pd.concat([df_LAG,LAG_N], axis=0)
+# #
+# df = df_LAG.reset_index(drop=True)
+# df = df.reindex(columns=['Data', 'TF', 'LAG', 'SampleNumber','CellNumber', 'CellType'])
+
+
+# ### filter####
+# df_test = df.copy()
+# df_test = df_test[~df_test['SampleNumber'].isin(['3','8','20','25'])]
+
 # #### test####
+# df_test = df_test[df_test['TF'].isin(['all']) & df_test['LAG'].isin(['1']) & df_test['SampleNumber'].isin(['13'])]
+# #### test####
+
+# paramspace = Paramspace(df_test, filename_params=['CellNumber', 'CellType'], param_sep="_")
+# ### filter####
+
+# rule all:
+#     input:
+#     	# output/WTS2/correlogram/raw_CFP/all/50/Acf/SampleNumber_1/CellNumber_87_CellType_ADAR.png
+#         expand('output/WTS2/correlogram/{params}.png', params = paramspace.instance_patterns)
+# rule WTS2 heatmap:
+#     output:
+#     	# f"output/WTS2/correlogram/{DATA_DIR}/{TimeFrame}/{LAG_MAX}/{ACF}/{paramspace.wildcard_pattern}.png"
+#     	expand('output/WTS2/correlogram/{params}.png', params = paramspace.wildcard_pattern)
+#     params:
+#     	args1 = lambda w: w["Data"],
+#     	args2 = lambda w: w["TF"],
+#     	args3 = lambda w: w["LAG"],
+#     	args4 = lambda w: w["ACF"],
+#         args5 = lambda w: w["SampleNumber"],
+#         args6 = lambda w: w["CellNumber"],
+#         args7 = lambda w: w["CellType"]
+#     benchmark:
+#         f'benchmarks/WTS2/correlogram/{paramspace.wildcard_pattern}.txt'
+#     conda:
+#         'envs/myenv_WTS2.yaml'
+#     resources:
+#         mem_gb=200
+#     log:
+#         f'logs/WTS2/correlogram/{paramspace.wildcard_pattern}.log'
+#     shell:
+#         'src/WTS2_correlogram.sh {params.args1} {params.args2} {params.args3} {params.args4} {params.args5} {params.args6} {params.args7} {output} >& {log}'
+# ###################################################
+
+# WTS2 heatmap normalize_1
+###################################################
+Data = 'normalize_1'
+TF = ["all", "before", "after"]
+N_SAMPLES = list(map(str, range(1, 29)))
+N_SAMPLES.remove('3')
+N_SAMPLES.remove('8')
+N_SAMPLES.remove('20')
+N_SAMPLES.remove('25')
+N_SAMPLES = list(map(str, range(1, 29)))
+LAG = list(map(str, range(1, 301)))
 ### filter####
-df_test = df.copy()
-df_test = df_test[df_test['Data'].isin(['normalize_1'])  & df_test['LAG'].isin(['300']) & ~df_test['SampleNumber'].isin(['3','8','20','25'])]
-paramspace = Paramspace(df_test, filename_params=['CellNumber', 'CellType'], param_sep="_")
+TF = TF[0]
+N_SAMPLES = N_SAMPLES[0]
+LAG = LAG[0]
 ### filter####
 
 rule all:
     input:
-    	# output/WTS2/correlogram/raw_CFP/all/50/Acf/SampleNumber_1/CellNumber_87_CellType_ADAR.png
-        expand('output/WTS2/correlogram/{params}.png', params = paramspace.instance_patterns)
-rule correlogram:
+    	# output/WTS2/heatmap/normalize_1/all/SampleNumber_1/τ1.png
+    	expand('output/WTS2/heatmap/{D}/{T}/SampleNumber_{N}/τ{L}.png',
+    	 D=Data,
+    	 T=TF,
+    	 N=N_SAMPLES,
+    	 L=LAG)
+    	
+rule heatmap:
     output:
-    	# f"output/WTS2/correlogram/{DATA_DIR}/{TimeFrame}/{LAG_MAX}/{ACF}/{paramspace.wildcard_pattern}.png"
-    	expand('output/WTS2/correlogram/{params}.png', params = paramspace.wildcard_pattern)
-    params:
-    	args1 = lambda w: w["Data"],
-    	args2 = lambda w: w["TF"],
-    	args3 = lambda w: w["LAG"],
-    	args4 = lambda w: w["ACF"],
-        args5 = lambda w: w["SampleNumber"],
-        args6 = lambda w: w["CellNumber"],
-        args7 = lambda w: w["CellType"]
+    	'output/WTS2/heatmap/{D}/{T}/SampleNumber_{N}/τ{L}.png'
     benchmark:
-        f'benchmarks/WTS2/correlogram/{paramspace.wildcard_pattern}.txt'
+        'benchmarks/WTS2/heatmap/{D}/{T}/SampleNumber_{N}/τ{L}.txt'
     conda:
         'envs/myenv_WTS2.yaml'
     resources:
         mem_gb=200
     log:
-        f'logs/WTS2/correlogram/{paramspace.wildcard_pattern}.log'
+        'logs/WTS2/heatmap/{D}/{T}/SampleNumber_{N}/τ{L}.log'
     shell:
-        'src/WTS2_correlogram.sh {params.args1} {params.args2} {params.args3} {params.args4} {params.args5} {params.args6} {params.args7} {output} >& {log}'
+        'src/WTS2_heatmap.sh {wildcards.D} {wildcards.T} {wildcards.L} {wildcards.N} {output} >& {log}'
 ###################################################
-
-# # WTS2 correlogram
-# # 廃案　スプレッドシートをDATA_DIRごとに変更したいが，難しい
-# ###################################################
-# DATA_DIR = ["raw_CFP", "raw_YFP", "normalize_1", "normalize_2", "normalize_3", "normalize_4"]
-# TimeFrame = ["all", "before", "after"]
-# LAG_MAX = ["50", "100"]
-# ACF = ["Acf","pAcf"]
-# import pandas as pd
-# from snakemake.utils import Paramspace
-
-# configfile: "config.yaml"
-# # SAMPLE_SHEET = pd.read_csv(config['SAMPLE_SHEET_normalize_4'], dtype='string')
-# # paramspace = Paramspace(SAMPLE_SHEET, filename_params=['CellNumber', 'CellType'], param_sep="_")
-
-# rule all:
-#     input:
-#     	# output/WTS2/correlogram/raw_CFP/all/50/Acf/SampleNumber_1/CellNumber_87_CellType_ADAR.png
-#         expand('output/WTS2/correlogram/{DATA_DIR}/{TimeFrame}/{LAG_MAX}/{ACF}/{params}.png',  
-#         	DATA_DIR = DATA_DIR, 
-#         	TimeFrame = TimeFrame,
-#         	LAG_MAX = LAG_MAX,
-#         	ACF = ACF,
-#         	SAMPLE_SHEET = pd.read_csv({DATA_DIR}, dtype='string'),
-#         	paramspace = Paramspace(SAMPLE_SHEET, filename_params=['CellNumber', 'CellType'], param_sep="_"),
-#         	params = paramspace.instance_patterns)
-
-# rule correlogram:
-#     output:
-#         f"output/WTS2/correlogram/{DATA_DIR}/{TimeFrame}/{LAG_MAX}/{ACF}/{paramspace.wildcard_pattern}.png"
-#     params:
-#         args1 = lambda w: w["SampleNumber"],
-#         args2 = lambda w: w["CellNumber"],
-#         args3 = lambda w: w["CellType"]
-#     benchmark:
-#             'benchmarks/WTS2/correlogram/{DATA_DIR}/{TimeFrame}/{LAG_MAX}/{ACF}/{paramspace.wildcard_pattern}.txt'
-#     conda:
-#             'envs/myenv_WTS2.yaml'
-#     resources:
-#             mem_gb=200
-#     log:
-#             'logs/WTS2/correlogram/{DATA_DIR}/{TimeFrame}/{LAG_MAX}/{ACF}/{paramspace.wildcard_pattern}.log'
-#     shell:
-#             'src/WTS2_correlogram.sh {wildcards.DATA_DIR} {wildcards.TimeFrame} {wildcards.LAG_MAX} {wildcards.ACF} {params.args1} {params.args2} {params.args3} {output} >& {log}'
-# ###################################################
-
-# # WTS2 correlogram stim τ50
-# #####################################################################################
-# import pandas as pd
-# from snakemake.utils import Paramspace
-
-# configfile: "config.yaml"
-
-# # read sample_sheet
-# SAMPLE_SHEET = pd.read_csv(config['SAMPLE_SHEET'], dtype='string')
-# # remove sample
-# SAMPLE_SHEET = SAMPLE_SHEET[~SAMPLE_SHEET['SampleNumber'].isin(['7','12','13','14'])]
-# SAMPLE_SHEET  = SAMPLE_SHEET .reset_index(drop=True)
-
-# # paramspace
-# paramspace = Paramspace(SAMPLE_SHEET, filename_params=['CellNumber', 'CellType'], param_sep="_")
-
-# rule all:
-# 	input:
-# 		expand('output/WTS2/ACFτ50_stim/ACF/{params}_BF.png', params = paramspace.instance_patterns),
-# 		expand('output/WTS2/ACFτ50_stim/ACF/{params}_AF.png', params = paramspace.instance_patterns),
-# 		expand('output/WTS2/ACFτ50_stim/pACF/{params}_BF.png', params = paramspace.instance_patterns),
-# 		expand('output/WTS2/ACFτ50_stim/pACF/{params}_AF.png', params = paramspace.instance_patterns)
-
-# rule WTS2_correlogram_τ50:
-# 	output:
-# 		expand('output/WTS2/ACFτ50_stim/ACF/{params}_BF.png', params = paramspace.wildcard_pattern),
-# 		expand('output/WTS2/ACFτ50_stim/ACF/{params}_AF.png', params = paramspace.wildcard_pattern),
-# 		expand('output/WTS2/ACFτ50_stim/pACF/{params}_BF.png', params = paramspace.wildcard_pattern),
-# 		expand('output/WTS2/ACFτ50_stim/pACF/{params}_AF.png', params = paramspace.wildcard_pattern)
-# 	params:
-# 		args1 = lambda w: w["SampleNumber"],
-# 		args2 = lambda w: w["CellNumber"],
-# 		args3 = lambda w: w["CellType"]
-		
-# 	benchmark:
-# 		f'benchmarks/WTS2/ACFτ50_stim/{paramspace.wildcard_pattern}.txt'
-# 	conda:
-# 		'envs/myenv_WTS2.yaml'
-# 	resources:
-# 		mem_gb=200
-# 	log:
-# 		f'logs/WTS2/ACFτ50_stim/{paramspace.wildcard_pattern}.log'
-# 	shell:
-# 		'src/WTS2_correlogram.sh {params.args1} {params.args2} {params.args3} >& {log}'
-# #####################################################################################
