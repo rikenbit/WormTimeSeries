@@ -612,7 +612,7 @@ LAG = list(map(str, range(1, 301)))
 ### filter####
 TF = TF[0]
 N_SAMPLES = N_SAMPLES[0]
-LAG = LAG[0]
+# LAG = LAG[0]
 ### filter####
 
 rule all:
