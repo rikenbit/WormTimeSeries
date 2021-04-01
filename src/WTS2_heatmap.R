@@ -20,11 +20,11 @@ args_output <- args[5]
 # # select timeframe 時系列区間の指定
 # args_TF <- c("all")
 # # select lag（ラグ） ラグの間隔の指定
-# args_lag <- as.numeric(c("300"))
+# args_lag <- as.numeric(c("1"))
 # # select animal number 個体番号の指定
 # args_sample <- c("1")
 # # outputファイル名
-# args_output <- c("output/WTS2/heatmap/Data_normalize_1/TF_all/SampleNumber_1/τ1.png")
+# args_output <- c("output/WTS2/heatmap/normalize_1/all/SampleNumber_1/τ1.png")
 ########################
 
 #### load NeuronActivity####
@@ -60,12 +60,15 @@ g_all %>%
             .$TimeFrame -> stim_after
 stim_after -1 -> stim_before
 eval(parse(text=paste0("TF <- stim_",args_TF)))
-mat <- mat[1:TF,]
+
+mat <- switch(args_TF,
+              "all" = mat[1:TF,],
+              "before" = mat[1:TF,],
+              "after" = mat[TF:stim_all,],
+              stop("Only can use all, before, after")
+)
+
 #### CCF_ACF####
-# #test
-# args_lag <- as.numeric(c("1"))
-# mat <- mat[,1:10]
-# #
 CCF_ACF_mat <- sapply(1:ncol(mat), function(x) {
     sapply(1:ncol(mat), function(z){
         if(x!=z){
@@ -104,4 +107,4 @@ CCF_ACF_df %>%
 titlename <- paste0("TF",args_TF,"_SampleNumber",args_sample,"_τ",args_lag)
 
 ghm <- ggplot_ghm(df) + ggtitle(titlename) + theme(plot.title = element_text(size = 30, hjust = 0.5))
-ggsave(filename = args_output, plot = ghm, dpi = 100, width = 10.0, height = 7.0)
+ggsave(filename = args_output, plot = ghm, dpi = 80, width = 24.0, height = 22.0)

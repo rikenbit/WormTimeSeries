@@ -608,7 +608,6 @@ N_SAMPLES.remove('3')
 N_SAMPLES.remove('8')
 N_SAMPLES.remove('20')
 N_SAMPLES.remove('25')
-N_SAMPLES = list(map(str, range(1, 29)))
 LAG = list(map(str, range(1, 301)))
 ### filter####
 TF = TF[0]
