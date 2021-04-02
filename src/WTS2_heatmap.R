@@ -36,37 +36,37 @@ eval(parse(text=paste0("ReadData <- ReadData_",args_sample)))
 mat <- as.matrix(ReadData)
 rownames(mat) <- rownames(ReadData)
 
-#### load stimulation timing####
-# inputpath <- paste('data','stimulation', 'stim_1.RData', sep = '/')
-eval(parse(text=paste0("inputpath <- paste('data','stimulation', 'stim_",args_sample,".RData', sep = '/')")))
-load(inputpath)
-# stim <- stim_1
-eval(parse(text=paste0("stim <- stim_",args_sample)))
-#dataframe
-stim %>% 
-    as.numeric() -> stimtiming
-timeframe <- as.numeric(rownames(ReadData))
-data.frame(
-  TimeFrame = timeframe,
-  StimTiming = stimtiming,
-  stringsAsFactors = FALSE
-) -> g_all
+# #### load stimulation timing####
+# # inputpath <- paste('data','stimulation', 'stim_1.RData', sep = '/')
+# eval(parse(text=paste0("inputpath <- paste('data','stimulation', 'stim_",args_sample,".RData', sep = '/')")))
+# load(inputpath)
+# # stim <- stim_1
+# eval(parse(text=paste0("stim <- stim_",args_sample)))
+# #dataframe
+# stim %>% 
+#     as.numeric() -> stimtiming
+# timeframe <- as.numeric(rownames(ReadData))
+# data.frame(
+#   TimeFrame = timeframe,
+#   StimTiming = stimtiming,
+#   stringsAsFactors = FALSE
+# ) -> g_all
 
-#### first stim TimeFrame####
-length(stimtiming) -> stim_all
-g_all %>%
-    filter(StimTiming != 0) %>%
-        slice_head() %>%
-            .$TimeFrame -> stim_after
-stim_after -1 -> stim_before
-eval(parse(text=paste0("TF <- stim_",args_TF)))
+# #### first stim TimeFrame####
+# length(stimtiming) -> stim_all
+# g_all %>%
+#     filter(StimTiming != 0) %>%
+#         slice_head() %>%
+#             .$TimeFrame -> stim_after
+# stim_after -1 -> stim_before
+# eval(parse(text=paste0("TF <- stim_",args_TF)))
 
-mat <- switch(args_TF,
-              "all" = mat[1:TF,],
-              "before" = mat[1:TF,],
-              "after" = mat[TF:stim_all,],
-              stop("Only can use all, before, after")
-)
+# mat <- switch(args_TF,
+#               "all" = mat[1:TF,],
+#               "before" = mat[1:TF,],
+#               "after" = mat[TF:stim_all,],
+#               stop("Only can use all, before, after")
+# )
 
 #### CCF_ACF####
 CCF_ACF_mat <- sapply(1:ncol(mat), function(x) {

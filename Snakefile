@@ -608,10 +608,11 @@ N_SAMPLES.remove('3')
 N_SAMPLES.remove('8')
 N_SAMPLES.remove('20')
 N_SAMPLES.remove('25')
-LAG = list(map(str, range(1, 301)))
+# LAG = list(map(str, range(1, 301)))
+LAG = list(map(str, range(1, 251)))
 ### filter####
 TF = TF[0]
-N_SAMPLES = N_SAMPLES[0]
+# N_SAMPLES = N_SAMPLES[0]
 # LAG = LAG[0]
 ### filter####
 
