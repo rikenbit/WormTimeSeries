@@ -14,4 +14,4 @@ SLURM_RESTART_COUNT=2
 echo $@
 echo $CONDA_PREFIX
 # $CONDA_PREFIX/bin/convert -delay 50 output/WTS2/heatmap/normalize_1/all/$1/*1.png $2
-$CONDA_PREFIX/bin/convert -delay 50 `ls -v output/WTS2/heatmap/normalize_1/all/$1/*1.png` $2
+$CONDA_PREFIX/bin/convert -delay 50 `ls -v output/WTS2/heatmap/normalize_1/all/$1/new/*1.png` $2

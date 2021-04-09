@@ -1,6 +1,6 @@
 source("src/functions_WTS2.R")
 
-# #### args####
+#### args####
 args <- commandArgs(trailingOnly = T)
 # select data データの指定
 args_data <- args[1]
@@ -13,8 +13,8 @@ args_sample <- args[4]
 # outputファイル名
 args_output <- args[5]
 #######################
-#######################
-#### test####
+# #######################
+# ### test####
 # # select data データの指定
 # args_data <- c("normalize_1")
 # # select timeframe 時系列区間の指定
@@ -24,8 +24,9 @@ args_output <- args[5]
 # # select animal number 個体番号の指定
 # args_sample <- c("1")
 # # outputファイル名
-# args_output <- c("output/WTS2/heatmap/normalize_1/all/SampleNumber_1/τ1.png")
-########################
+# # args_output <- c("output/WTS2/heatmap/normalize_1/all/SampleNumber_1/τ1.png")
+# args_output <- c("output/WTS2/heatmap/normalize_1/all/SampleNumber_1/new/τ1.png")
+# #######################
 
 #### load NeuronActivity####
 # inputpath <- paste('data', args_data, 'ReadData_1.RData', sep = '/')
@@ -35,38 +36,6 @@ load(inputpath)
 eval(parse(text=paste0("ReadData <- ReadData_",args_sample)))
 mat <- as.matrix(ReadData)
 rownames(mat) <- rownames(ReadData)
-
-# #### load stimulation timing####
-# # inputpath <- paste('data','stimulation', 'stim_1.RData', sep = '/')
-# eval(parse(text=paste0("inputpath <- paste('data','stimulation', 'stim_",args_sample,".RData', sep = '/')")))
-# load(inputpath)
-# # stim <- stim_1
-# eval(parse(text=paste0("stim <- stim_",args_sample)))
-# #dataframe
-# stim %>% 
-#     as.numeric() -> stimtiming
-# timeframe <- as.numeric(rownames(ReadData))
-# data.frame(
-#   TimeFrame = timeframe,
-#   StimTiming = stimtiming,
-#   stringsAsFactors = FALSE
-# ) -> g_all
-
-# #### first stim TimeFrame####
-# length(stimtiming) -> stim_all
-# g_all %>%
-#     filter(StimTiming != 0) %>%
-#         slice_head() %>%
-#             .$TimeFrame -> stim_after
-# stim_after -1 -> stim_before
-# eval(parse(text=paste0("TF <- stim_",args_TF)))
-
-# mat <- switch(args_TF,
-#               "all" = mat[1:TF,],
-#               "before" = mat[1:TF,],
-#               "after" = mat[TF:stim_all,],
-#               stop("Only can use all, before, after")
-# )
 
 #### CCF_ACF####
 CCF_ACF_mat <- sapply(1:ncol(mat), function(x) {
@@ -78,7 +47,7 @@ CCF_ACF_mat <- sapply(1:ncol(mat), function(x) {
                           lag.max = args_lag)
             resTmp$acf[which.max(resTmp$lag)]
         } else{
-            resTmp <- acf(x = mat[, 1], 
+            resTmp <- acf(x = mat[, x], 
                           plot=F, 
                           na.action = na.contiguous, 
                           lag.max = args_lag)
