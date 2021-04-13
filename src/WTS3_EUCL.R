@@ -24,7 +24,7 @@ args_lag <- as.numeric(c("1"))
 # select animal number 個体番号の指定
 args_sample <- c("1")
 # outputファイル名
-args_output <- c("output/WTS3/DTW/normalize_1/all/SampleNumber_1/DTW.png")
+args_output <- c("output/WTS3/EUCL/normalize_1/all/SampleNumber_1/EUCL.png")
 ########################
 
 #### load NeuronActivity####
@@ -35,31 +35,20 @@ load(inputpath)
 eval(parse(text=paste0("ReadData <- ReadData_",args_sample)))
 
 #### test####
-# ReadData <- ReadData[,1:4]
+# ReadData <- ReadData[,1:50]
 ########
 
-#### DTW####
-# DTW 距離で距離行列を作成
-#### test####
-before <- Sys.time()
-d <- diss(ReadData, "DTWARP")
-after <- Sys.time()
-after - before
-save(d, file="output/WTS3/DTW/normalize_1/all/SampleNumber_1/DTW.RData")
-########
-d <- diss(ReadData, "DTWARP")
-tSNE <- Rtsne(d, is_distance = TRUE, dims = 2, perplexity = 1, verbose = TRUE, max_iter = 500)
+### EUCL####
+# ユークリッド距離で距離行列を作成
+# #### test####
+# before <- Sys.time()
+# tSNE <- Rtsne(d, is_distance = TRUE, dims = 2, perplexity = 5, verbose = TRUE, max_iter = 1000)
+# after <- Sys.time()
+# Time <- after - before
+# save(tSNE, file="output/WTS3/EUCL/normalize_1/all/SampleNumber_1/tSNE.RData")
+# save(Time, file="output/WTS3/EUCL/normalize_1/all/SampleNumber_1/Time.RData")
+# ########
+d <- diss(ReadData, "EUCL")
+tSNE <- Rtsne(d, is_distance = TRUE, dims = 2, perplexity = 5, verbose = TRUE, max_iter = 1000)
 ########
 plot(tSNE$Y)
-
-#### サンプルデータ####
-# library(Rtsne)
-# library(vegan)
-# df = data.frame(A = c(4, 11, 17, 0, 2, 4, 8, 10, 2, 4),
-#                 B = c(6, 10, 7, 2, 21, 3, 3, 0, 2, 17),
-#                 C = c(5, 2, 3, 12, 12, 14, 0, 7, 8, 2),
-#                 D = c(7, 16, 24, 18, 31, 8, 2, 21, 3, 13))
-# bc <- vegdist(df, method = "bray")
-# tSNE <- Rtsne(bc, is_distance = TRUE, dims = 2, perplexity = 2, verbose = TRUE, max_iter = 500)
-# plot(tSNE)
-########

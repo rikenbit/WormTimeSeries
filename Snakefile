@@ -516,49 +516,49 @@
 #         'src/WTS2_correlogram.sh {params.args1} {params.args2} {params.args3} {params.args4} {params.args5} {params.args6} {params.args7} {output} >& {log}'
 # ###################################################
 
-# WTS2 heatmap normalize_1
-###################################################
-Data = 'normalize_1'
-TF = ["all", "before", "after"]
-N_SAMPLES = list(map(str, range(1, 29)))
-N_SAMPLES.remove('3')
-N_SAMPLES.remove('8')
-N_SAMPLES.remove('20')
-N_SAMPLES.remove('25')
-# LAG = list(map(str, range(1, 301)))
-# LAG = list(map(str, range(1, 251)))
-LAG = list(map(str, range(1, 252, 10)))
-### filter####
-TF = TF[0]
-# N_SAMPLES = N_SAMPLES[0]
-# LAG = LAG[0]
-### filter####
+# # WTS2 heatmap normalize_1
+# ###################################################
+# Data = 'normalize_1'
+# TF = ["all", "before", "after"]
+# N_SAMPLES = list(map(str, range(1, 29)))
+# N_SAMPLES.remove('3')
+# N_SAMPLES.remove('8')
+# N_SAMPLES.remove('20')
+# N_SAMPLES.remove('25')
+# # LAG = list(map(str, range(1, 301)))
+# # LAG = list(map(str, range(1, 251)))
+# LAG = list(map(str, range(1, 252, 10)))
+# ### filter####
+# TF = TF[0]
+# # N_SAMPLES = N_SAMPLES[0]
+# # LAG = LAG[0]
+# ### filter####
 
-rule all:
-    input:
-    	# output/WTS2/heatmap/normalize_1/all/SampleNumber_1/τ1.png
-    	# expand('output/WTS2/heatmap/{D}/{T}/SampleNumber_{N}/τ{L}.png',
-    	expand('output/WTS2/heatmap/{D}/{T}/SampleNumber_{N}/new/τ{L}.png',
-    	 D=Data,
-    	 T=TF,
-    	 N=N_SAMPLES,
-    	 L=LAG)
+# rule all:
+#     input:
+#     	# output/WTS2/heatmap/normalize_1/all/SampleNumber_1/τ1.png
+#     	# expand('output/WTS2/heatmap/{D}/{T}/SampleNumber_{N}/τ{L}.png',
+#     	expand('output/WTS2/heatmap/{D}/{T}/SampleNumber_{N}/new/τ{L}.png',
+#     	 D=Data,
+#     	 T=TF,
+#     	 N=N_SAMPLES,
+#     	 L=LAG)
     	
-rule heatmap:
-    output:
-    	# 'output/WTS2/heatmap/{D}/{T}/SampleNumber_{N}/τ{L}.png'
-    	'output/WTS2/heatmap/{D}/{T}/SampleNumber_{N}/new/τ{L}.png'
-    benchmark:
-        'benchmarks/WTS2/heatmap/{D}/{T}/SampleNumber_{N}/τ{L}.txt'
-    conda:
-        'envs/myenv_WTS2.yaml'
-    resources:
-        mem_gb=200
-    log:
-        'logs/WTS2/heatmap/{D}/{T}/SampleNumber_{N}/τ{L}.log'
-    shell:
-        'src/WTS2_heatmap.sh {wildcards.D} {wildcards.T} {wildcards.L} {wildcards.N} {output} >& {log}'
-###################################################
+# rule heatmap:
+#     output:
+#     	# 'output/WTS2/heatmap/{D}/{T}/SampleNumber_{N}/τ{L}.png'
+#     	'output/WTS2/heatmap/{D}/{T}/SampleNumber_{N}/new/τ{L}.png'
+#     benchmark:
+#         'benchmarks/WTS2/heatmap/{D}/{T}/SampleNumber_{N}/τ{L}.txt'
+#     conda:
+#         'envs/myenv_WTS2.yaml'
+#     resources:
+#         mem_gb=200
+#     log:
+#         'logs/WTS2/heatmap/{D}/{T}/SampleNumber_{N}/τ{L}.log'
+#     shell:
+#         'src/WTS2_heatmap.sh {wildcards.D} {wildcards.T} {wildcards.L} {wildcards.N} {output} >& {log}'
+# ###################################################
 
 # # WTS2 anime partial
 # ###################################################
@@ -620,3 +620,55 @@ rule heatmap:
 #     shell:
 #         'src/WTS2_anime_full.sh SampleNumber_{wildcards.N} {output} >& {log}'
 # ###################################################
+
+# # WTS2 anime partial
+# ###################################################
+# N_SAMPLES = list(map(str, range(1, 29)))
+# N_SAMPLES.remove('3')
+# N_SAMPLES.remove('8')
+# N_SAMPLES.remove('20')
+# N_SAMPLES.remove('25')
+# # ### test ####
+# # N_SAMPLES = N_SAMPLES[0]
+# # ### ####
+# rule all:
+#     input:
+#     	expand('output/WTS2/heatmap/normalize_1/all/SampleNumber_{N}/new/τ250_partial.gif', N=N_SAMPLES)
+#     	# expand('output/WTS2/heatmap/normalize_1/all/SampleNumber_{N}/τ250_partial.gif', N=N_SAMPLES)
+
+# rule heatmap:
+#     output:
+#     	# 'output/WTS2/heatmap/normalize_1/all/SampleNumber_{N}/τ250_partial.gif'
+#     	'output/WTS2/heatmap/normalize_1/all/SampleNumber_{N}/new/τ250_partial.gif'
+#     benchmark:
+#         'benchmarks/WTS2/heatmap/normalize_1/all/SampleNumber_{N}/τ250_partial.txt'
+#     conda:
+#         'envs/myenv_WTS2.yaml'
+#     resources:
+#         mem_gb=200
+#     log:
+#         'logs/WTS2/heatmap/normalize_1/all/SampleNumber_{N}/τ250_partial.log'
+#     shell:
+#         'src/WTS2_anime_partial.sh SampleNumber_{wildcards.N} {output} >& {log}'
+# ###################################################
+# test
+###################################################
+rule all:
+    input:
+    	'output/WTS3/EUCL/normalize_1/all/SampleNumber_1/EUCL_test.RData'
+
+rule EUCL:
+    output:
+    	# 'output/WTS2/heatmap/normalize_1/all/SampleNumber_{N}/τ250_partial.gif'
+    	'output/WTS3/EUCL/normalize_1/all/SampleNumber_1/EUCL_test.RData'
+    benchmark:
+        'benchmarks/WTS3/EUCL/normalize_1/all/SampleNumber_1/EUCL_test.txt'
+    conda:
+        'envs/myenv_WTS3.yaml'
+    resources:
+        mem_gb=200
+    log:
+        'logs/WTS3/EUCL/normalize_1/all/SampleNumber_1/EUCL_test.log'
+    shell:
+        'src/WTS3_EUCL.sh >& {log}'
+###################################################
