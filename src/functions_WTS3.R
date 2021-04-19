@@ -5,4 +5,45 @@ library(TSclust)
 library(tidyverse)
 library(Rtsne)
 library(ggrepel)
+library(patchwork)
 ##################################################
+gg_clsters = function(x) {
+    # clustering
+    cls_n <- x
+    hclust(d, method = "ward.D2") %>% 
+        cutree(., cls_n) %>% 
+        as.vector() -> g_cls
+    # prepare df
+    df_tSNE <- data.frame(tsne_1 = tSNE$Y[,1],
+                          tsne_2 = tSNE$Y[,2],
+                          celltype = attr(d, "Labels"),
+                          cls = c(g_cls)
+                          )
+    # ggplot
+    gg_cls_n <- ggplot(df_tSNE, 
+                       aes(x = tsne_1, 
+                           y = tsne_2, 
+                           label = celltype, 
+                           color = factor(cls))) +
+                geom_point() +
+                geom_text_repel(max.overlaps = Inf, 
+                                min.segment.length = 0)
+    eval(parse(text=paste0("title <- ggtitle('cutree_",cls_n,"')")))
+    t_1 <- theme(plot.title = element_text(size = 30, hjust = 0.5))
+    gg_cls_n <- gg_cls_n +
+                title + 
+                t_1
+    return(gg_cls_n)
+}
+
+gg_n = function(x) {
+    # ggplot
+    g_col <- x
+    gg_n <- eval(parse(text=paste0("ggplot(df_merged, aes(x = tsne_1, y = tsne_2, label = celltype, color = ",factor(g_col),"))"))) +
+        geom_point() +
+        geom_text_repel(max.overlaps = Inf,
+                        min.segment.length = 0) +
+        ggtitle(g_col) +
+        theme(plot.title = element_text(size = 30, hjust = 0.5))
+    return(gg_n)
+}

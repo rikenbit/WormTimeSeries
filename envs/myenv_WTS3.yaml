@@ -12,7 +12,7 @@ dependencies:
   - bwidget=1.9.14=0
   - bzip2=1.0.8=h7f98852_4
   - c-ares=1.17.1=h7f98852_1
-  - ca-certificates=2021.1.19=h06a4308_1
+  - ca-certificates=2021.4.13=h06a4308_1
   - cairo=1.16.0=h6cf1ce9_1008
   - curl=7.76.0=h979ede3_0
   - expat=2.3.0=h9c3ff4c_0
@@ -109,6 +109,7 @@ dependencies:
   - r-fs=1.5.0=r40h0357c0b_0
   - r-generics=0.1.0=r40hc72bb7e_0
   - r-ggplot2=3.3.3=r40hc72bb7e_0
+  - r-ggrepel=0.9.1=r40h03ef668_0
   - r-glue=1.4.2=r40hcfec24a_0
   - r-gtable=0.3.0=r40h6115d3f_3
   - r-haven=2.3.1=r40hde08347_0
@@ -145,6 +146,7 @@ dependencies:
   - r-munsell=0.5.0=r40h6115d3f_1003
   - r-nlme=3.1_152=r40h859d828_0
   - r-openssl=1.4.3=r40he5c4762_0
+  - r-patchwork=1.1.1=r40hc72bb7e_0
   - r-pdc=1.0.3=r40hcdcec82_2
   - r-pillar=1.5.1=r40hc72bb7e_0
   - r-pkgconfig=2.0.3=r40h6115d3f_1
