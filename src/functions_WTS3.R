@@ -6,6 +6,7 @@ library(tidyverse)
 library(Rtsne)
 library(ggrepel)
 library(patchwork)
+library(igraph)
 ##################################################
 gg_clsters = function(x) {
     # clustering

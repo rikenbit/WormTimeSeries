@@ -6,6 +6,8 @@ args <- commandArgs(trailingOnly = T)
 args_sample <- args[1]
 # outputファイル名
 args_output <- args[2]
+# # select data データの指定
+args_data <- c("normalize_1")
 #######################
 # #### test####
 # # select animal number 個体番号の指定

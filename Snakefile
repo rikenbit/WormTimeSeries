@@ -657,20 +657,19 @@ N_SAMPLES.remove('8')
 N_SAMPLES.remove('20')
 N_SAMPLES.remove('25')
 #### test ####
-N_SAMPLES = N_SAMPLES[:2]
+# N_SAMPLES = N_SAMPLES[:2]
 ########
 rule all:
     input:
-    	'output/WTS3/EUCL/normalize_1/all/SampleNumber_{N}/EUCL.png'
+        expand('output/WTS3/EUCL/normalize_1/all/SampleNumber_{N}/EUCL.png', N=N_SAMPLES)
 
 rule EUCL:
     output:
-    	# 'output/WTS3/EUCL/normalize_1/all/SampleNumber_{N}/EUCL.png'
-    	'output/WTS3/EUCL/normalize_1/all/SampleNumber_{N}/EUCL.png'
+        'output/WTS3/EUCL/normalize_1/all/SampleNumber_{N}/EUCL.png'
     benchmark:
         'benchmarks/WTS3/EUCL/normalize_1/all/SampleNumber_{N}/EUCL.txt'
     conda:
-        'envs/myenv_WTS3.yaml'
+        '../envs/myenv_WTS3.yaml'
     resources:
         mem_gb=200
     log:
