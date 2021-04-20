@@ -1,30 +1,18 @@
 source("src/functions_WTS3.R")
 
-# #### args####
-# args <- commandArgs(trailingOnly = T)
-# # select data データの指定
-# args_data <- args[1]
-# # select timeframe 時系列区間の指定
-# args_TF <- args[2]
-# # select lag（ラグ） ラグの間隔の指定
-# args_lag <- as.numeric(args[3])
-# # select animal number 個体番号の指定
-# args_sample <- args[4]
-# # outputファイル名
-# args_output <- args[5]
-# #######################
-#### test####
-# select data データの指定
-args_data <- c("normalize_1")
-# select timeframe 時系列区間の指定
-args_TF <- c("all")
-# select lag（ラグ） ラグの間隔の指定
-args_lag <- as.numeric(c("1"))
+#### args####
+args <- commandArgs(trailingOnly = T)
 # select animal number 個体番号の指定
-args_sample <- c("1")
+args_sample <- args[1]
 # outputファイル名
-args_output <- c("output/WTS3/EUCL/normalize_1/all/SampleNumber_1/EUCL.png")
-########################
+args_output <- args[2]
+#######################
+# #### test####
+# # select animal number 個体番号の指定
+# args_sample <- c("1")
+# # outputファイル名
+# args_output <- c("output/WTS3/EUCL/normalize_1/all/SampleNumber_1/EUCL.png")
+# ########################
 
 #### load NeuronActivity####
 # inputpath <- paste('data', args_data, 'ReadData_1.RData', sep = '/')
