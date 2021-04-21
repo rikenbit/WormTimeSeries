@@ -13,3 +13,4 @@ logs/*
 .RData
 .Rhistory
 *.Rproj
+slurm-*.out
