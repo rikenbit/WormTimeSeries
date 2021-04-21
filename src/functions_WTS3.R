@@ -26,6 +26,7 @@ gg_clsters = function(x) {
                            y = tsne_2, 
                            label = celltype, 
                            color = factor(cls))) +
+                           # color = forcats::fct_explicit_na(factor(cls)))) +
                 geom_point() +
                 geom_text_repel(max.overlaps = Inf, 
                                 min.segment.length = 0)
@@ -41,6 +42,7 @@ gg_n = function(x) {
     # ggplot
     g_col <- x
     gg_n <- eval(parse(text=paste0("ggplot(df_merged, aes(x = tsne_1, y = tsne_2, label = celltype, color = ",factor(g_col),"))"))) +
+    # gg_n <- eval(parse(text=paste0("ggplot(df_merged, aes(x = tsne_1, y = tsne_2, label = celltype, color = forcats::fct_explicit_na(",factor(g_col),")))"))) +
         geom_point() +
         geom_text_repel(max.overlaps = Inf,
                         min.segment.length = 0) +

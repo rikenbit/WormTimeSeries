@@ -1,65 +1,86 @@
 source("src/functions_WTS3.R")
 
-# #### args####
-# args <- commandArgs(trailingOnly = T)
-# # select data データの指定
-# args_data <- args[1]
-# # select timeframe 時系列区間の指定
-# args_TF <- args[2]
-# # select lag（ラグ） ラグの間隔の指定
-# args_lag <- as.numeric(args[3])
-# # select animal number 個体番号の指定
-# args_sample <- args[4]
-# # outputファイル名
-# args_output <- args[5]
-# #######################
-#######################
-#### test####
-# select data データの指定
-args_data <- c("normalize_1")
-# select timeframe 時系列区間の指定
-args_TF <- c("all")
-# select lag（ラグ） ラグの間隔の指定
-args_lag <- as.numeric(c("1"))
+#### args####
+args <- commandArgs(trailingOnly = T)
 # select animal number 個体番号の指定
-args_sample <- c("1")
+args_sample <- args[1]
 # outputファイル名
-args_output <- c("output/WTS3/DTW/normalize_1/all/SampleNumber_1/DTW.png")
-########################
+args_output <- args[2]
+# 中間データファイル名
+args_DTW <- args[3]
+# # select data データの指定
+args_data <- c("normalize_1")
+#######################
+# #### test####
+# args_sample <- c("1")
+# # outputファイル名
+# args_output <- c("output/WTS3/DTW/normalize_1/all/SampleNumber_1/DTW.png")
+# # 中間データファイル名
+# args_DTW <- c("output/WTS3/DTW/normalize_1/all/SampleNumber_1/DTW.RData")
+# # select data データの指定
+# args_data <- c("normalize_1")
+# ########################
 
 #### load NeuronActivity####
 # inputpath <- paste('data', args_data, 'ReadData_1.RData', sep = '/')
 eval(parse(text=paste0("inputpath <- paste('data', args_data, 'ReadData_",args_sample,".RData', sep = '/')")))
 load(inputpath)
-# ReadData <- ReadData_1
 eval(parse(text=paste0("ReadData <- ReadData_",args_sample)))
 
 #### test####
-# ReadData <- ReadData[,1:4]
+ReadData <- ReadData[,70:85]
 ########
 
 #### DTW####
-# DTW 距離で距離行列を作成
-#### test####
-before <- Sys.time()
 d <- diss(ReadData, "DTWARP")
-after <- Sys.time()
-after - before
-save(d, file="output/WTS3/DTW/normalize_1/all/SampleNumber_1/DTW.RData")
-########
-d <- diss(ReadData, "DTWARP")
-tSNE <- Rtsne(d, is_distance = TRUE, dims = 2, perplexity = 1, verbose = TRUE, max_iter = 500)
-########
-plot(tSNE$Y)
+save(d, file=args_DTW)
 
-#### サンプルデータ####
-# library(Rtsne)
-# library(vegan)
-# df = data.frame(A = c(4, 11, 17, 0, 2, 4, 8, 10, 2, 4),
-#                 B = c(6, 10, 7, 2, 21, 3, 3, 0, 2, 17),
-#                 C = c(5, 2, 3, 12, 12, 14, 0, 7, 8, 2),
-#                 D = c(7, 16, 24, 18, 31, 8, 2, 21, 3, 13))
-# bc <- vegdist(df, method = "bray")
-# tSNE <- Rtsne(bc, is_distance = TRUE, dims = 2, perplexity = 2, verbose = TRUE, max_iter = 500)
-# plot(tSNE)
+#### Rtsne####
+# tSNE <- Rtsne(d, is_distance = TRUE, dims = 2, perplexity = 5, verbose = TRUE, max_iter = 1000)
+#### test####
+tSNE <- Rtsne(d, is_distance = TRUE, dims = 2, perplexity = 1, verbose = TRUE, max_iter = 1000)
 ########
+df_tSNE <- data.frame(tsne_1 = tSNE$Y[,1],
+                      tsne_2 = tSNE$Y[,2],
+                      celltype = attr(d, "Labels")
+                      )
+
+#### merge igraph####
+load("data/igraph/Fig1_HNS.RData")
+# node information convert dataframe
+ig_Fig1_HNS %>% 
+    igraph::as_data_frame(., what="vertices") -> df_node
+# remove space from colnames
+df_node %>% 
+    names() %>% 
+        str_replace_all(., c(" " = "")) -> names(df_node)
+# add node information
+df_merged <- merge(df_tSNE, 
+                   df_node, 
+                   by.x = "celltype", 
+                   by.y = "name", 
+                   all.x = TRUE)
+
+#### ggplot neuron group####
+g_col <- c('NeuronType')
+gg_nt <- gg_n(g_col)
+
+g_col <- c('NeuronGroup')
+gg_ng <- gg_n(g_col)
+
+#### ggplot clustering group####
+seq(3,10) %>% 
+    purrr::map(., gg_clsters) -> gg_cls
+
+#### patchwork####
+append(gg_cls, list(gg_nt)) %>% 
+    append(., list(gg_ng)) -> gg_cls
+eval(parse(text=paste0("plot_title <- c('DTW_SampleNumber_",args_sample,"')")))
+
+gg <- wrap_plots(gg_cls) +
+    plot_annotation(
+        title = plot_title,
+        caption = 'made with patchwork',
+        theme = theme(plot.title = element_text(size = 48, hjust = 0.5))
+    )
+ggsave(filename = args_output, plot = gg, dpi = 100, width = 40.0, height = 30.0)
