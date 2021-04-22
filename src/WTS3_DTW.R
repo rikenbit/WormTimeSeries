@@ -11,15 +11,6 @@ args_DTW <- args[3]
 # # select data データの指定
 args_data <- c("normalize_1")
 #######################
-# #### test####
-# args_sample <- c("1")
-# # outputファイル名
-# args_output <- c("output/WTS3/DTW/normalize_1/all/SampleNumber_1/DTW.png")
-# # 中間データファイル名
-# args_DTW <- c("output/WTS3/DTW/normalize_1/all/SampleNumber_1/DTW.RData")
-# # select data データの指定
-# args_data <- c("normalize_1")
-# ########################
 
 #### load NeuronActivity####
 # inputpath <- paste('data', args_data, 'ReadData_1.RData', sep = '/')
@@ -27,19 +18,13 @@ eval(parse(text=paste0("inputpath <- paste('data', args_data, 'ReadData_",args_s
 load(inputpath)
 eval(parse(text=paste0("ReadData <- ReadData_",args_sample)))
 
-#### test####
-# ReadData <- ReadData[,70:85]
-########
-
 #### DTW####
 d <- diss(ReadData, "DTWARP")
 save(d, file=args_DTW)
 
 #### Rtsne####
 tSNE <- Rtsne(d, is_distance = TRUE, dims = 2, perplexity = 5, verbose = TRUE, max_iter = 1000)
-#### test####
-# tSNE <- Rtsne(d, is_distance = TRUE, dims = 2, perplexity = 1, verbose = TRUE, max_iter = 1000)
-########
+
 df_tSNE <- data.frame(tsne_1 = tSNE$Y[,1],
                       tsne_2 = tSNE$Y[,2],
                       celltype = attr(d, "Labels")
