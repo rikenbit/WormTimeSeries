@@ -13,6 +13,8 @@ rule all:
         expand('output/WTS3/DTW/normalize_1/all/SampleNumber_{N}/DTW_load.png', N=N_SAMPLES)
 
 rule DTW:
+    input:
+        RData = 'output/WTS3/DTW/normalize_1/all/SampleNumber_{N}/DTW.RData'
     output:
         png = 'output/WTS3/DTW/normalize_1/all/SampleNumber_{N}/DTW_load.png'
     benchmark:
@@ -24,5 +26,5 @@ rule DTW:
     log:
         'logs/WTS3/DTW/normalize_1/all/SampleNumber_{N}/DTW_load.log'
     shell:
-        'src/WTS3_DTW_load.sh {wildcards.N} {output.png} {output.RData} >& {log}'
+        'src/WTS3_DTW_load.sh {wildcards.N} {output.png} {input.RData} >& {log}'
 ###################################################

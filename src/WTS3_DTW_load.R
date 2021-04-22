@@ -23,7 +23,7 @@ args_data <- c("normalize_1")
 
 
 #### DTW####
-d <- load(args_DTW)
+load(args_DTW)
 
 #### Rtsne####
 tSNE <- Rtsne(d, is_distance = TRUE, dims = 2, perplexity = 5, verbose = TRUE, max_iter = 1000)
