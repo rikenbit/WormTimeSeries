@@ -8,6 +8,8 @@ library(ggrepel)
 library(patchwork)
 library(igraph)
 ##################################################
+set.seed(1234)
+
 gg_clsters = function(x) {
     # clustering
     cls_n <- x
