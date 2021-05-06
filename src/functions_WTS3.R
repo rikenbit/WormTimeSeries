@@ -8,9 +8,6 @@ library(ggrepel)
 library(patchwork)
 library(igraph)
 
-
-# load dtwclust
-BiocManager::install("dtwclust")
 library(dtwclust)
 ##################################################
 set.seed(1234)

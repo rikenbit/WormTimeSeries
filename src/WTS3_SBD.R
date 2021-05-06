@@ -7,7 +7,7 @@ args_sample <- args[1]
 # outputファイル名
 args_output <- args[2]
 # 中間データファイル名
-args_DTW <- args[3]
+args_SBD <- args[3]
 # # select data データの指定
 args_data <- c("normalize_1")
 #######################
@@ -29,12 +29,15 @@ load(inputpath)
 eval(parse(text=paste0("ReadData <- ReadData_",args_sample)))
 
 #### SBD####
-d <- diss(ReadData, "???")
+ReadData.list <- asplit(ReadData,2)
+hc <- tsclust(ReadData.list, distance = "sbd", trace = TRUE)
+# convert dist
+d <- stats::as.dist(hc@distmat)
+# save TempData
 save(d, file=args_SBD)
 
 #### Rtsne####
 tSNE <- Rtsne(d, is_distance = TRUE, dims = 2, perplexity = 5, verbose = TRUE, max_iter = 1000)
-
 df_tSNE <- data.frame(tsne_1 = tSNE$Y[,1],
                       tsne_2 = tSNE$Y[,2],
                       celltype = attr(d, "Labels")
@@ -70,7 +73,7 @@ seq(3,10) %>%
 #### patchwork####
 append(gg_cls, list(gg_nt)) %>% 
     append(., list(gg_ng)) -> gg_cls
-eval(parse(text=paste0("plot_title <- c('DTW_SampleNumber_",args_sample,"')")))
+eval(parse(text=paste0("plot_title <- c('SBD_SampleNumber_",args_sample,"')")))
 
 gg <- wrap_plots(gg_cls) +
     plot_annotation(
@@ -79,47 +82,3 @@ gg <- wrap_plots(gg_cls) +
         theme = theme(plot.title = element_text(size = 48, hjust = 0.5))
     )
 ggsave(filename = args_output, plot = gg, dpi = 100, width = 40.0, height = 30.0)
-
-#### test dtwclust tutorial####
-# https://github.com/asardaes/dtwclust
-# Load series
-data("uciCT")
-# Partitional
-pc <- tsclust(CharTraj, type = "partitional", k = 20L, 
-              distance = "dtw_basic", centroid = "pam", 
-              seed = 3247L, trace = TRUE,
-              args = tsclust_args(dist = list(window.size = 20L)))
-plot(pc)
-# Hierarchical
-hc <- tsclust(CharTraj, type = "hierarchical", k = 20L, 
-              distance = "sbd", trace = TRUE,
-              control = hierarchical_control(method = "average"))
-
-# convert dist
-# d2 <- stats::as.dist(hc)
-d2 <- stats::as.dist(hc@distmat)
-# Rtsne
-tSNE <- Rtsne(d2, is_distance = TRUE, dims = 2, perplexity = 5, verbose = TRUE, max_iter = 1000)
-
-
-#### test dtwclust ####
-eval(parse(text=paste0("inputpath <- paste('data', args_data, 'ReadData_",args_sample,".RData', sep = '/')")))
-load(inputpath)
-eval(parse(text=paste0("ReadData <- ReadData_",args_sample)))
-
-# # df
-# df <- ReadData[1:100,1:100]
-# hc <- tsclust(df, type = "hierarchical", k = 20L, 
-#               distance = "sbd", trace = TRUE,
-#               control = hierarchical_control(method = "average"))
-
-# list
-df <- ReadData[1:100,1:100]
-df.list <- asplit(df,2)
-hc <- tsclust(df.list, type = "hierarchical", k = 20L, 
-              distance = "sbd", trace = TRUE,
-              control = hierarchical_control(method = "average"))
-# convert dist
-d2 <- stats::as.dist(hc@distmat)
-# Rtsne
-tSNE <- Rtsne(d2, is_distance = TRUE, dims = 2, perplexity = 5, verbose = TRUE, max_iter = 1000)
