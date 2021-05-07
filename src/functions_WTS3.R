@@ -7,7 +7,6 @@ library(Rtsne)
 library(ggrepel)
 library(patchwork)
 library(igraph)
-
 library(dtwclust)
 ##################################################
 set.seed(1234)
