@@ -12,16 +12,6 @@ args_SBD <- args[3]
 args_data <- c("normalize_1")
 #######################
 
-# #### test####
-# args_sample <- c("1")
-# # outputファイル名
-# args_output <- c("output/WTS3/SBD/normalize_1/all/SampleNumber_1/SBD.png")
-# # 中間データファイル名
-# args_SBD <- c("output/WTS3/SBD/normalize_1/all/SampleNumber_1/SBD.RData")
-# # select data データの指定
-# args_data <- c("normalize_1")
-# ########################
-
 #### load NeuronActivity####
 # inputpath <- paste('data', args_data, 'ReadData_1.RData', sep = '/')
 eval(parse(text=paste0("inputpath <- paste('data', args_data, 'ReadData_",args_sample,".RData', sep = '/')")))
