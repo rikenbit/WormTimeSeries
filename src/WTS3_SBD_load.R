@@ -8,6 +8,8 @@ args_sample <- args[1]
 args_output <- args[2]
 # 中間データファイル名
 args_SBD <- args[3]
+# option para
+args_op1 <- as.numeric(args[4])
 # # select data データの指定
 args_data <- c("normalize_1")
 #######################
@@ -16,7 +18,8 @@ args_data <- c("normalize_1")
 load(args_SBD)
 
 #### Rtsne####
-tSNE <- Rtsne(d, is_distance = TRUE, dims = 2, perplexity = 5, verbose = TRUE, max_iter = 1000)
+tSNE <- Rtsne(d, is_distance = TRUE, dims = 2, perplexity = args_op1, verbose = TRUE, max_iter = 1000)
+# tSNE <- Rtsne(d, is_distance = TRUE, dims = 2, perplexity = 5, verbose = TRUE, max_iter = 1000)
 df_tSNE <- data.frame(tsne_1 = tSNE$Y[,1],
                       tsne_2 = tSNE$Y[,2],
                       celltype = attr(d, "Labels")

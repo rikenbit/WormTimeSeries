@@ -5,14 +5,12 @@ N_SAMPLES.remove('3')
 N_SAMPLES.remove('8')
 N_SAMPLES.remove('20')
 N_SAMPLES.remove('25')
-### test ####
-N_SAMPLES = N_SAMPLES[:4]
-#######
+
 rule all:
     input:
         expand('output/WTS3/DTW/normalize_1/all/SampleNumber_{N}/DTW_load.png', N=N_SAMPLES)
 
-rule DTW:
+rule DTW_load:
     input:
         RData = 'output/WTS3/DTW/normalize_1/all/SampleNumber_{N}/DTW.RData'
     output:
