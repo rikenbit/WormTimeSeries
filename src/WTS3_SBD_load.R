@@ -18,6 +18,7 @@ args_data <- c("normalize_1")
 load(args_SBD)
 
 #### Rtsne####
+set.seed(1234)
 tSNE <- Rtsne(d, is_distance = TRUE, dims = 2, perplexity = args_op1, verbose = TRUE, max_iter = 1000)
 # tSNE <- Rtsne(d, is_distance = TRUE, dims = 2, perplexity = 5, verbose = TRUE, max_iter = 1000)
 df_tSNE <- data.frame(tsne_1 = tSNE$Y[,1],
@@ -56,6 +57,7 @@ seq(3,10) %>%
 append(gg_cls, list(gg_nt)) %>% 
     append(., list(gg_ng)) -> gg_cls
 eval(parse(text=paste0("plot_title <- c('SBD_SampleNumber_",args_sample,"')")))
+# eval(parse(text=paste0("plot_title <- c('SBD_SampleNumber_",args_sample,"_",args_op1,"')")))
 
 gg <- wrap_plots(gg_cls) +
     plot_annotation(

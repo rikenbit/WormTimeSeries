@@ -7,6 +7,9 @@ N_SAMPLES.remove('20')
 N_SAMPLES.remove('25')
 
 # option perplexity
+### test ####
+N_SAMPLES = N_SAMPLES[:1]
+### test ####
 op_per = ["5", "15", "30", "50",]
 
 rule all:
