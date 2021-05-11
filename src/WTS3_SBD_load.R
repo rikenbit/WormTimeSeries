@@ -19,7 +19,8 @@ load(args_SBD)
 
 #### Rtsne####
 set.seed(1234)
-tSNE <- Rtsne(d, is_distance = TRUE, dims = 2, perplexity = args_op1, verbose = TRUE, max_iter = 1000)
+tSNE <- Rtsne(d, is_distance = TRUE, dims = 2, perplexity = 15, verbose = TRUE, max_iter = args_op1)
+# tSNE <- Rtsne(d, is_distance = TRUE, dims = 2, perplexity = args_op1, verbose = TRUE, max_iter = 1000)
 # tSNE <- Rtsne(d, is_distance = TRUE, dims = 2, perplexity = 5, verbose = TRUE, max_iter = 1000)
 df_tSNE <- data.frame(tsne_1 = tSNE$Y[,1],
                       tsne_2 = tSNE$Y[,2],

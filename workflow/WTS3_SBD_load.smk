@@ -7,14 +7,13 @@ N_SAMPLES.remove('20')
 N_SAMPLES.remove('25')
 
 # option perplexity
-### test ####
-N_SAMPLES = N_SAMPLES[:1]
-### test ####
-op_per = ["5", "15", "30", "50",]
+# op_per = ["5", "15", "30", "50"]
+# option max_iter
+op_max_iter = ["3000", "5000"]
 
 rule all:
     input:
-        expand('output/WTS3/SBD/normalize_1/all/SampleNumber_{N}/SBD_load_{op1}.png', N=N_SAMPLES,op1=op_per)
+        expand('output/WTS3/SBD/normalize_1/all/SampleNumber_{N}/SBD_load_{op1}.png', N=N_SAMPLES, op1=op_max_iter)
 
 rule SBD_load:
     input:
