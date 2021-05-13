@@ -9,12 +9,6 @@ args_output <- args[2]
 # # select data データの指定
 args_data <- c("normalize_1")
 #######################
-# #### test####
-# # select animal number 個体番号の指定
-# args_sample <- c("1")
-# # outputファイル名
-# args_output <- c("output/WTS3/EUCL/normalize_1/all/SampleNumber_1/EUCL.png")
-# ########################
 
 #### load NeuronActivity####
 # inputpath <- paste('data', args_data, 'ReadData_1.RData', sep = '/')
@@ -26,7 +20,8 @@ eval(parse(text=paste0("ReadData <- ReadData_",args_sample)))
 d <- diss(ReadData, "EUCL")
 
 #### Rtsne####
-tSNE <- Rtsne(d, is_distance = TRUE, dims = 2, perplexity = 5, verbose = TRUE, max_iter = 1000)
+tSNE <- Rtsne(d, is_distance = TRUE, dims = 2, perplexity = 15, verbose = TRUE, max_iter = 1000)
+# tSNE <- Rtsne(d, is_distance = TRUE, dims = 2, perplexity = 5, verbose = TRUE, max_iter = 1000)
 df_tSNE <- data.frame(tsne_1 = tSNE$Y[,1],
                       tsne_2 = tSNE$Y[,2],
                       celltype = attr(d, "Labels")

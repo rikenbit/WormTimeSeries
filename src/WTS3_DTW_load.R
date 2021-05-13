@@ -8,28 +8,19 @@ args_sample <- args[1]
 args_output <- args[2]
 # 中間データファイル名
 args_DTW <- args[3]
+# option para
+args_op1 <- as.numeric(args[4])
 # # select data データの指定
 args_data <- c("normalize_1")
 #######################
-# #### test####
-# args_sample <- c("1")
-# # outputファイル名
-# args_output <- c("output/WTS3/DTW/normalize_1/all/SampleNumber_1/DTW.png")
-# # 中間データファイル名
-# args_DTW <- c("output/WTS3/DTW/normalize_1/all/SampleNumber_1/DTW.RData")
-# # select data データの指定
-# args_data <- c("normalize_1")
-# ########################
-
 
 #### DTW####
 load(args_DTW)
 
 #### Rtsne####
-tSNE <- Rtsne(d, is_distance = TRUE, dims = 2, perplexity = 5, verbose = TRUE, max_iter = 1000)
-#### test####
-# tSNE <- Rtsne(d, is_distance = TRUE, dims = 2, perplexity = 1, verbose = TRUE, max_iter = 1000)
-########
+set.seed(1234)
+tSNE <- Rtsne(d, is_distance = TRUE, dims = 2, perplexity = args_op1, verbose = TRUE, max_iter = 1000)
+# tSNE <- Rtsne(d, is_distance = TRUE, dims = 2, perplexity = 5, verbose = TRUE, max_iter = 1000)
 df_tSNE <- data.frame(tsne_1 = tSNE$Y[,1],
                       tsne_2 = tSNE$Y[,2],
                       celltype = attr(d, "Labels")

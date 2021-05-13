@@ -8,19 +8,19 @@ N_SAMPLES.remove('25')
 
 rule all:
     input:
-        expand('output/WTS3/EUCL/normalize_1/all/SampleNumber_{N}/EUCL.png', N=N_SAMPLES)
+        expand('output/WTS3/EUCL/normalize_1/all/SampleNumber_{N}/EUCL_15.png', N=N_SAMPLES)
 
-rule EUCL:
+rule EUCL_15:
     output:
-        'output/WTS3/EUCL/normalize_1/all/SampleNumber_{N}/EUCL.png'
+        'output/WTS3/EUCL/normalize_1/all/SampleNumber_{N}/EUCL_15.png'
     benchmark:
-        'benchmarks/WTS3/EUCL/normalize_1/all/SampleNumber_{N}/EUCL.txt'
+        'benchmarks/WTS3/EUCL/normalize_1/all/SampleNumber_{N}/EUCL_15.txt'
     conda:
         '../envs/myenv_WTS3.yaml'
     resources:
         mem_gb=200
     log:
-        'logs/WTS3/EUCL/normalize_1/all/SampleNumber_{N}/EUCL.log'
+        'logs/WTS3/EUCL/normalize_1/all/SampleNumber_{N}/EUCL_15.log'
     shell:
         'src/WTS3_EUCL.sh {wildcards.N} {output} >& {log}'
 ###################################################
