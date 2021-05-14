@@ -9,7 +9,7 @@ args_data <- args[1]
 # select timeframe 時系列区間の指定
 args_TF <- args[2]
 # select lag（ラグ） ラグの間隔の指定
-args_lag <- args[3]
+args_lag <- as.numeric(args[3])
 # select Acf 自己相関の指定
 args_Acf <- args[4]
 # select animal number 個体番号の指定
@@ -27,7 +27,7 @@ args_output <- args[8]
 # # select timeframe 時系列区間の指定
 # args_TF <- c("all")
 # # select lag（ラグ） ラグの間隔の指定
-# args_lag <- c("50")
+# args_lag <- as.numeric(c("50"))
 # # select Acf 自己相関の指定
 # args_Acf <- c("Acf")
 # # select animal number 個体番号の指定
@@ -90,8 +90,8 @@ p_type <- switch(args_Acf,
 )
 # calculate Acf
 g_TF$Nactivity %>%
-  # ggAcf(lag.max = args_lag, type = p_type, plot = TRUE) -> p
-  ggAcf(lag.max = 300, type = p_type, plot = TRUE) -> p
+  ggAcf(lag.max = args_lag, type = p_type, plot = TRUE) -> p
+  # ggAcf(lag.max = 300, type = p_type, plot = TRUE) -> p
 
 #### ggplot####
 # title name
