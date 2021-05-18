@@ -86,7 +86,7 @@ ClusterP_df %>%
     filter(., purity == max(purity)) %>%
         .$cls_length %>% 
             purrr::map(., gg_clsters) -> gg_cls
-# 純度のテキストテーブル
+# table of purity
 ClusterP_df %>% 
     dplyr::summarise_all(list(round), digits=3) %>% 
         ggtexttable(rows = NULL, theme = ttheme(base_size = 50)) -> gg_cls_table
