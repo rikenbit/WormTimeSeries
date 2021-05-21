@@ -19,13 +19,13 @@ gg_clsters = function(x) {
         cutree(., cls_n) %>% 
         as.vector() -> g_cls
     #### prepare df#### 
-    df_tSNE <- data.frame(tsne_1 = tSNE$Y[,1],
+    df_cls <- data.frame(tsne_1 = tSNE$Y[,1],
                           tsne_2 = tSNE$Y[,2],
                           cell_type = attr(d, "Labels"),
                           cls = c(g_cls)
     )
     #### ggplot#### 
-    gg_cls_n <- ggplot(df_tSNE, 
+    gg_cls_n <- ggplot(df_cls, 
                        aes(x = tsne_1, 
                            y = tsne_2, 
                            label = cell_type, 
@@ -66,28 +66,28 @@ cls_purity = function(x) {
         cutree(., cls_n) %>% 
         as.vector() -> g_cls
     #### prepare df#### 
-    df_tSNE <- data.frame(tsne_1 = tSNE$Y[,1],
+    df_plot <- data.frame(tsne_1 = tSNE$Y[,1],
                           tsne_2 = tSNE$Y[,2],
                           cell_type = attr(d, "Labels"),
                           cls = c(g_cls)
                         )
     #### merge df####
     # merge
-    df_merged <- merge(df_tSNE, 
+    df_plot_stim <- merge(df_plot, 
                        stim_sheet, 
                        by.x = "cell_type", 
                        by.y = "cell_type", 
                        all.x = TRUE)
     # stim列のNAを0に変換する
-    df_merged %>% 
-        replace_na(., replace = list(stim = 0)) -> df_tSNE_stim
+    df_plot_stim %>% 
+        replace_na(., replace = list(stim = 0)) -> df_stim
     #### cal  purity####
     ClusterPurity <- function(clusters, classes) {
         sum(apply(table(classes, clusters), 2, max)) / length(clusters)
     }
     
-    classes <- df_tSNE_stim$stim
-    clusters <- df_tSNE_stim$cls
+    classes <- df_stim$stim
+    clusters <- df_stim$cls
     ClusterP <- ClusterPurity(clusters, classes)
     return(ClusterP)
 }

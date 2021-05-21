@@ -1,29 +1,29 @@
 source("src/functions_WTS3.R")
 
-#### args####
-args <- commandArgs(trailingOnly = T)
-# select animal number 個体番号の指定
-args_sample <- args[1]
-# outputファイル名
-args_output <- args[2]
-# 中間データファイル名
-args_SBD <- args[3]
-# option para
-args_op1 <- as.numeric(args[4])
-# # select data データの指定
-args_data <- c("normalize_1")
-#######################
-# #### test args####
-# args_sample <- c("1")
+# #### args####
+# args <- commandArgs(trailingOnly = T)
+# # select animal number 個体番号の指定
+# args_sample <- args[1]
 # # outputファイル名
-# args_output <- c("output/WTS3/SBD/normalize_1/all/SampleNumber_1/SBD_Purity_15.png")
+# args_output <- args[2]
 # # 中間データファイル名
-# args_SBD <- c("output/WTS3/SBD/normalize_1/all/SampleNumber_1/SBD.RData")
-# # option para
-# args_op1 <- as.numeric(15)
+# args_SBD <- args[3]
 # # select data データの指定
 # args_data <- c("normalize_1")
+# # クラスター評価手法
+# args_eval <- args[4]
 # #######################
+#### test args####
+args_sample <- c("1")
+# outputファイル名
+args_output <- c("output/WTS3/SBD/normalize_1/all/umap/purity/SampleNumber_1.png")
+# 中間データファイル名
+args_SBD <- c("output/WTS3/SBD/normalize_1/all/SampleNumber_1/SBD.RData")
+# select data データの指定
+args_data <- c("normalize_1")
+# クラスター評価手法
+args_eval <- c("purity")
+#######################
 
 #### SBD####
 load(args_SBD)
@@ -33,7 +33,7 @@ set.seed(1234)
 tSNE <- Rtsne(d, 
               is_distance = TRUE, 
               dims = 2, 
-              perplexity = args_op1, 
+              perplexity = 15, 
               verbose = TRUE, 
               max_iter = 1000)
 df_tSNE <- data.frame(tsne_1 = tSNE$Y[,1],
@@ -59,7 +59,6 @@ df_merged <- merge(df_tSNE,
 
 #### import stim sheet####
 # load WTS2_PeriodicACF.csv
-# periodic_sheet <- read.csv("output/WTS2/WTS2_PeriodicACF.csv", 
 periodic_sheet <- read.csv("output/WTS2/WTS2_PeriodicACF_fix.csv", 
                            colClasses=c("numeric", 
                                         "character", 
@@ -72,30 +71,37 @@ periodic_sheet %>%
 #### ggplot neuron group####
 g_col <- c('NeuronType')
 gg_nt <- gg_n(g_col)
-
 g_col <- c('NeuronGroup')
 gg_ng <- gg_n(g_col)
 
 #### ggplot clustering group####
 cls_length <- seq(3,10)
+# select clustering evaluation method
+eval_type <- switch(args_eval,
+              "purity" = cls_purity,
+              stop("Only can use cls_purity,")
+)
+
 cls_length %>% 
-    purrr::map_dbl(., cls_purity) -> ClusterP_n
+    purrr::map_dbl(., eval_type) -> ClusterP_n
 ClusterP_df <- data.frame(cls_length = cls_length, 
-                          purity = ClusterP_n
+                          cls_eval = ClusterP_n
                           )
 ClusterP_df %>% 
-    filter(., purity == max(purity)) %>%
+    filter(., cls_eval == max(cls_eval)) %>%
         .$cls_length %>% 
             purrr::map(., gg_clsters) -> gg_cls
-# table of purity
+            
+# table of cls_eval
 ClusterP_df %>% 
-    # dplyr::summarise_all(list(round), digits=3) %>% 
+    dplyr::summarise_all(list(round), digits=3) %>% 
         ggtexttable(rows = NULL, theme = ttheme(base_size = 50)) -> gg_cls_table
+
 
 #### patchwork####
 append(list(gg_nt), list(gg_ng)) %>% 
     append(., gg_cls) -> gg_cls
-eval(parse(text=paste0("plot_title <- c('SBD_SampleNumber_",args_sample,"')")))
+eval(parse(text=paste0("plot_title <- c('",args_eval,"_SampleNumber_",args_sample,"')")))
 # eval(parse(text=paste0("plot_title <- c('SBD_SampleNumber_",args_sample,"_",args_op1,"')")))
 gg <- wrap_plots(gg_cls) +
     plot_annotation(
