@@ -12,6 +12,8 @@ source("src/functions_WTS3.R")
 # args_data <- c("normalize_1")
 # # クラスター評価手法
 # args_eval <- args[4]
+# # 次元圧縮手法
+# args_DimRedu <- args[5]
 # #######################
 #### test args####
 args_sample <- c("1")
@@ -23,23 +25,22 @@ args_SBD <- c("output/WTS3/SBD/normalize_1/all/SampleNumber_1/SBD.RData")
 args_data <- c("normalize_1")
 # クラスター評価手法
 args_eval <- c("purity")
+# 次元圧縮手法
+args_DimRedu <- c("tsne")
 #######################
 
-#### SBD####
+### SBD####
 load(args_SBD)
 
-#### Rtsne####
-set.seed(1234)
-tSNE <- Rtsne(d, 
-              is_distance = TRUE, 
-              dims = 2, 
-              perplexity = 15, 
-              verbose = TRUE, 
-              max_iter = 1000)
-df_tSNE <- data.frame(tsne_1 = tSNE$Y[,1],
-                      tsne_2 = tSNE$Y[,2],
-                      cell_type = attr(d, "Labels")
-)
+#### TSNE####
+# df_cord <- wts_tsne(d)
+#### UMAP####
+# df_cord <- wts_umap()
+#### Dimensionality Reduction####
+df_cord <- switch(args_DimRedu,
+          "tsne" = wts_tsne(d),
+          stop("Only can use tsne,")
+          )
 
 #### merge igraph####
 load("data/igraph/Fig1_HNS.RData")
@@ -51,14 +52,13 @@ df_node %>%
     names() %>% 
         str_replace_all(., c(" " = "")) -> names(df_node)
 # add node information
-df_merged <- merge(df_tSNE, 
+df_merged <- merge(df_cord, 
                    df_node, 
                    by.x = "cell_type", 
                    by.y = "name", 
                    all.x = TRUE)
 
 #### import stim sheet####
-# load WTS2_PeriodicACF.csv
 periodic_sheet <- read.csv("output/WTS2/WTS2_PeriodicACF_fix.csv", 
                            colClasses=c("numeric", 
                                         "character", 
@@ -74,35 +74,38 @@ gg_nt <- gg_n(g_col)
 g_col <- c('NeuronGroup')
 gg_ng <- gg_n(g_col)
 
-#### ggplot clustering group####
+#### clustering evaluation####
 cls_length <- seq(3,10)
-# select clustering evaluation method
+cls_length %>% 
+    purrr::map(., cls_cord) -> df_cls_cord
+# select method
 eval_type <- switch(args_eval,
               "purity" = cls_purity,
               stop("Only can use cls_purity,")
 )
-
+# evaluation
 cls_length %>% 
     purrr::map_dbl(., eval_type) -> ClusterP_n
 ClusterP_df <- data.frame(cls_length = cls_length, 
                           cls_eval = ClusterP_n
                           )
+
+#### ggplot clustering group####
 ClusterP_df %>% 
     filter(., cls_eval == max(cls_eval)) %>%
         .$cls_length %>% 
-            purrr::map(., gg_clsters) -> gg_cls
+            purrr::map(., gg_clusters) -> gg_cls
             
-# table of cls_eval
+#### table of cls_eval####
 ClusterP_df %>% 
     dplyr::summarise_all(list(round), digits=3) %>% 
+        # ggpubr
         ggtexttable(rows = NULL, theme = ttheme(base_size = 50)) -> gg_cls_table
-
 
 #### patchwork####
 append(list(gg_nt), list(gg_ng)) %>% 
     append(., gg_cls) -> gg_cls
 eval(parse(text=paste0("plot_title <- c('",args_eval,"_SampleNumber_",args_sample,"')")))
-# eval(parse(text=paste0("plot_title <- c('SBD_SampleNumber_",args_sample,"_",args_op1,"')")))
 gg <- wrap_plots(gg_cls) +
     plot_annotation(
         title = plot_title,
