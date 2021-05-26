@@ -120,6 +120,7 @@ dependencies:
   - r-diffobj=0.3.3=r40hcfec24a_0
   - r-digest=0.6.27=r40h1b71b39_0
   - r-dplyr=1.0.5=r40h03ef668_0
+  - r-dqrng=0.3.0=r40h03ef668_0
   - r-dtw=1.22_3=r40h516909a_0
   - r-dtwclust=5.5.6=r40h0357c0b_1
   - r-ellipsis=0.3.1=r40hcdcec82_0
@@ -128,6 +129,7 @@ dependencies:
   - r-farver=2.1.0=r40h03ef668_0
   - r-fastmap=1.1.0=r40h03ef668_0
   - r-flexclust=1.4_0=r40hcdcec82_2
+  - r-fnn=1.1.3=r40h0357c0b_2
   - r-forcats=0.5.1=r40hc72bb7e_0
   - r-foreach=1.5.1=r40h142f84f_0
   - r-foreign=0.8_81=r40hcfec24a_0
@@ -150,6 +152,7 @@ dependencies:
   - r-httr=1.4.2=r40h6115d3f_0
   - r-ifultools=2.0_22=r40hcfec24a_0
   - r-igraph=1.2.6=r40hfbf21e4_1
+  - r-irlba=2.3.3=r40he454529_3
   - r-isoband=0.2.4=r40h03ef668_0
   - r-iterators=1.0.13=r40h142f84f_0
   - r-jquerylib=0.1.3=r40hc72bb7e_0
@@ -208,9 +211,11 @@ dependencies:
   - r-rappdirs=0.3.3=r40hcfec24a_0
   - r-rcolorbrewer=1.1_2=r40h6115d3f_1003
   - r-rcpp=1.0.6=r40h03ef668_0
+  - r-rcppannoy=0.0.18=r40h03ef668_0
   - r-rcpparmadillo=0.10.4.0.0=r40h306847c_0
   - r-rcppeigen=0.3.3.9.1=r40h306847c_0
   - r-rcppparallel=5.1.4=r40h03ef668_0
+  - r-rcppprogress=0.4.2=r40hc72bb7e_1
   - r-rcppthread=1.0.0=r40hc72bb7e_0
   - r-readr=1.4.0=r40h1b71b39_0
   - r-readxl=1.3.1=r40hde08347_4
@@ -233,6 +238,7 @@ dependencies:
   - r-selectr=0.4_2=r40h6115d3f_1
   - r-shiny=1.6.0=r40hc72bb7e_0
   - r-shinyjs=2.0.0=r40h6115d3f_0
+  - r-sitmo=2.0.1=r40h0357c0b_2
   - r-sourcetools=0.1.7=r40he1b5a44_1002
   - r-sp=1.4_5=r40hcfec24a_0
   - r-sparsem=1.81=r40h859d828_0
@@ -249,6 +255,7 @@ dependencies:
   - r-tinytex=0.31=r40hc72bb7e_0
   - r-tsclust=1.2.4=r40h6115d3f_2
   - r-utf8=1.2.1=r40hcfec24a_0
+  - r-uwot=0.1.10=r40h03ef668_0
   - r-vctrs=0.3.7=r40hcfec24a_0
   - r-viridislite=0.3.0=r40h6115d3f_1003
   - r-waldo=0.2.5=r40hc72bb7e_0

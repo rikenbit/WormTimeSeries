@@ -9,7 +9,7 @@ library(patchwork)
 library(igraph)
 library(dtwclust)
 library(ggpubr)
-library(umap)
+library(uwot)
 ##################################################
 set.seed(1234)
 
@@ -31,33 +31,20 @@ wts_tsne = function(x) {
 }
 
 #### UMAP####
-# d_nn <- uwot:::dist_nn(d, k = lab_length)
-# uwot_umap_d <- uwot::umap(d, 
-#                           metric = "precomputed", 
-#                           nn_method = list(idx = d_nn$idx, dist = d_nn$dist))
-# plot(uwot_umap_d)
-attr(d, "Labels") %>% length() -> lab_length
-set.seed(1234)
-uwot_umap_d <- uwot::umap(d, 
-                          metric = "precomputed", 
-                          nn_method = uwot:::dist_nn(d, k = lab_length),
-                          n_neighbors = 15,
-                          n_components = 2)
-plot(uwot_umap_d)
-
-
 wts_umap = function(x) {
-    dist_data <- x
+    d <- x
+    attr(d, "Labels") %>% length() -> lab_length
     set.seed(1234)
-
-    dist_data %>% 
-        as.matrix() %>%
-            umap() -> umap_d
-    #### umap####
-    df_umap <- data.frame(cord_1 = umap_d$layout[,1],
-                          cord_2 = umap_d$layout[,2],
-                          cell_type = attr(dist_data, "Labels")
-                        )
+    umap_d <- uwot::umap(d,
+                         metric = "precomputed", 
+                         nn_method = uwot:::dist_nn(d, k = lab_length),
+                         n_neighbors = 15,
+                         n_components = 2
+                         )
+    df_umap <- data.frame(cord_1 = umap_d[,1],
+                          cord_2 = umap_d[,2],
+                          cell_type = attr(d, "Labels")
+                          )
     return(df_umap)
 }
 
