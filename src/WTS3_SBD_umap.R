@@ -26,19 +26,17 @@ args_data <- c("normalize_1")
 # クラスター評価手法
 args_eval <- c("purity")
 # 次元圧縮手法
-args_DimRedu <- c("tsne")
+# args_DimRedu <- c("tsne")
+args_DimRedu <- c("umap")
 #######################
 
 ### SBD####
 load(args_SBD)
 
-#### TSNE####
-# df_cord <- wts_tsne(d)
-#### UMAP####
-# df_cord <- wts_umap()
 #### Dimensionality Reduction####
 df_cord <- switch(args_DimRedu,
           "tsne" = wts_tsne(d),
+          "umap" = wts_umap(d),
           stop("Only can use tsne,")
           )
 
@@ -113,4 +111,8 @@ gg <- wrap_plots(gg_cls) +
         theme = theme(plot.title = element_text(size = 48, hjust = 0.5))
     )
 gg <- gg + gg_cls_table
-ggsave(filename = args_output, plot = gg, dpi = 100, width = 40.0, height = 30.0)
+ggsave(filename = args_output, 
+       plot = gg, 
+       dpi = 100, 
+       width = 40.0, 
+       height = 30.0)
