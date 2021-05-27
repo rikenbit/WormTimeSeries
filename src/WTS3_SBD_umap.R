@@ -1,34 +1,34 @@
 source("src/functions_WTS3.R")
 
-# #### args####
-# args <- commandArgs(trailingOnly = T)
-# # select animal number 個体番号の指定
-# args_sample <- args[1]
-# # outputファイル名
-# args_output <- args[2]
-# # 中間データファイル名
-# args_SBD <- args[3]
-# # select data データの指定
-# args_data <- c("normalize_1")
-# # クラスター評価手法
-# args_eval <- args[4]
-# # 次元圧縮手法
-# args_DimRedu <- args[5]
-# #######################
-#### test args####
-args_sample <- c("1")
+#### args####
+args <- commandArgs(trailingOnly = T)
+# select animal number 個体番号の指定
+args_sample <- args[1]
 # outputファイル名
-args_output <- c("output/WTS3/SBD/normalize_1/all/umap/purity/SampleNumber_1.png")
+args_output <- args[2]
 # 中間データファイル名
-args_SBD <- c("output/WTS3/SBD/normalize_1/all/SampleNumber_1/SBD.RData")
+args_SBD <- args[3]
 # select data データの指定
 args_data <- c("normalize_1")
 # クラスター評価手法
-args_eval <- c("purity")
+args_eval <- args[4]
 # 次元圧縮手法
-# args_DimRedu <- c("tsne")
-args_DimRedu <- c("umap")
+args_DimRedu <- args[5]
 #######################
+# #### test args####
+# args_sample <- c("1")
+# # outputファイル名
+# args_output <- c("output/WTS3/SBD/normalize_1/all/umap/purity/SampleNumber_1.png")
+# # 中間データファイル名
+# args_SBD <- c("output/WTS3/SBD/normalize_1/all/SampleNumber_1/SBD.RData")
+# # select data データの指定
+# args_data <- c("normalize_1")
+# # クラスター評価手法
+# args_eval <- c("purity")
+# # 次元圧縮手法
+# # args_DimRedu <- c("tsne")
+# args_DimRedu <- c("umap")
+# #######################
 
 ### SBD####
 load(args_SBD)
@@ -101,6 +101,7 @@ ClusterP_df %>%
         ggtexttable(rows = NULL, theme = ttheme(base_size = 50)) -> gg_cls_table
 
 #### patchwork####
+# append(list(gg_nt), list(gg_ng)) -> gg_cls
 append(list(gg_nt), list(gg_ng)) %>% 
     append(., gg_cls) -> gg_cls
 eval(parse(text=paste0("plot_title <- c('",args_eval,"_SampleNumber_",args_sample,"')")))
