@@ -10,7 +10,7 @@ N_SAMPLES.remove('25')
 dist_data = ["SBD"]
 
 # Dimensionality Reduction Method
-DR_Method = ["umap"]
+DR_Method = ["tsne","umap"]
 
 # option perplexity
 # op_per = ["15"]
