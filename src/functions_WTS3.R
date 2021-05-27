@@ -10,6 +10,7 @@ library(igraph)
 library(dtwclust)
 library(ggpubr)
 library(uwot)
+library(mclust)
 ##################################################
 set.seed(1234)
 
@@ -65,11 +66,6 @@ gg_n = function(x) {
     return(gg_n)
 }
 
-#### cal purity####
-ClusterPurity <- function(clusters, classes) {
-    sum(apply(table(classes, clusters), 2, max)) / length(clusters)
-}
-
 #### dataframe for evaluation ####
 cls_cord = function(x) {
     #### clustering#### 
@@ -80,27 +76,6 @@ cls_cord = function(x) {
     #### prepare df####
     df_cls <- mutate(df_cord, cls = c(g_cls))
     return(df_cls)
-}
-
-#### eval purity####
-cls_purity = function(x) {
-    cls_n <- x
-    first_cls_diff <- cls_length[1] - 1
-    i <- cls_n - first_cls_diff
-    df_plot <- df_cls_cord[[i]]
-    # merge
-    df_plot_stim <- merge(df_plot, 
-                       stim_sheet, 
-                       by.x = "cell_type", 
-                       by.y = "cell_type", 
-                       all.x = TRUE)
-    # stim列のNAを0に変換する
-    df_plot_stim %>% 
-        replace_na(., replace = list(stim = 0)) -> df_stim
-    classes <- df_stim$stim
-    clusters <- df_stim$cls
-    ClusterP <- ClusterPurity(clusters, classes)
-    return(ClusterP)
 }
 
 #### ggplot ward.D2 clustering####
@@ -125,4 +100,137 @@ gg_clusters = function(x) {
         title + 
         t_1
     return(gg_cls_n)
+}
+
+#### eval purity####
+ClusterPurity <- function(clusters, classes) {
+    sum(apply(table(classes, clusters), 2, max)) / length(clusters)
+}
+cls_purity = function(x) {
+    cls_n <- x
+    first_cls_diff <- cls_length[1] - 1
+    i <- cls_n - first_cls_diff
+    df_plot <- df_cls_cord[[i]]
+    # merge
+    df_plot_stim <- merge(df_plot, 
+                       stim_sheet, 
+                       by.x = "cell_type", 
+                       by.y = "cell_type", 
+                       all.x = TRUE)
+    # stim列のNAを0に変換する
+    df_plot_stim %>% 
+        replace_na(., replace = list(stim = 0)) -> df_stim
+    classes <- df_stim$stim
+    clusters <- df_stim$cls
+    ClusterP <- ClusterPurity(clusters, classes)
+    return(ClusterP)
+}
+
+#### eval ARI####
+cls_ARI = function(x) {
+    cls_n <- x
+    first_cls_diff <- cls_length[1] - 1
+    i <- cls_n - first_cls_diff
+    df_plot <- df_cls_cord[[i]]
+    # merge
+    df_plot_stim <- merge(df_plot, 
+                          stim_sheet, 
+                          by.x = "cell_type", 
+                          by.y = "cell_type", 
+                          all.x = TRUE)
+    # stim列のNAを0に変換する
+    df_plot_stim %>% 
+        replace_na(., replace = list(stim = 0)) -> df_stim
+    classes <- df_stim$stim
+    clusters <- df_stim$cls
+    ClusterARI <- adjustedRandIndex(clusters, classes)
+    return(ClusterARI)
+}
+
+#### eval Fmeasure####
+Fmeasure <- function(cluster, label){
+  # クロス集計
+  ctbl <- table(cluster, label)
+  # 相当たりRecall
+  R <- ctbl / colSums(ctbl)
+  # 相当たりPrecision
+  P <- ctbl / rowSums(ctbl)
+  # 相当たりF-measure
+  F <- 2 * R * P / (R + P)
+  # 0補正
+  F[is.nan(F)] <- 0
+  # 重み
+  w <- apply(ctbl, 2, sum) / sum(ctbl)
+  # 全体のF-measure
+  sum(w * apply(F, 1, max))
+}
+cls_Fmeasure = function(x) {
+    cls_n <- x
+    first_cls_diff <- cls_length[1] - 1
+    i <- cls_n - first_cls_diff
+    df_plot <- df_cls_cord[[i]]
+    # merge
+    df_plot_stim <- merge(df_plot, 
+                          stim_sheet, 
+                          by.x = "cell_type", 
+                          by.y = "cell_type", 
+                          all.x = TRUE)
+    # stim列のNAを0に変換する
+    df_plot_stim %>% 
+        replace_na(., replace = list(stim = 0)) -> df_stim
+    classes <- df_stim$stim
+    clusters <- df_stim$cls
+    ClusterFmeasure <- Fmeasure(clusters, classes)
+    return(ClusterFmeasure)
+}
+
+#### eval Entropy####
+calcEntropy0 <- function(pv){
+    p1 <- pv / sum(pv)
+    p2 <- p1[p1 !=0]
+    - sum(p2 * log2(p2))
+}
+# 全体のエントロピー（クラスタのデータ数で重み付け平均をとる）
+Entropy <- function(cluster, label){
+    # クロス集計
+    ctbl <- table(cluster, label)
+    # 重み
+    w <- apply(ctbl, 1, sum) / sum(ctbl)
+    # 全体のエントロピー
+    sum(w * apply(ctbl, 1, calcEntropy0))
+}
+cls_Entropy = function(x) {
+    cls_n <- x
+    first_cls_diff <- cls_length[1] - 1
+    i <- cls_n - first_cls_diff
+    df_plot <- df_cls_cord[[i]]
+    # merge
+    df_plot_stim <- merge(df_plot, 
+                          stim_sheet, 
+                          by.x = "cell_type", 
+                          by.y = "cell_type", 
+                          all.x = TRUE)
+    # stim列のNAを0に変換する
+    df_plot_stim %>% 
+        replace_na(., replace = list(stim = 0)) -> df_stim
+    classes <- df_stim$stim
+    clusters <- df_stim$cls
+    ClusterEntropy <- Entropy(clusters, classes)
+    return(ClusterEntropy)
+}
+#### eval Max####
+max_eval = function(x) {
+    x %>%
+        filter(., cls_eval == max(cls_eval)) %>%
+            .$cls_length %>%
+                purrr::map(., gg_clusters) -> gg_cls
+    return(gg_cls)
+}
+#### eval Min####
+min_eval = function(x) {
+    x %>%
+        filter(., cls_eval == min(cls_eval)) %>%
+            .$cls_length %>%
+                purrr::map(., gg_clusters) -> gg_cls
+    return(gg_cls)
 }
