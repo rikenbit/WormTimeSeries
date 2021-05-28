@@ -7,7 +7,7 @@ library(patchwork)
 library(igraph)
 library(ggpubr)
 library(uwot)
-library(mclust)
+# mclustだけ個別にインストール
 ##################################################
 set.seed(1234)
 
@@ -126,6 +126,9 @@ cls_purity = function(x) {
 #### eval ARI####
 cls_ARI = function(x) {
     cls_n <- x
+    options(repos="https://cran.ism.ac.jp/")
+    BiocManager::install("mclust", update = FALSE)
+    library(mclust)
     first_cls_diff <- cls_length[1] - 1
     i <- cls_n - first_cls_diff
     df_plot <- df_cls_cord[[i]]

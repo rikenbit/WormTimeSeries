@@ -1,17 +1,17 @@
 # WTS3 load
 ###################################################
-N_SAMPLES = list(map(str, range(1, 29)))
-N_SAMPLES.remove('3')
-N_SAMPLES.remove('8')
-N_SAMPLES.remove('20')
-N_SAMPLES.remove('25')
-
+# N_SAMPLES = list(map(str, range(1, 29)))
+# N_SAMPLES.remove('3')
+# N_SAMPLES.remove('8')
+# N_SAMPLES.remove('20')
+# N_SAMPLES.remove('25')
+N_SAMPLES = list(map(str, range(1, 2)))
 # Distance Data
 dist_data = ["SBD"]
 
 # Dimensionality Reduction Method
 DR_Method = ["tsne","umap"]
-
+# DR_Method = ["tsne"]
 # option perplexity
 # op_per = ["15"]
 # option max_iter
@@ -36,7 +36,7 @@ rule WTS3_Visualization:
     benchmark:
         'benchmarks/WTS3/{dist}/normalize_1/all/{dr_method}/{eval}/SampleNumber_{N}.txt'
     conda:
-        '../envs/myenv_WTS3_new.yaml'
+        '../envs/myenv_WTS3_r4_0_3.yaml'
     resources:
         mem_gb=200
     log:

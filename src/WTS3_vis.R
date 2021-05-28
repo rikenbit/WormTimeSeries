@@ -19,9 +19,9 @@ args_DimRedu <- args[5]
 # args_sample <- c("1")
 # # outputファイル名
 # # args_output <- c("output/WTS3/SBD/normalize_1/all/umap/purity/SampleNumber_1.png")
-# # args_output <- c("output/WTS3/SBD/normalize_1/all/umap/ARI/SampleNumber_1.png")
+# args_output <- c("output/WTS3/SBD/normalize_1/all/umap/ARI/SampleNumber_1.png")
 # # args_output <- c("output/WTS3/SBD/normalize_1/all/tsne/Fmeasure/SampleNumber_1.png")
-# args_output <- c("output/WTS3/SBD/normalize_1/all/tsne/Entropy/SampleNumber_1.png")
+# # args_output <- c("output/WTS3/SBD/normalize_1/all/tsne/Entropy/SampleNumber_1.png")
 
 # # 中間データファイル名
 # args_dist <- c("output/WTS3/SBD/normalize_1/all/SampleNumber_1/SBD.RData")
@@ -31,12 +31,12 @@ args_DimRedu <- args[5]
 
 # # クラスター評価手法
 # # args_eval <- c("purity")
-# # args_eval <- c("ARI")
+# args_eval <- c("ARI")
 # # args_eval <- c("Fmeasure")
-# args_eval <- c("Entropy")
+# # args_eval <- c("Entropy")
 
 # # 次元圧縮手法
-# args_DimRedu <- c("tsne")
+# args_DimRedu <- c("umap")
 # #######################
 
 ### SBD####
