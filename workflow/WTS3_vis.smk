@@ -36,7 +36,7 @@ rule WTS3_Visualization:
     benchmark:
         'benchmarks/WTS3/{dist}/normalize_1/all/{dr_method}/{eval}/SampleNumber_{N}.txt'
     conda:
-        '../envs/myenv_WTS3.yaml'
+        '../envs/myenv_WTS3_new.yaml'
     resources:
         mem_gb=200
     log:

@@ -1,4 +1,4 @@
-source("src/functions_WTS3.R")
+source("src/functions_WTS3_new.R")
 
 #### args####
 args <- commandArgs(trailingOnly = T)
