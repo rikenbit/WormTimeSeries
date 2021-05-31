@@ -66,7 +66,7 @@ df_merged <- merge(df_cord,
                    all.x = TRUE)
 
 #### import stim sheet####
-periodic_sheet <- read.csv("output/WTS2/WTS2_PeriodicACF_fix.csv", 
+periodic_sheet <- read.csv("output/WTS2/WTS2_PeriodicACF.csv", 
                            colClasses=c("numeric", 
                                         "character", 
                                         rep("numeric",2)))
