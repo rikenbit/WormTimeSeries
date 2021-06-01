@@ -1,19 +1,51 @@
-source("src/functions_WTS1.R")
+source("src/functions_WTS3_plot.R")
 
 # args setting
 ##################################################
 args <- commandArgs(trailingOnly = T)
 # select animal number 個体番号の指定
 args_sample <- args[1]
-# select cell number 細胞番号の指定
-args_cell <- args[2]
-# select celltype 細胞型名の指定
-args_celltype <- args[3]
-# select datadir ディレクトリ 名の指定
-args_datadir <- args[4]
+# inputデータファイル名
+args_input <- args[2]
+# 中間データファイル名
+args_dist <- args[3]
 # outputファイル名
-args_output <- args[5]
+args_output <- args[4]
+# select data データの指定
+args_data <- c("normalize_1")
+# クラスター評価手法
+args_eval <- args[5]
+# 次元圧縮手法
+args_DimRedu <- args[6]
+
+# select cell number 細胞番号の指定
+# args_cell <- args[2]
+# select celltype 細胞型名の指定
+# args_celltype <- args[3]
+# select datadir ディレクトリ 名の指定
+# args_datadir <- args[4]
 ##################################################
+#### test args####
+args_sample <- c("1")
+
+# inputファイル名
+args_input <- c("data/normalize_1/ReadData_1.RData")
+
+# outputファイル名
+args_output <- c("output/WTS3/SBD/normalize_1/all/tsne/ARI/plot/SampleNumber_1.png")
+
+# 中間データファイル名
+args_dist <- c("output/WTS3/SBD/normalize_1/all/SampleNumber_1/SBD.RData")
+
+# select data データの指定
+args_data <- c("normalize_1")
+
+# クラスター評価手法
+args_eval <- c("ARI")
+
+# 次元圧縮手法
+args_DimRedu <- c("tsne")
+#######################
 
 # Neuron Activity Data
 ##################################################

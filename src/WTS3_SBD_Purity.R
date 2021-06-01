@@ -86,7 +86,7 @@ ClusterP_df <- data.frame(cls_length = cls_length,
 ClusterP_df %>% 
     filter(., purity == max(purity)) %>%
         .$cls_length %>% 
-            purrr::map(., gg_clsters) -> gg_cls
+            purrr::map(., gg_clusters) -> gg_cls
 # table of purity
 ClusterP_df %>% 
     # dplyr::summarise_all(list(round), digits=3) %>% 

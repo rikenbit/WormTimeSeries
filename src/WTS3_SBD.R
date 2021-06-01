@@ -59,7 +59,7 @@ gg_ng <- gg_n(g_col)
 
 #### ggplot clustering group####
 seq(3,10) %>% 
-    purrr::map(., gg_clsters) -> gg_cls
+    purrr::map(., gg_clusters) -> gg_cls
 
 #### patchwork####
 append(gg_cls, list(gg_nt)) %>% 
