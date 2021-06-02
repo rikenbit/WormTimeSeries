@@ -6,35 +6,30 @@ args <- commandArgs(trailingOnly = T)
 args_sample <- args[1]
 # outputファイル名
 args_output <- args[2]
-# 中間データファイル名
-args_dist <- args[3]
+# output 中間データファイル名
+args_tempdata <- args[3]
+# inputファイル名
+args_dist <- args[4]
 # select data データの指定
 args_data <- c("normalize_1")
 # クラスター評価手法
-args_eval <- args[4]
+args_eval <- args[5]
 # 次元圧縮手法
-args_DimRedu <- args[5]
+args_DimRedu <- args[6]
 # #######################
 # #### test args####
+# # select animal number 個体番号の指定
 # args_sample <- c("1")
 # # outputファイル名
-# args_output <- c("output/WTS3/SBD/normalize_1/all/tsne/purity/SampleNumber_1.png")
-# # args_output <- c("output/WTS3/SBD/normalize_1/all/umap/ARI/SampleNumber_1.png")
-# # args_output <- c("output/WTS3/SBD/normalize_1/all/tsne/Fmeasure/SampleNumber_1.png")
-# # args_output <- c("output/WTS3/SBD/normalize_1/all/tsne/Entropy/SampleNumber_1.png")
-
-# # 中間データファイル名
+# args_output <- c("output/WTS3/SBD/normalize_1/all/tsne/ARI/cls_plot/SampleNumber_1.png")
+# # output 中間データファイル名
+# args_tempdata <- c("output/WTS3/SBD/normalize_1/all/tsne/ARI/cls_tempdata/SampleNumber_1.RData")
+# # inputファイル名
 # args_dist <- c("output/WTS3/SBD/normalize_1/all/SampleNumber_1/SBD.RData")
-
 # # select data データの指定
 # args_data <- c("normalize_1")
-
 # # クラスター評価手法
-# args_eval <- c("purity")
-# # args_eval <- c("ARI")
-# # args_eval <- c("Fmeasure")
-# # args_eval <- c("Entropy")
-
+# args_eval <- c("ARI")
 # # 次元圧縮手法
 # args_DimRedu <- c("tsne")
 # #######################
@@ -115,6 +110,35 @@ ClusterP_df %>%
     dplyr::summarise_all(list(round), digits=5) %>% 
         # ggpubr
         ggtexttable(rows = NULL, theme = ttheme(base_size = 50)) -> gg_cls_table
+
+#### output temp data####
+# merge cell group vs clustering group
+df_cell_cls <- merge(df_merged, 
+                      gg_cls[[1]]$data, 
+                      by.x = "cell_type", 
+                      by.y = "cell_type", 
+                      all.x = TRUE)
+# merge stim sheet
+df_cell_cls_stim <- merge(df_cell_cls, 
+                     stim_sheet, 
+                     by.x = "cell_type", 
+                     by.y = "cell_type", 
+                     all.x = TRUE)
+# stim列のNAを0に変換する
+df_cell_cls_stim %>% 
+    replace_na(., replace = list(stim = 0)) -> df_cell_cls_stim0
+# remove column
+df_cell_cls_stim0 %>% 
+    dplyr::select(., 
+                  cell_type, 
+                  NeuronType, 
+                  cls, 
+                  stim, 
+                  NeuronGroup, 
+                  Color, 
+                  acf) -> df_tempdata
+# save tempdata
+save(df_tempdata, file=args_tempdata)
 
 #### patchwork####
 # append(list(gg_nt), list(gg_ng)) -> gg_cls
