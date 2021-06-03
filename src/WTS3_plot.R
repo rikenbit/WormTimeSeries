@@ -1,29 +1,29 @@
 source("src/functions_WTS3_plot.R")
 
-# args setting
-##################################################
-args <- commandArgs(trailingOnly = T)
-# select animal number 個体番号の指定
-args_sample <- args[1]
-# input_Neuron Activity ファイル名
-args_input_n <- args[2]
-# input_stim ファイル名
-args_input_stim <- args[3]
-# input_mCherry ファイル名
-args_input_mCherry <- args[4]
-# input_Position ファイル名
-args_input_Position <- args[5]
-# input_tempdat ファイル名
-args_input_tempdata <- args[6]
-# outputファイル名
-args_output <- args[7]
-# select data データの指定
-args_data <- c("normalize_1")
-# クラスター評価手法
-args_eval <- args[8]
-# 次元圧縮手法
-args_DimRedu <- args[9]
-##################################################
+# # args setting
+# ##################################################
+# args <- commandArgs(trailingOnly = T)
+# # select animal number 個体番号の指定
+# args_sample <- args[1]
+# # input_Neuron Activity ファイル名
+# args_input_n <- args[2]
+# # input_stim ファイル名
+# args_input_stim <- args[3]
+# # input_mCherry ファイル名
+# args_input_mCherry <- args[4]
+# # input_Position ファイル名
+# args_input_Position <- args[5]
+# # input_tempdat ファイル名
+# args_input_tempdata <- args[6]
+# # outputファイル名
+# args_output <- args[7]
+# # select data データの指定
+# args_data <- c("normalize_1")
+# # クラスター評価手法
+# args_eval <- args[8]
+# # 次元圧縮手法
+# args_DimRedu <- args[9]
+# ##################################################
 #### test args####
 args_sample <- c("1")
 # input_Neuron Activity ファイル名
@@ -45,60 +45,56 @@ args_eval <- c("ARI")
 # 次元圧縮手法
 args_DimRedu <- c("tsne")
 #######################
-#
-属性情報：output/WTS3/SBD/normalize_1/all/tsne/ARI/cls_tempdata/SampleNumber_1.RData
 
 # Neuron Activity Data
 ##################################################
-path <- "data"
-inputdir <- args_datadir
-# inputpath <- paste(path, inputdir, 'ReadData_1.RData', sep = '/')
-eval(parse(text=paste0("inputpath <- paste(path, inputdir, 'ReadData_",args_sample,".RData', sep = '/')")))
-load(inputpath)
+load(args_input_n)
+# input_n <- ReadData_1
+eval(parse(text=paste0("input_n <- ReadData_",args_sample)))
 # ReadData_1[,'102'] %>% as.numeric() -> nactivity
-eval(parse(text=paste0("ReadData_",args_sample,"[,'",args_celltype,"'] %>% as.numeric() -> nactivity")))
-
+#### test####
+input_n[,1] %>% 
+    as.numeric() -> nactivity
+########
 #TimeFrame
 # rownames(ReadData_1) %>% as.numeric() -> timeframe
-eval(parse(text=paste0("rownames(ReadData_",args_sample,") %>% as.numeric() -> timeframe")))
+rownames(input_n) %>% 
+    as.numeric() -> timeframe
 ##################################################
 
 # Stimulation Data
 ##################################################
-path <- "data"
-inputdir <- "stimulation"
-# inputpath <- paste(datapath, 'stim_1.RData', sep = '/')
-eval(parse(text=paste0("inputpath <- paste(path, inputdir, 'stim_",args_sample,".RData', sep = '/')")))
-load(inputpath)
+load(args_input_stim)
+# input_stim <- stim_1
+eval(parse(text=paste0("input_stim <- stim_",args_sample)))
 # stim_1 %>% as.numeric() -> stimtiming
-eval(parse(text=paste0("stim_",args_sample," %>% as.numeric() -> stimtiming")))
+input_stim %>%
+    as.numeric() -> stimtiming
 # cut TimeFrame
 stimtiming[1:length(timeframe)] -> stimtiming
 ##################################################
 
 # mCherry
 ##################################################
-path <- "data"
-inputdir <- "mCherry"
-# inputpath <- paste(path, inputdir, 'mCherry_1.RData', sep = '/')
-eval(parse(text=paste0("inputpath <- paste(path, inputdir, 'mCherry_",args_sample,".RData', sep = '/')")))
-load(inputpath)
+load(args_input_mCherry)
+# input_mCherry <- mCherry_1
+eval(parse(text=paste0("input_mCherry <- mCherry_",args_sample)))
 # mCherry_1[,1] %>% as.numeric() -> mcherry
-# mCherry_1[,'102'] %>% as.numeric() -> mcherry
 eval(parse(text=paste0("mCherry_",args_sample,"[,'",args_celltype,"'] %>% as.numeric() -> mcherry")))
+input_mCherry[,1] %>% 
+    as.numeric() -> mcherry
 # cut TimeFrame
 mcherry[1:length(timeframe)] -> mcherry
 ##################################################
 
 # Position
 ##################################################
-path <- "data"
-inputdir <- "Position"
-# inputpath <- paste(path, inputdir, 'Position_1.RData', sep = '/')
-eval(parse(text=paste0("inputpath <- paste(path, inputdir, 'Position_",args_sample,".RData', sep = '/')")))
-load(inputpath)
+load(args_input_Position)
+# input_Position <- Position_1
+eval(parse(text=paste0("input_Position <- Position_",args_sample)))
 # Position_1$MoveX %>% as.numeric() -> position
-eval(parse(text=paste0("Position_",args_sample,"$MoveX %>% as.numeric() -> position")))
+input_Position$MoveX %>% 
+    as.numeric() -> position
 # cut TimeFrame
 position[1:length(timeframe)] -> position
 ##################################################

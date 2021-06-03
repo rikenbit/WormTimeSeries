@@ -10,10 +10,12 @@ N_SAMPLES.remove('25')
 dist_data = ["SBD"]
 
 # Dimensionality Reduction Method
-DR_Method = ["tsne","umap"]
+DR_Method = ["tsne"]
+# DR_Method = ["tsne","umap"]
 
 #Clustering Evaluation Method
-cls_eval = ["ARI", "Fmeasure"]
+cls_eval = ["ARI"]
+# cls_eval = ["purity", "ARI", "Fmeasure", "Entropy"]
 
 rule all:
     input:
