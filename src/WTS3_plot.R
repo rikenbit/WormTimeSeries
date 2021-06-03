@@ -46,126 +46,125 @@ args_eval <- c("ARI")
 args_DimRedu <- c("tsne")
 #######################
 
-# Neuron Activity Data
-##################################################
+#### input Neuron Activity Data####
 load(args_input_n)
 # input_n <- ReadData_1
 eval(parse(text=paste0("input_n <- ReadData_",args_sample)))
-# ReadData_1[,'102'] %>% as.numeric() -> nactivity
-#### test####
-input_n[,1] %>% 
-    as.numeric() -> nactivity
-########
-#TimeFrame
-# rownames(ReadData_1) %>% as.numeric() -> timeframe
+# rownamesを一行目に追加したデータフレーム作成
+input_n %>% 
+    rownames_to_column("time_frame") %>% 
+    pivot_longer(-time_frame, 
+                 names_to = "cell_type", 
+                 values_to = "n_activity") -> df_input_n
+# convert type
+as.numeric(df_input_n$time_frame) -> df_input_n$time_frame
+
+#### input other Data####
+# TimeFrame
 rownames(input_n) %>% 
     as.numeric() -> timeframe
-##################################################
-
 # Stimulation Data
-##################################################
 load(args_input_stim)
-# input_stim <- stim_1
 eval(parse(text=paste0("input_stim <- stim_",args_sample)))
-# stim_1 %>% as.numeric() -> stimtiming
 input_stim %>%
     as.numeric() -> stimtiming
-# cut TimeFrame
 stimtiming[1:length(timeframe)] -> stimtiming
-##################################################
 
 # mCherry
-##################################################
 load(args_input_mCherry)
-# input_mCherry <- mCherry_1
 eval(parse(text=paste0("input_mCherry <- mCherry_",args_sample)))
-# mCherry_1[,1] %>% as.numeric() -> mcherry
-eval(parse(text=paste0("mCherry_",args_sample,"[,'",args_celltype,"'] %>% as.numeric() -> mcherry")))
 input_mCherry[,1] %>% 
     as.numeric() -> mcherry
-# cut TimeFrame
 mcherry[1:length(timeframe)] -> mcherry
-##################################################
 
 # Position
-##################################################
 load(args_input_Position)
-# input_Position <- Position_1
 eval(parse(text=paste0("input_Position <- Position_",args_sample)))
-# Position_1$MoveX %>% as.numeric() -> position
 input_Position$MoveX %>% 
     as.numeric() -> position
-# cut TimeFrame
 position[1:length(timeframe)] -> position
-##################################################
 
-# dataframe for ggplot
-##################################################
 data.frame(
-        TimeFrame = timeframe,
-        Nactivity = nactivity,
-        StimTiming = stimtiming,
-        mCherry = mcherry,
-        Position = position,
-        stringsAsFactors = FALSE
-) -> g
+    time_frame = timeframe,
+    stim_timing = stimtiming,
+    m_cherry = mcherry,
+    position = position,
+    stringsAsFactors = FALSE
+) -> df_input_other
 
-# rollmean
-g %>% mutate(N_roll = roll_meanr(Nactivity, n=51, align="right", fill=NA)) -> g_roll
+#### merge input####
+df_input_n %>% 
+    # test 3細胞にフィルタ#
+    # filter(., cell_type %in% colnames(input_n)[1:3]) %>% 
+    ##
+        merge(., 
+              df_input_other, 
+              by.x = "time_frame", 
+              by.y = "time_frame", 
+              all.x = TRUE) -> df_merged_other
+#### merge tempdata####
+load(args_input_tempdata)
+merge(df_merged_other,
+      df_tempdata,
+      by.x = "cell_type", 
+      by.y = "cell_type", 
+      all.x = TRUE) -> df_merged_temp
+#### filter####
+df_merged_temp %>% 
+    filter(., stim == 1) %>% 
+        mutate(.,
+           stim_timing = if_else(stim_timing == 1, 
+                                 max(.$n_activity), 
+                                 min(.$n_activity))) -> df_merged
 
-# diff
-diff_value <- 50
-n_diff <- append(rep(NA, diff_value), diff(g$Nactivity, diff_value))
-g_roll %>% 
-    mutate(N_diff = n_diff) -> g_roll_diff
-##################################################
-
-# ggplot
-##################################################
-p_1 <- ggplot(data = g_roll_diff, aes(TimeFrame))
-p_2 <- p_1 +
-        geom_line(aes(y = Nactivity, colour = "Nactivity"), size = 0.5) +
-        geom_line(aes(y = N_roll, colour = "N_rollmean"), size = 1.5, alpha = 0.7) +
-        geom_line(aes(y = N_diff, colour = "N_diff"), size = 1.5, alpha = 0.7, linetype = "dotted")
-p_3 <- p_1 +        
-         geom_line(aes(y = StimTiming, colour = "StimTiming") , size = 1.5)
-p_4 <- p_1 +        
-         geom_line(aes(y = mCherry, colour = "mCherry") , size = 1.5)
-p_5 <- p_1 +        
-         geom_line(aes(y = Position, colour = "Position") , size = 1.5)
-
-
+#### ggplot Neuron Activity Dat####
+p_1 <- ggplot(data = df_merged, aes(x = time_frame))
+p_2 <- p_1 + 
+    geom_line(aes(y = n_activity, 
+                  group = cell_type, 
+                  colour = cell_type)
+    ) +
+    scale_color_viridis(option = "D", discrete = T) +
+    geom_text_repel(data = subset(df_merged, 
+                                  time_frame == max(time_frame)),
+                    aes(x = time_frame,
+                        y = n_activity,
+                        label = cell_type),
+                    nudge_x = 50,
+                    segment.alpha = 0.5,
+                    size = 3,
+                    max.overlaps = Inf,
+                    min.segment.length = 0
+    ) +
+    # lims(x = c(min(df_merged$time_frame), max(df_merged$time_frame)*1.1)) +
+    geom_line(aes(y = stim_timing) , linetype = "dashed", alpha = 0.3)
 sX <- scale_x_continuous(name = "TimeFrame(1frame/0.2sec)",    # 軸の名前を変える
                          breaks = seq(0, length(timeframe), by= 1000),     # 軸の区切りを0,2,4にする
                         )
-s_2 <- scale_color_manual(values = c("orange", "green", "black"))
-s_3 <- scale_color_manual(values = c("purple"))
-s_4 <- scale_color_manual(values = c("red"))
-s_5 <- scale_color_manual(values = c("blue"))
-
-
-# title <- ggtitle('SampleNumber1_CellNumber1_X1_raw_CFP')
-eval(parse(text=paste0("title <- ggtitle('SampleNumber",args_sample,"_CellNumber",args_cell,"_",args_celltype,"_",args_datadir,"')")))
+eval(parse(text=paste0("title <- ggtitle('SampleNumber",args_sample,"_",args_data,"')")))
 t_1 <- theme(plot.title = element_text(size = 30, hjust = 0.5))
 t_2 <- theme(axis.title = element_text(size = 20))
 t_3 <- theme(legend.title = element_text(size = 28),
              legend.text = element_text(size = 20))
 
-
 gg2 <- p_2 +
-    s_2 +
     sX +
     title +
     t_1 +
     t_2 +
     t_3 +
     labs(colour="each data")
-gg3 <- p_3 +
-    s_3 +
-    sX +
-    t_2 +
-    t_3 +
-    labs(colour="each data")
+########
+
+#### ggplot other Data####
+p_4 <- p_1 +        
+         geom_line(aes(y = m_cherry, colour = "m_cherry") , size = 1.5)
+p_5 <- p_1 +        
+         geom_line(aes(y = position, colour = "position") , size = 1.5)
+
+s_4 <- scale_color_manual(values = c("red"))
+s_5 <- scale_color_manual(values = c("blue"))
+
 gg4<- p_4 +
     s_4 +
     sX +
@@ -178,10 +177,10 @@ gg5 <- p_5 +
     t_2 +
     t_3 +
     labs(colour="each data")
-gg <- gg2 + gg3 + gg4 + gg5 + plot_layout(ncol = 1, heights = c(2, 1, 1, 1))
 ##################################################
 
 # ggsave
 ##################################################
-ggsave(filename = args_output, plot = gg, dpi = 100, width = 20.0, height = 15.0)
+gg <- gg2  + gg4 + gg5 + plot_layout(ncol = 1, heights = c(2, 1, 1))
+ggsave(filename = args_output, plot = gg, dpi = 100, width = 30.0, height = 15.0)
 ##################################################
