@@ -23,6 +23,8 @@ source("src/functions_WTS3_plot.R")
 # args_eval <- args[8]
 # # 次元圧縮手法
 # args_DimRedu <- args[9]
+# # フィルタリング
+# args_filter <- args[10]
 # ##################################################
 #### test args####
 args_sample <- c("1")
@@ -44,6 +46,10 @@ args_data <- c("normalize_1")
 args_eval <- c("ARI")
 # 次元圧縮手法
 args_DimRedu <- c("tsne")
+# フィルタリング
+args_filter <- c("stim_cell")
+# 色づけ
+# args_color <- c("")
 #######################
 
 #### input Neuron Activity Data####
@@ -110,13 +116,10 @@ merge(df_merged_other,
       by.y = "cell_type", 
       all.x = TRUE) -> df_merged_temp
 #### filter####
-df_merged_temp %>% 
-    filter(., stim == 1) %>% 
-        mutate(.,
-           stim_timing = if_else(stim_timing == 1, 
-                                 max(.$n_activity), 
-                                 min(.$n_activity))) -> df_merged
-
+df_merged <- switch(args_filter,
+              "stim_cell" = filter_stim(df_merged_temp),
+              stop("Only can use stim_cell")
+)
 #### ggplot Neuron Activity Dat####
 p_1 <- ggplot(data = df_merged, aes(x = time_frame))
 p_2 <- p_1 + 
@@ -124,7 +127,8 @@ p_2 <- p_1 +
                   group = cell_type, 
                   colour = cell_type)
     ) +
-    scale_color_viridis(option = "D", discrete = T) +
+    # scale_color_viridis(option = "D", discrete = T) +
+    # scale_color_brewer(palette = "Set1") +
     geom_text_repel(data = subset(df_merged, 
                                   time_frame == max(time_frame)),
                     aes(x = time_frame,
@@ -132,7 +136,7 @@ p_2 <- p_1 +
                         label = cell_type),
                     nudge_x = 50,
                     segment.alpha = 0.5,
-                    size = 3,
+                    size = 2,
                     max.overlaps = Inf,
                     min.segment.length = 0
     ) +
@@ -181,6 +185,7 @@ gg5 <- p_5 +
 
 # ggsave
 ##################################################
-gg <- gg2  + gg4 + gg5 + plot_layout(ncol = 1, heights = c(2, 1, 1))
+gg <- gg2  + gg4 + gg5 + plot_layout(ncol = 1, heights = c(3, 1, 1))
 ggsave(filename = args_output, plot = gg, dpi = 100, width = 30.0, height = 15.0)
 ##################################################
+                  

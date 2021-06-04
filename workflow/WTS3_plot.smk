@@ -13,17 +13,21 @@ dist_data = ["SBD"]
 DR_Method = ["tsne"]
 # DR_Method = ["tsne","umap"]
 
-#Clustering Evaluation Method
+# Clustering Evaluation Method
 cls_eval = ["ARI"]
 # cls_eval = ["purity", "ARI", "Fmeasure", "Entropy"]
 
+# filtering data
+df_filter = ["stim_cell"]
+
 rule all:
     input:
-        expand('output/WTS3/{dist}/normalize_1/all/{dr_method}/{eval}/plot/SampleNumber_{N}.png', 
+        expand('output/WTS3/{dist}/normalize_1/all/{dr_method}/{eval}/plot/{df_f}/SampleNumber_{N}.png', 
             N=N_SAMPLES, 
             eval=cls_eval, 
             dr_method=DR_Method,
-            dist=dist_data)
+            dist=dist_data,
+            df_f=df_filter)
 
 rule WTS3_plot:
     input:
@@ -34,15 +38,15 @@ rule WTS3_plot:
         tempdata = 'output/WTS3/{dist}/normalize_1/all/{dr_method}/{eval}/cls_tempdata/SampleNumber_{N}.RData'
         
     output:
-        png = 'output/WTS3/{dist}/normalize_1/all/{dr_method}/{eval}/plot/SampleNumber_{N}.png'
+        png = 'output/WTS3/{dist}/normalize_1/all/{dr_method}/{eval}/plot/{df_f}/SampleNumber_{N}.png'
     benchmark:
-        'benchmarks/WTS3/SBD/normalize_1/all/SampleNumber_{N}/SBD.txt'
+        'benchmarks/WTS3/{dist}/normalize_1/all/{dr_method}/{eval}/plot/{df_f}/SampleNumber_{N}.txt'
     conda:
         '../envs/myenv_WTS3.yaml'
     resources:
         mem_gb=200
     log:
-        'logs/WTS3/SBD/normalize_1/all/SampleNumber_{N}/SBD.log'
+        'logs/WTS3/{dist}/normalize_1/all/{dr_method}/{eval}/plot/{df_f}/SampleNumber_{N}.log'
     shell:
-        'src/WTS3_SBD.sh {wildcards.N} {input.Neuron} {input.stim} {input.mCherry} {input.Position} {input.tempdata} {output.png} {wildcards.eval} {wildcards.dr_method} >& {log}'
+        'src/WTS3_SBD.sh {wildcards.N} {input.Neuron} {input.stim} {input.mCherry} {input.Position} {input.tempdata} {output.png} {wildcards.eval} {wildcards.dr_method} {wildcards.df_f} >& {log}'
 ###################################################
