@@ -100,14 +100,11 @@ data.frame(
 
 #### merge input####
 df_input_n %>% 
-    # test 3細胞にフィルタ#
-    # filter(., cell_type %in% colnames(input_n)[1:3]) %>% 
-    ##
-        merge(., 
-              df_input_other, 
-              by.x = "time_frame", 
-              by.y = "time_frame", 
-              all.x = TRUE) -> df_merged_other
+      merge(., 
+            df_input_other, 
+            by.x = "time_frame", 
+            by.y = "time_frame", 
+            all.x = TRUE) -> df_merged_other
 #### merge tempdata####
 load(args_input_tempdata)
 merge(df_merged_other,
@@ -120,7 +117,16 @@ df_merged <- switch(args_filter,
               "stim_cell" = filter_stim(df_merged_temp),
               stop("Only can use stim_cell")
 )
-#### ggplot Neuron Activity Dat####
+#### ggplot test####
+p_1 <- ggplot(data = df_merged, aes(x = time_frame))
+
+list_cell_type <- df_merged$cell_type %>% unique()
+list_length <- seq(1:length(list_cell_type))
+list_length %>% 
+    purrr::map(., ???)
+
+#######################
+#### ggplot Neuron Activity Data####
 p_1 <- ggplot(data = df_merged, aes(x = time_frame))
 p_2 <- p_1 + 
     geom_line(aes(y = n_activity, 
