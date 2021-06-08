@@ -27,46 +27,25 @@ args_shift <- c("ASER")
 #######################
 #### SBD yshift####
 load(args_input_n)
-# input_n <- ReadData_2
 eval(parse(text=paste0("input_n <- ReadData_",args_sample)))
-# 行列っぽいデータを各細胞（列）ごとに分割
+# 行列っぽいデータを細胞ごとにlist化
 input_n.list <- asplit(input_n, 2)
-# cal SBD
+# setup SBD
 library(dtwclust)
 RNGkind(kind = "Mersenne-Twister")
 set.seed(1234)
 
-# dtwclust::SBD()
-sbd_y = function(x) {
-    shift_2 <- input_n.list[[x]] %>% as.numeric()
-    sbd <- dtwclust::SBD(shift_1,
-                         shift_2, 
-                         znorm = FALSE, 
-                         error.check = TRUE, 
-                         return.shifted = TRUE)
-    return(sbd$yshift)
-    # return(sbd)
-}
+# prepare sbd y-shift
 list_cell_type <- colnames(input_n)
 eval(parse(text=paste0("shift_1 <- input_n.list$",args_shift," %>% as.numeric()")))
+# sbd y-shift
 seq(1:length(list_cell_type)) %>% 
     purrr::map(., sbd_y) %>%
-        as.data.frame() -> sbd_yshift_df
-colnames(sbd_yshift_df) <- list_cell_type
-# # dtwclust::tsclust()
-# hc <- dtwclust::tsclust(input_n.list,
-#                         distance = "sbd",
-#                         trace = TRUE)
-# hc <- dtwclust::tsclust(input_n.list, 
-#                         distance = "sbd", 
-#                         trace = TRUE,
-#                         return.shifted = TRUE)
-# hc@distmat %>% head()
-
-# proxy::dist()
-# library(proxy)
-# test_list <- input_n.list[1:10]
-# sbD <- proxy::dist(test_list, 
-#                    test_list, 
-#                    method = "SBD", 
-#                    znorm = TRUE)
+        as.data.frame() -> sbd_yshift_df_wide
+colnames(sbd_yshift_df_wide) <- list_cell_type
+# convert long df
+sbd_yshift_df_wide %>% 
+    rownames_to_column("time_frame") %>% 
+        pivot_longer(-time_frame, 
+                     names_to = "cell_type", 
+                     values_to = "y_shift") -> sbd_yshift_df

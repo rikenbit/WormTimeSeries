@@ -26,20 +26,43 @@ source("src/functions_WTS3_plot.R")
 # # フィルタリング
 # args_filter <- args[10]
 # ##################################################
+# #### test args####
+# args_sample <- c("1")
+# # input_Neuron Activity ファイル名
+# args_input_n <- c("data/normalize_1/ReadData_1.RData")
+# # input_stim ファイル名
+# args_input_stim <- c("data/stimulation/stim_1.RData")
+# # input_mCherry ファイル名
+# args_input_mCherry <- c("data/mCherry/mCherry_1.RData")
+# # input_Position ファイル名
+# args_input_Position <- c("data/Position/Position_1.RData")
+# # input_tempdat ファイル名
+# args_input_tempdata <- c("output/WTS3/SBD/normalize_1/all/tsne/ARI/cls_tempdata/SampleNumber_1.RData")
+# # outputファイル名
+# args_output <- c("output/WTS3/SBD/normalize_1/all/tsne/ARI/plot/SampleNumber_1.png")
+# # select data データの指定
+# args_data <- c("normalize_1")
+# # クラスター評価手法
+# args_eval <- c("ARI")
+# # 次元圧縮手法
+# args_DimRedu <- c("tsne")
+# # フィルタリング
+# args_filter <- c("stim_cell")
+# #######################
 #### test args####
-args_sample <- c("1")
+args_sample <- c("2")
 # input_Neuron Activity ファイル名
-args_input_n <- c("data/normalize_1/ReadData_1.RData")
+args_input_n <- c("data/normalize_1/ReadData_2.RData")
 # input_stim ファイル名
-args_input_stim <- c("data/stimulation/stim_1.RData")
+args_input_stim <- c("data/stimulation/stim_2.RData")
 # input_mCherry ファイル名
-args_input_mCherry <- c("data/mCherry/mCherry_1.RData")
+args_input_mCherry <- c("data/mCherry/mCherry_2.RData")
 # input_Position ファイル名
-args_input_Position <- c("data/Position/Position_1.RData")
+args_input_Position <- c("data/Position/Position_2.RData")
 # input_tempdat ファイル名
-args_input_tempdata <- c("output/WTS3/SBD/normalize_1/all/tsne/ARI/cls_tempdata/SampleNumber_1.RData")
+args_input_tempdata <- c("output/WTS3/SBD/normalize_1/all/tsne/ARI/cls_tempdata/SampleNumber_2.RData")
 # outputファイル名
-args_output <- c("output/WTS3/SBD/normalize_1/all/tsne/ARI/plot/SampleNumber_1.png")
+args_output <- c("output/WTS3/SBD/normalize_1/all/tsne/ARI/plot/SampleNumber_2.png")
 # select data データの指定
 args_data <- c("normalize_1")
 # クラスター評価手法
@@ -48,6 +71,8 @@ args_eval <- c("ARI")
 args_DimRedu <- c("tsne")
 # フィルタリング
 args_filter <- c("stim_cell")
+# y-shift計算対象の細胞
+args_shift <- c("ASER")
 #######################
 
 #### input Neuron Activity Data####
@@ -115,11 +140,55 @@ df_merged <- switch(args_filter,
               "stim_cell" = filter_stim(df_merged_temp),
               stop("Only can use stim_cell")
 )
-#### ggplot test####
 # List of filtered cells 
 df_merged %>%
     .$cell_type %>%
         unique() -> list_cell_type
+#### check ASER or BAGR or BAGL####
+list_cell_type %>% 
+    str_count(., pattern="ASER") %>%
+        sum() -> check_ASER
+list_cell_type %>% 
+    str_count(., pattern="BAGR") %>%
+        sum() -> check_BAGR
+list_cell_type %>% 
+    str_count(., pattern="BAGL") %>%
+        sum() -> check_BAGL
+if (check_ASER >= 1) {
+    args_shift <- "ASER"
+} else if (check_BAGR >= 1) {
+    args_shift <- "BAGR"
+} else if (check_BAGL >= 1) {
+    args_shift <- "BAGL"
+} else {
+    args_shift <- list_cell_type[1]
+}
+#### WTS3_yshift#####
+# 行列っぽいデータを細胞ごとにlist化
+input_n.list <- asplit(input_n, 2)
+# prepare shift_1
+eval(parse(text=paste0("shift_1 <- input_n.list$",args_shift," %>% as.numeric()")))
+# sbd y-shift
+list_cell_type %>% 
+    purrr::map(., sbd_y) %>%
+        as.data.frame() -> sbd_yshift_df_wide
+colnames(sbd_yshift_df_wide) <- list_cell_type
+# convert long df
+sbd_yshift_df_wide %>% 
+    rownames_to_column("time_frame") %>% 
+    pivot_longer(-time_frame, 
+                 names_to = "cell_type", 
+                 values_to = "y_shift") -> sbd_yshift_df
+#### merge yshift#####
+merge(x=df_merged, 
+      y=sbd_yshift_df, 
+      by.x=c("time_frame", "cell_type"), 
+      by.y=c("time_frame", "cell_type"),
+      all.x = TRUE) -> df_merged_yshift
+df_merged_yshift %>% 
+    mutate(., 
+           shifted_TF = time_frame + y_shift) -> df_merged_TF
+#### ggplot test####
 # ggplot theme
 sX <- scale_x_continuous(name = "TimeFrame(1frame/0.2sec)",
                          breaks = seq(0, length(timeframe), by= 1000)

@@ -3,6 +3,9 @@
 library(tidyverse)
 library(patchwork)
 library(ggrepel)
+library(dtwclust)
+RNGkind(kind = "Mersenne-Twister")
+set.seed(1234)
 ##################################################
 #filter stim
 filter_stim = function(x) {
@@ -33,4 +36,15 @@ plot_one_cell = function(x) {
         t_3 +
         sX
     return(p_2)
+}
+
+# dtwclust::SBD()
+sbd_y = function(x) {
+    shift_2 <- input_n.list[[x]] %>% as.numeric()
+    sbd <- dtwclust::SBD(shift_1,
+                         shift_2, 
+                         znorm = FALSE, 
+                         error.check = TRUE, 
+                         return.shifted = TRUE)
+    return(sbd$yshift)
 }
