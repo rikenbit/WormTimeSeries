@@ -48,8 +48,6 @@ args_eval <- c("ARI")
 args_DimRedu <- c("tsne")
 # フィルタリング
 args_filter <- c("stim_cell")
-# 色づけ
-# args_color <- c("")
 #######################
 
 #### input Neuron Activity Data####
@@ -118,80 +116,56 @@ df_merged <- switch(args_filter,
               stop("Only can use stim_cell")
 )
 #### ggplot test####
-p_1 <- ggplot(data = df_merged, aes(x = time_frame))
-
-list_cell_type <- df_merged$cell_type %>% unique()
-list_length <- seq(1:length(list_cell_type))
-list_length %>% 
-    purrr::map(., ???)
-
-#######################
-#### ggplot Neuron Activity Data####
-p_1 <- ggplot(data = df_merged, aes(x = time_frame))
-p_2 <- p_1 + 
-    geom_line(aes(y = n_activity, 
-                  group = cell_type, 
-                  colour = cell_type)
-    ) +
-    # scale_color_viridis(option = "D", discrete = T) +
-    # scale_color_brewer(palette = "Set1") +
-    geom_text_repel(data = subset(df_merged, 
-                                  time_frame == max(time_frame)),
-                    aes(x = time_frame,
-                        y = n_activity,
-                        label = cell_type),
-                    nudge_x = 50,
-                    segment.alpha = 0.5,
-                    size = 2,
-                    max.overlaps = Inf,
-                    min.segment.length = 0
-    ) +
-    # lims(x = c(min(df_merged$time_frame), max(df_merged$time_frame)*1.1)) +
-    geom_line(aes(y = stim_timing) , linetype = "dashed", alpha = 0.3)
-sX <- scale_x_continuous(name = "TimeFrame(1frame/0.2sec)",    # 軸の名前を変える
-                         breaks = seq(0, length(timeframe), by= 1000),     # 軸の区切りを0,2,4にする
-                        )
-eval(parse(text=paste0("title <- ggtitle('SampleNumber",args_sample,"_",args_data,"')")))
+# List of filtered cells 
+df_merged %>%
+    .$cell_type %>%
+        unique() -> list_cell_type
+# ggplot theme
+sX <- scale_x_continuous(name = "TimeFrame(1frame/0.2sec)",
+                         breaks = seq(0, length(timeframe), by= 1000)
+                         )
 t_1 <- theme(plot.title = element_text(size = 30, hjust = 0.5))
 t_2 <- theme(axis.title = element_text(size = 20))
 t_3 <- theme(legend.title = element_text(size = 28),
              legend.text = element_text(size = 20))
 
-gg2 <- p_2 +
-    sX +
-    title +
-    t_1 +
-    t_2 +
-    t_3 +
-    labs(colour="each data")
-########
+# plot Neuron Activity Data
+seq(1:length(list_cell_type)) %>% 
+    purrr::map(., plot_one_cell) -> gg_cells
 
-#### ggplot other Data####
-p_4 <- p_1 +        
-         geom_line(aes(y = m_cherry, colour = "m_cherry") , size = 1.5)
-p_5 <- p_1 +        
-         geom_line(aes(y = position, colour = "position") , size = 1.5)
+# plot other data
+p_1 <- ggplot(data = df_merged,
+              aes(x = time_frame))
+gg_m <- p_1 +        
+        geom_line(aes(y = m_cherry, colour = "m_cherry")) +
+        scale_color_manual(values = c("red")) +
+        t_2 +
+        t_3 +
+        sX
+gg_p <- p_1 +
+        geom_line(aes(y = position, colour = "position")) +
+        scale_color_manual(values = c("blue")) +
+        t_2 +
+        t_3 +
+        sX
 
-s_4 <- scale_color_manual(values = c("red"))
-s_5 <- scale_color_manual(values = c("blue"))
-
-gg4<- p_4 +
-    s_4 +
-    sX +
-    t_2 +
-    t_3 +
-    labs(colour="each data")
-gg5 <- p_5 +
-    s_5 +
-    sX +
-    t_2 +
-    t_3 +
-    labs(colour="each data")
-##################################################
-
-# ggsave
-##################################################
-gg <- gg2  + gg4 + gg5 + plot_layout(ncol = 1, heights = c(3, 1, 1))
-ggsave(filename = args_output, plot = gg, dpi = 100, width = 30.0, height = 15.0)
-##################################################
-                  
+#### wrap_plots####
+# list n_activity & other data
+append(gg_cells, list(gg_m)) %>% 
+    append(., list(gg_p)) -> gg_list
+# wrap
+eval(parse(text=paste0("plot_title <- c('SampleNumber_",args_sample,"_",args_data,"')")))
+gg_list %>% 
+    wrap_plots(., ncol = 1) +
+    plot_annotation(
+        title = plot_title,
+        caption = 'made with patchwork::wrap_plots',
+        theme = theme(plot.title = element_text(size = 48, hjust = 0.5))
+    ) -> gg
+#### ggsave####
+ggsave(filename = args_output, 
+       plot = gg, 
+       dpi = 100, 
+       width = 25.0, 
+       height = 50.0, 
+       limitsize = FALSE)
