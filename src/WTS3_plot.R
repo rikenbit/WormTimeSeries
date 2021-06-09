@@ -185,14 +185,12 @@ merge(x=df_merged,
       by.x=c("time_frame", "cell_type"), 
       by.y=c("time_frame", "cell_type"),
       all.x = TRUE) -> df_merged_yshift
-df_merged_yshift %>% 
-    mutate(., 
-           shifted_TF = time_frame + y_shift) -> df_merged_TF
 #### ggplot test####
+# gg_cellsオブジェクトに異なるx軸（shifted_TF）のデータを重ねる
 # ggplot theme
 sX <- scale_x_continuous(name = "TimeFrame(1frame/0.2sec)",
                          breaks = seq(0, length(timeframe), by= 1000)
-                         )
+)
 t_1 <- theme(plot.title = element_text(size = 30, hjust = 0.5))
 t_2 <- theme(axis.title = element_text(size = 20))
 t_3 <- theme(legend.title = element_text(size = 28),
@@ -200,10 +198,15 @@ t_3 <- theme(legend.title = element_text(size = 28),
 
 # plot Neuron Activity Data
 seq(1:length(list_cell_type)) %>% 
-    purrr::map(., plot_one_cell) -> gg_cells
+    purrr::map(., plot_yshift) -> gg_cells
+
+#### ggplot####
+# plot Neuron Activity Data
+seq(1:length(list_cell_type)) %>% 
+    purrr::map(., plot_yshift) -> gg_cells
 
 # plot other data
-p_1 <- ggplot(data = df_merged,
+p_1 <- ggplot(data = df_merged_yshift,
               aes(x = time_frame))
 gg_m <- p_1 +        
         geom_line(aes(y = m_cherry, colour = "m_cherry")) +
@@ -234,7 +237,7 @@ gg_list %>%
 #### ggsave####
 ggsave(filename = args_output, 
        plot = gg, 
-       dpi = 100, 
+       dpi = 200, 
        width = 25.0, 
        height = 50.0, 
        limitsize = FALSE)
