@@ -28,56 +28,6 @@ args_filter <- args[10]
 # y-shift計算対象の細胞
 args_shift <- c("ASER")
 ##################################################
-# #### test args 2####
-# args_sample <- c("2")
-# # input_Neuron Activity ファイル名
-# args_input_n <- c("data/normalize_1/ReadData_2.RData")
-# # input_stim ファイル名
-# args_input_stim <- c("data/stimulation/stim_2.RData")
-# # input_mCherry ファイル名
-# args_input_mCherry <- c("data/mCherry/mCherry_2.RData")
-# # input_Position ファイル名
-# args_input_Position <- c("data/Position/Position_2.RData")
-# # input_tempdat ファイル名
-# args_input_tempdata <- c("output/WTS3/SBD/normalize_1/all/tsne/ARI/cls_tempdata/SampleNumber_2.RData")
-# # outputファイル名
-# args_output <- c("output/WTS3/SBD/normalize_1/all/tsne/ARI/plot/SampleNumber_2.png")
-# # select data データの指定
-# args_data <- c("normalize_1")
-# # クラスター評価手法
-# args_eval <- c("ARI")
-# # 次元圧縮手法
-# args_DimRedu <- c("tsne")
-# # フィルタリング
-# args_filter <- c("stim_cell")
-# # y-shift計算対象の細胞
-# args_shift <- c("ASER")
-# #######################
-# #### test args 4####
-# args_sample <- c("4")
-# # input_Neuron Activity ファイル名
-# args_input_n <- c("data/normalize_1/ReadData_4.RData")
-# # input_stim ファイル名
-# args_input_stim <- c("data/stimulation/stim_4.RData")
-# # input_mCherry ファイル名
-# args_input_mCherry <- c("data/mCherry/mCherry_4.RData")
-# # input_Position ファイル名
-# args_input_Position <- c("data/Position/Position_4.RData")
-# # input_tempdat ファイル名
-# args_input_tempdata <- c("output/WTS3/SBD/normalize_1/all/tsne/ARI/cls_tempdata/SampleNumber_4.RData")
-# # outputファイル名
-# args_output <- c("output/WTS3/SBD/normalize_1/all/tsne/ARI/plot/SampleNumber_4.png")
-# # select data データの指定
-# args_data <- c("normalize_1")
-# # クラスター評価手法
-# args_eval <- c("ARI")
-# # 次元圧縮手法
-# args_DimRedu <- c("tsne")
-# # フィルタリング
-# args_filter <- c("stim_cell")
-# # y-shift計算対象の細胞
-# args_shift <- c("ASER")
-# #######################
 
 #### input Neuron Activity Data####
 load(args_input_n)

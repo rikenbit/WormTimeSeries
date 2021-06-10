@@ -48,5 +48,5 @@ rule WTS3_plot:
     log:
         'logs/WTS3/{dist}/normalize_1/all/{dr_method}/{eval}/plot/{df_f}/SampleNumber_{N}.log'
     shell:
-        'src/WTS3_SBD.sh {wildcards.N} {input.Neuron} {input.stim} {input.mCherry} {input.Position} {input.tempdata} {output.png} {wildcards.eval} {wildcards.dr_method} {wildcards.df_f} >& {log}'
+        'src/WTS3_plot.sh {wildcards.N} {input.Neuron} {input.stim} {input.mCherry} {input.Position} {input.tempdata} {output.png} {wildcards.eval} {wildcards.dr_method} {wildcards.df_f} >& {log}'
 ###################################################
