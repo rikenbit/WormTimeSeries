@@ -31,10 +31,10 @@ rule all:
 
 rule WTS3_plot:
     input:
-        Neuron = 'output/data/normalize_1/ReadData_{N}.RData',
-        stim = 'output/data/stimulation/stim_{N}.RData',
-        mCherry = 'output/data/mCherry/mCherry_{N}.RData',
-        Position = 'output/data/Position/Position_{N}.RData',
+        Neuron = 'data/normalize_1/ReadData_{N}.RData',
+        stim = 'data/stimulation/stim_{N}.RData',
+        mCherry = 'data/mCherry/mCherry_{N}.RData',
+        Position = 'data/Position/Position_{N}.RData',
         tempdata = 'output/WTS3/{dist}/normalize_1/all/{dr_method}/{eval}/cls_tempdata/SampleNumber_{N}.RData'
         
     output:
@@ -42,7 +42,7 @@ rule WTS3_plot:
     benchmark:
         'benchmarks/WTS3/{dist}/normalize_1/all/{dr_method}/{eval}/plot/{df_f}/SampleNumber_{N}.txt'
     conda:
-        '../envs/myenv_WTS3.yaml'
+        '../envs/myenv_WTS3_plot.yaml'
     resources:
         mem_gb=200
     log:

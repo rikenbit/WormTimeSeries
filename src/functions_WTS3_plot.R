@@ -2,9 +2,8 @@
 ##################################################
 library(tidyverse)
 library(patchwork)
-library(ggrepel)
 library(dtwclust)
-# dtwclustでデフォルトの変数生成器じゃなくなるので元に戻す
+# library(dtwclust)でデフォルトの変数生成器じゃなくなるので元に戻す
 RNGkind(kind = "Mersenne-Twister")
 set.seed(1234)
 ##################################################
@@ -73,37 +72,3 @@ sbd_y = function(x) {
                          return.shifted = TRUE)
     return(sbd$yshift)
 }
-
-# # plot one cell 3coloar
-# plot_yshift = function(x) {
-#     df_merged_yshift %>% 
-#         filter(., cell_type == list_cell_type[x]) %>% 
-#             mutate(.,
-#                    stim_timing = if_else(stim_timing == 1, 
-#                                          max(.$n_activity), 
-#                                          min(.$n_activity))
-#                    ) -> data_shifted
-#     p_1 <- ggplot(data = data_shifted)
-#     p_2 <- p_1 + 
-#         geom_line(aes(x = time_frame, 
-#                       y = n_activity, 
-#                       colour = "n_activity")
-#                   ) +
-#         geom_line(aes(x = time_frame, 
-#                       y = y_shift, 
-#                       colour = "n_yshift")
-#                   ) +
-#         # geom_line(aes(y = n_activity, colour = "n_activity")) +
-#         geom_line(aes(x = time_frame, 
-#                       y = stim_timing, 
-#                       colour = "stim_timing"),
-#                   linetype = "dotted", 
-#                   alpha = 0.5) +
-#         scale_colour_manual(values = c("black", "red", "purple")) +
-#         eval(parse(text=paste0("ggtitle('celltype_",list_cell_type[x],"')"))) +
-#         t_1 +
-#         t_2 +
-#         t_3 +
-#         sX
-#     return(p_2)
-# }
