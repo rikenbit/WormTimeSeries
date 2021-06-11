@@ -28,6 +28,32 @@ args_filter <- args[10]
 # y-shift計算対象の細胞
 args_shift <- c("ASER")
 ##################################################
+# #### test args 2####
+# args_sample <- c("2")
+# # input_Neuron Activity ファイル名
+# args_input_n <- c("data/normalize_1/ReadData_2.RData")
+# # input_stim ファイル名
+# args_input_stim <- c("data/stimulation/stim_2.RData")
+# # input_mCherry ファイル名
+# args_input_mCherry <- c("data/mCherry/mCherry_2.RData")
+# # input_Position ファイル名
+# args_input_Position <- c("data/Position/Position_2.RData")
+# # input_tempdat ファイル名
+# args_input_tempdata <- c("output/WTS3/SBD/normalize_1/all/tsne/ARI/cls_tempdata/SampleNumber_2.RData")
+# # outputファイル名
+# args_output <- c("output/WTS3/SBD/normalize_1/all/tsne/ARI/plot/SampleNumber_2.png")
+# # select data データの指定
+# args_data <- c("normalize_1")
+# # クラスター評価手法
+# args_eval <- c("ARI")
+# # 次元圧縮手法
+# args_DimRedu <- c("tsne")
+# # フィルタリング
+# args_filter <- c("stim_cell")
+# # args_filter <- c("stim_cluster")
+# # y-shift計算対象の細胞
+# args_shift <- c("ASER")
+
 
 #### input Neuron Activity Data####
 load(args_input_n)
@@ -88,36 +114,26 @@ merge(df_merged_other,
       by.x = "cell_type", 
       by.y = "cell_type", 
       all.x = TRUE) -> df_merged_temp
+#### check args_shift####
+# サンプルの全細胞内にASERがあるかないか
+df_tempdata$cell_type %>% 
+    check_args_shift() -> args_shift
 
 #### filter####
 df_merged <- switch(args_filter,
               "stim_cell" = filter_stim(df_merged_temp),
+              "stim_cluster" = filter_clusters(df_merged_temp,args_shift),
               stop("Only can use stim_cell")
 )
-# List of filtered cells 
-df_merged %>%
-    .$cell_type %>%
-        unique() -> list_cell_type
-
-#### check ASER or BAGR or BAGL####
-list_cell_type %>% 
-    str_count(., pattern="ASER") %>%
-        sum() -> check_ASER
-list_cell_type %>% 
-    str_count(., pattern="BAGR") %>%
-        sum() -> check_BAGR
-list_cell_type %>% 
-    str_count(., pattern="BAGL") %>%
-        sum() -> check_BAGL
-if (check_ASER >= 1) {
-    args_shift <- "ASER"
-} else if (check_BAGR >= 1) {
-    args_shift <- "BAGR"
-} else if (check_BAGL >= 1) {
-    args_shift <- "BAGL"
-} else {
-    args_shift <- list_cell_type[1]
-}
+#### check filtered args_shift####
+# フィルターした細胞の中ににASERがあるかないか
+df_merged$cell_type %>%
+    unique() -> list_cell_type
+list_cell_type %>%
+    check_args_shift() -> args_shift
+# 先頭をyshiftの基準となる細胞にする
+match(args_shift,list_cell_type) -> yshift_order
+c(list_cell_type[yshift_order], list_cell_type[-yshift_order]) -> list_cell_type
 
 #### WTS3_yshift#####
 # 行列っぽいデータを細胞ごとにlist化

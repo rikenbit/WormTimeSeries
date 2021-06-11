@@ -18,7 +18,7 @@ cls_eval = ["ARI"]
 # cls_eval = ["purity", "ARI", "Fmeasure", "Entropy"]
 
 # filtering data
-df_filter = ["stim_cell"]
+df_filter = ["stim_cell","stim_cluster"]
 
 rule all:
     input:
