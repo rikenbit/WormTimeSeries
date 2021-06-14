@@ -1,13 +1,15 @@
-source("src/functions_WTS3.R")
+# source("src/functions_WTS3.R")
+source("src/functions_WTS3_tsclust.R")
 
 #### args####
 args <- commandArgs(trailingOnly = T)
 # select animal number 個体番号の指定
 args_sample <- args[1]
 # outputファイル名
-args_output <- args[2]
+# args_output <- args[2]
 # 中間データファイル名
-args_DTW <- args[3]
+# args_EUCL <- args[3]
+args_EUCL <- args[2]
 # # select data データの指定
 args_data <- c("normalize_1")
 #######################
@@ -20,7 +22,7 @@ eval(parse(text=paste0("ReadData <- ReadData_",args_sample)))
 
 #### EUCL####
 d <- diss(ReadData, "EUCL")
-save(d, file=args_DTW)
+save(d, file=args_EUCL)
 
 # #### Rtsne####
 # tSNE <- Rtsne(d, is_distance = TRUE, dims = 2, perplexity = 15, verbose = TRUE, max_iter = 1000)
