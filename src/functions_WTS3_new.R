@@ -79,7 +79,7 @@ cls_cord = function(x) {
 #### ggplot ward.D2 clustering####
 gg_clusters = function(x) {
     cls_n <- x
-    first_cls_diff <- cls_length[1] - 1
+    first_cls_diff <- set_cutree[1] - 1
     i <- cls_n - first_cls_diff
     df_cls <- df_cls_cord[[i]]
     #### ggplot#### 
@@ -106,7 +106,7 @@ ClusterPurity <- function(clusters, classes) {
 }
 cls_purity = function(x) {
     cls_n <- x
-    first_cls_diff <- cls_length[1] - 1
+    first_cls_diff <- set_cutree[1] - 1
     i <- cls_n - first_cls_diff
     df_plot <- df_cls_cord[[i]]
     # merge
@@ -127,7 +127,7 @@ cls_purity = function(x) {
 #### eval ARI####
 cls_ARI = function(x) {
     cls_n <- x
-    first_cls_diff <- cls_length[1] - 1
+    first_cls_diff <- set_cutree[1] - 1
     i <- cls_n - first_cls_diff
     df_plot <- df_cls_cord[[i]]
     # merge
@@ -164,7 +164,7 @@ Fmeasure <- function(cluster, label){
 }
 cls_Fmeasure = function(x) {
     cls_n <- x
-    first_cls_diff <- cls_length[1] - 1
+    first_cls_diff <- set_cutree[1] - 1
     i <- cls_n - first_cls_diff
     df_plot <- df_cls_cord[[i]]
     # merge
@@ -199,7 +199,7 @@ Entropy <- function(cluster, label){
 }
 cls_Entropy = function(x) {
     cls_n <- x
-    first_cls_diff <- cls_length[1] - 1
+    first_cls_diff <- set_cutree[1] - 1
     i <- cls_n - first_cls_diff
     df_plot <- df_cls_cord[[i]]
     # merge
@@ -219,16 +219,16 @@ cls_Entropy = function(x) {
 #### eval Max####
 max_eval = function(x) {
     x %>%
-        filter(., cls_eval == max(cls_eval)) %>%
-            .$cls_length %>%
+        filter(., eval_value == max(eval_value)) %>%
+            .$set_cutree %>%
                 purrr::map(., gg_clusters) -> gg_cls
     return(gg_cls)
 }
 #### eval Min####
 min_eval = function(x) {
     x %>%
-        filter(., cls_eval == min(cls_eval)) %>%
-            .$cls_length %>%
+        filter(., eval_value == min(eval_value)) %>%
+            .$set_cutree %>%
                 purrr::map(., gg_clusters) -> gg_cls
     return(gg_cls)
 }

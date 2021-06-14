@@ -4,12 +4,16 @@ source("src/functions_WTS3_new.R")
 args <- commandArgs(trailingOnly = T)
 # select animal number 個体番号の指定
 args_sample <- args[1]
-# outputファイル名
+# output
 args_output <- args[2]
-# output 中間データファイル名
+# output 中間データ
 args_tempdata <- args[3]
-# inputファイル名
+# input 距離データ
 args_dist <- args[4]
+# input igraph
+args_igraph <- c("data/igraph/Fig1_HNS.RData")
+# input PeriodicACF
+args_periodic <- c("output/WTS2/WTS2_PeriodicACF.csv")
 # select data データの指定
 args_data <- c("normalize_1")
 # クラスター評価手法
@@ -17,22 +21,26 @@ args_eval <- args[5]
 # 次元圧縮手法
 args_DimRedu <- args[6]
 # #######################
-# #### test args####
-# # select animal number 個体番号の指定
-# args_sample <- c("1")
-# # outputファイル名
-# args_output <- c("output/WTS3/SBD/normalize_1/all/tsne/ARI/cls_plot/SampleNumber_1.png")
-# # output 中間データファイル名
-# args_tempdata <- c("output/WTS3/SBD/normalize_1/all/tsne/ARI/cls_tempdata/SampleNumber_1.RData")
-# # inputファイル名
-# args_dist <- c("output/WTS3/SBD/normalize_1/all/SampleNumber_1/SBD.RData")
-# # select data データの指定
-# args_data <- c("normalize_1")
-# # クラスター評価手法
-# args_eval <- c("ARI")
-# # 次元圧縮手法
-# args_DimRedu <- c("tsne")
-# #######################
+#### test args####
+# select animal number 個体番号の指定
+args_sample <- c("1")
+# output
+args_output <- c("output/WTS3/normalize_1/SBD/ARI/tsne/cls_plot/SampleNumber_1.png")
+# output 中間データ
+args_tempdata <- c("output/WTS3/normalize_1/SBD/ARI/cls_tempdata/SampleNumber_1.RData")
+# input 距離データ
+args_dist <- c("output/WTS3/SBD/normalize_1/all/SampleNumber_1/SBD.RData")
+# input igraph
+args_igraph <- c("data/igraph/Fig1_HNS.RData")
+# input PeriodicACF
+args_periodic <- c("output/WTS2/WTS2_PeriodicACF.csv")
+# select data データの指定
+args_data <- c("normalize_1")
+# クラスター評価手法
+args_eval <- c("ARI")
+# 次元圧縮手法
+args_DimRedu <- c("tsne")
+#######################
 
 ### SBD####
 load(args_dist)
@@ -45,7 +53,7 @@ df_cord <- switch(args_DimRedu,
           )
 
 #### merge igraph####
-load("data/igraph/Fig1_HNS.RData")
+load(args_igraph)
 # node information convert dataframe
 ig_Fig1_HNS %>% 
     igraph::as_data_frame(., what="vertices") -> df_node
@@ -61,7 +69,7 @@ df_merged <- merge(df_cord,
                    all.x = TRUE)
 
 #### import stim sheet####
-periodic_sheet <- read.csv("output/WTS2/WTS2_PeriodicACF.csv", 
+periodic_sheet <- read.csv(args_periodic, 
                            colClasses=c("numeric", 
                                         "character", 
                                         rep("numeric",2)))
@@ -77,8 +85,8 @@ g_col <- c('NeuronGroup')
 gg_ng <- gg_n(g_col)
 
 #### clustering evaluation####
-cls_length <- seq(3,10)
-cls_length %>% 
+set_cutree <- seq(3,10)
+set_cutree %>% 
     purrr::map(., cls_cord) -> df_cls_cord
 # select method
 eval_type <- switch(args_eval,
@@ -90,10 +98,10 @@ eval_type <- switch(args_eval,
 )
 
 # evaluation
-cls_length %>% 
-    purrr::map_dbl(., eval_type) -> ClusterP_n
-ClusterP_df <- data.frame(cls_length = cls_length, 
-                          cls_eval = ClusterP_n
+set_cutree %>% 
+    purrr::map_dbl(., eval_type) -> eval_value
+ClusterP_df <- data.frame(set_cutree = set_cutree, 
+                          eval_value = eval_value
                           )
 
 #### ggplot clustering group####
@@ -105,7 +113,7 @@ gg_cls <- switch(args_eval,
                  stop("Only can use cls_purity,ARI,Fmeasure,Entropy")
 )
             
-#### table of cls_eval####
+#### table of eval_value####
 ClusterP_df %>% 
     dplyr::summarise_all(list(round), digits=5) %>% 
         # ggpubr
