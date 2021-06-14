@@ -21,26 +21,26 @@ args_eval <- args[5]
 # 次元圧縮手法
 args_DimRedu <- args[6]
 # #######################
-#### test args####
-# select animal number 個体番号の指定
-args_sample <- c("1")
-# output
-args_output <- c("output/WTS3/normalize_1/SBD/ARI/tsne/cls_plot/SampleNumber_1.png")
-# output 中間データ
-args_tempdata <- c("output/WTS3/normalize_1/SBD/ARI/cls_tempdata/SampleNumber_1.RData")
-# input 距離データ
-args_dist <- c("output/WTS3/SBD/normalize_1/all/SampleNumber_1/SBD.RData")
-# input igraph
-args_igraph <- c("data/igraph/Fig1_HNS.RData")
-# input PeriodicACF
-args_periodic <- c("output/WTS2/WTS2_PeriodicACF.csv")
-# select data データの指定
-args_data <- c("normalize_1")
-# クラスター評価手法
-args_eval <- c("ARI")
-# 次元圧縮手法
-args_DimRedu <- c("tsne")
-#######################
+# #### test args####
+# # select animal number 個体番号の指定
+# args_sample <- c("1")
+# # output
+# args_output <- c("output/WTS3/normalize_1/SBD/ARI/tsne/cls_plot/SampleNumber_1.png")
+# # output 中間データ
+# args_tempdata <- c("output/WTS3/normalize_1/SBD/ARI/tsne/cls_tempdata/SampleNumber_1.RData")
+# # input 距離データ
+# args_dist <- c("output/WTS3/SBD/normalize_1/all/SampleNumber_1/SBD.RData")
+# # input igraph
+# args_igraph <- c("data/igraph/Fig1_HNS.RData")
+# # input PeriodicACF
+# args_periodic <- c("output/WTS2/WTS2_PeriodicACF.csv")
+# # select data データの指定
+# args_data <- c("normalize_1")
+# # クラスター評価手法
+# args_eval <- c("ARI")
+# # 次元圧縮手法
+# args_DimRedu <- c("tsne")
+# #######################
 
 ### SBD####
 load(args_dist)

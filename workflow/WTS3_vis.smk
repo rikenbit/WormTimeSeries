@@ -7,27 +7,24 @@ N_SAMPLES.remove('20')
 N_SAMPLES.remove('25')
 
 # Distance Data
-dist_data = ["SBD"]
+dist_data = ["EUCL","DTW","SBD"]
 
 # Dimensionality Reduction Method
-DR_Method = ["tsne","umap"]
-
-# option perplexity
-# op_per = ["15"]
-# option max_iter
-# op_max_iter = ["3000", "5000"]
+# DR_Method = ["tsne","umap"]
+DR_Method = ["tsne"]
 
 #Clustering Evaluation Method
-cls_eval = ["purity", "ARI", "Fmeasure", "Entropy"]
+# cls_eval = ["purity", "ARI", "Fmeasure", "Entropy"]
+cls_eval = ["ARI"]
 
 rule all:
     input:
-        expand('output/WTS3/{dist}/normalize_1/all/{dr_method}/{eval}/cls_plot/SampleNumber_{N}.png', 
+        expand('output/WTS3/normalize_1/{dist}/{eval}/{dr_method}/cls_plot/SampleNumber_{N}.png', 
             N=N_SAMPLES, 
             eval=cls_eval, 
             dr_method=DR_Method,
             dist=dist_data),
-        expand('output/WTS3/{dist}/normalize_1/all/{dr_method}/{eval}/cls_tempdata/SampleNumber_{N}.RData', 
+        expand('output/WTS3/normalize_1/{dist}/{eval}/{dr_method}/cls_tempdata/SampleNumber_{N}.RData', 
             N=N_SAMPLES, 
             eval=cls_eval, 
             dr_method=DR_Method,
@@ -37,16 +34,16 @@ rule WTS3_Visualization:
     input:
         RData = 'output/WTS3/{dist}/normalize_1/all/SampleNumber_{N}/{dist}.RData'
     output:
-        png = 'output/WTS3/{dist}/normalize_1/all/{dr_method}/{eval}/cls_plot/SampleNumber_{N}.png',
-        RData = 'output/WTS3/{dist}/normalize_1/all/{dr_method}/{eval}/cls_tempdata/SampleNumber_{N}.RData'
+        png = 'output/WTS3/normalize_1/{dist}/{eval}/{dr_method}/cls_plot/SampleNumber_{N}.png',
+        RData = 'output/WTS3/normalize_1/{dist}/{eval}/{dr_method}/cls_tempdata/SampleNumber_{N}.RData'
     benchmark:
-        'benchmarks/WTS3/{dist}/normalize_1/all/{dr_method}/{eval}/cls_plot/SampleNumber_{N}.txt'
+        'benchmarks/WTS3/normalize_1/{dist}/{eval}/{dr_method}/cls_plot/SampleNumber_{N}.txt'
     conda:
         '../envs/myenv_WTS3_st_mclust.yaml'
     resources:
         mem_gb=200
     log:
-        'logs/WTS3/{dist}/normalize_1/all/{dr_method}/{eval}/cls_plot/SampleNumber_{N}.log'
+        'logs/WTS3/normalize_1/{dist}/{eval}/{dr_method}/cls_plot/SampleNumber_{N}.log'
     shell:
         'src/WTS3_vis.sh {wildcards.N} {output.png} {output.RData} {input.RData} {wildcards.eval} {wildcards.dr_method} >& {log}'
 ###################################################
