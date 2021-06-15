@@ -64,6 +64,25 @@ gg_n = function(x) {
     return(gg_n)
 }
 
+#### ggplot Neuron type/group StimShape####
+gg_n_stim = function(x) {
+  # ggplot
+  g_col <- x
+  gg_n <- eval(parse(text=paste0("ggplot(df_merged_stim0, 
+                                    aes(x = cord_1,
+                                        y = cord_2, 
+                                        label = cell_type,
+                                        shape = factor(stim),
+                                        color = ",factor(g_col),"))"))) +
+    geom_point(size = 8.0) +
+    scale_shape_manual(values=c(4,15)) +
+    geom_text_repel(max.overlaps = Inf,
+                    min.segment.length = 0) +
+    ggtitle(g_col) +
+    theme(plot.title = element_text(size = 30, hjust = 0.5))
+  return(gg_n)
+}
+
 #### dataframe for evaluation ####
 cls_cord = function(x) {
     #### clustering#### 

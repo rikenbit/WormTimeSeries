@@ -77,12 +77,20 @@ periodic_sheet %>%
     filter(.,
            stim == 1,
            sample_number == args_sample) -> stim_sheet
-
+#### Stim Cell Checker####
+df_merged_stim <- merge(df_merged, 
+                        stim_sheet, 
+                        by.x = "cell_type", 
+                        by.y = "cell_type", 
+                        all.x = TRUE)
+df_merged_stim %>% 
+    replace_na(., replace = list(stim = 0)) -> df_merged_stim0
+########
 #### ggplot neuron group####
 g_col <- c('NeuronType')
-gg_nt <- gg_n(g_col)
+gg_nt <- gg_n_stim(g_col)
 g_col <- c('NeuronGroup')
-gg_ng <- gg_n(g_col)
+gg_ng <- gg_n_stim(g_col)
 
 #### clustering evaluation####
 set_cutree <- seq(3,10)
