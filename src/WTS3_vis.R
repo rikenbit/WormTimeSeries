@@ -85,7 +85,7 @@ df_merged_stim <- merge(df_merged,
                         all.x = TRUE)
 df_merged_stim %>% 
     replace_na(., replace = list(stim = 0)) -> df_merged_stim0
-########
+
 #### ggplot neuron group####
 g_col <- c('NeuronType')
 gg_nt <- gg_n_stim(g_col)

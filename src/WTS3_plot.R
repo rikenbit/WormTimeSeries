@@ -164,7 +164,7 @@ merge(x=df_merged,
 sX <- scale_x_continuous(name = "TimeFrame(1frame/0.2sec)",
                          breaks = seq(0, length(timeframe), by= 1000)
 )
-t_1 <- theme(plot.title = element_text(size = 30, hjust = 0.5))
+t_1 <- theme(plot.title = element_text(size = 30, hjust = 0.5, family ="HiraKakuPro-W3"))
 t_2 <- theme(axis.title = element_text(size = 20))
 t_3 <- theme(legend.title = element_text(size = 28),
              legend.text = element_text(size = 20))

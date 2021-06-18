@@ -59,8 +59,10 @@ sbd_y = function(x) {
                          return.shifted = TRUE)
     return(sbd$yshift)
 }
+##########
 
-# plot one cell 3coloar
+##########
+# plot one cell 3coloar y-shift value
 plot_yshift = function(x) {
     df_merged_yshift %>% 
         filter(., cell_type == list_cell_type[x]) %>% 
@@ -69,6 +71,27 @@ plot_yshift = function(x) {
                                      max(.$n_activity), 
                                      min(.$n_activity))
         ) -> data_shifted
+    # get y-shift value
+    data_shifted %>% 
+        dplyr::arrange(time_frame) -> data_shifted
+    if (data_shifted$y_shift[1]==0) {
+        # はじめて0でない要素番号の取得
+        data_shifted %>% 
+            filter(y_shift != 0) %>% 
+                slice_head() %>% 
+                    .$time_frame -> first_not_0
+        # y_shift_valueの計算
+        y_shift_value <- first_not_0 -1
+    } else {
+        # はじめて0になる要素番号の取得
+        data_shifted %>% 
+            filter(y_shift == 0) %>% 
+                slice_head() %>% 
+                    .$time_frame -> first_0
+        # y_shift_valueの計算
+        y_shift_value <- first_0 -1 -length(data_shifted$time_frame)
+    }
+    
     p_1 <- ggplot(data = data_shifted)
     p_2 <- p_1 + 
         geom_line(aes(x = time_frame, 
@@ -87,14 +110,47 @@ plot_yshift = function(x) {
         ) +
         scale_colour_manual(values = c("black", "red", "purple"),
                             breaks = c("n_activity", "n_yshift", "stim_timing")) +
-        eval(parse(text=paste0("ggtitle('celltype_",list_cell_type[x],"')"))) +
+        eval(parse(text=paste0("ggtitle('celltype_",list_cell_type[x],"_平行移動 ",y_shift_value,"')"))) +
         t_1 +
         t_2 +
         t_3 +
         sX
     return(p_2)
 }
-
+# # plot one cell 3coloar
+# plot_yshift = function(x) {
+#     df_merged_yshift %>% 
+#         filter(., cell_type == list_cell_type[x]) %>% 
+#         mutate(.,
+#                stim_timing = if_else(stim_timing == 1, 
+#                                      max(.$n_activity), 
+#                                      min(.$n_activity))
+#         ) -> data_shifted
+#     p_1 <- ggplot(data = data_shifted)
+#     p_2 <- p_1 + 
+#         geom_line(aes(x = time_frame, 
+#                       y = n_activity, 
+#                       colour = "n_activity")
+#         ) +
+#         geom_line(aes(x = time_frame, 
+#                       y = y_shift, 
+#                       colour = "n_yshift")
+#         ) +
+#         geom_line(aes(x = time_frame, 
+#                       y = stim_timing, 
+#                       colour = "stim_timing"),
+#                   linetype = "dotted", 
+#                   alpha = 0.5
+#         ) +
+#         scale_colour_manual(values = c("black", "red", "purple"),
+#                             breaks = c("n_activity", "n_yshift", "stim_timing")) +
+#         eval(parse(text=paste0("ggtitle('celltype_",list_cell_type[x],"')"))) +
+#         t_1 +
+#         t_2 +
+#         t_3 +
+#         sX
+#     return(p_2)
+# }
 # # plot one cell 4coloar
 # plot_yshift = function(x) {
 #     df_merged_yshift %>% 
