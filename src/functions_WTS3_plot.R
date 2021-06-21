@@ -7,7 +7,7 @@ library(dtwclust)
 RNGkind(kind = "Mersenne-Twister")
 set.seed(1234)
 ##################################################
-# check args_shift
+#### check args_shift####
 check_args_shift = function(x) {
     x -> sample_cell_type
     sample_cell_type %>% 
@@ -31,14 +31,14 @@ check_args_shift = function(x) {
     return(args_shift)
 }
 
-# filter stim
+#### filter stim####
 filter_stim = function(x) {
     x %>% 
         filter(., stim == 1) -> df_filter
     return(df_filter)
 }
 
-# filter same_clusters
+#### filter same_clusters####
 filter_clusters = function(x,y) {
     x %>% 
         filter(., cell_type == y) %>% 
@@ -49,7 +49,7 @@ filter_clusters = function(x,y) {
     return(df_filter)
 }
 
-# dtwclust::SBD()
+#### dtwclust::SBD()####
 sbd_y = function(x) {
     shift_2 <- input_n.list[[x]] %>% as.numeric()
     sbd <- dtwclust::SBD(shift_1,
@@ -61,8 +61,7 @@ sbd_y = function(x) {
 }
 ##########
 
-##########
-# plot one cell 3coloar y-shift value
+#### plot one cell 3coloar y-shift value####
 plot_yshift = function(x) {
     df_merged_yshift %>% 
         filter(., cell_type == list_cell_type[x]) %>% 
@@ -117,84 +116,82 @@ plot_yshift = function(x) {
         sX
     return(p_2)
 }
-# # plot one cell 3coloar
-# plot_yshift = function(x) {
-#     df_merged_yshift %>% 
-#         filter(., cell_type == list_cell_type[x]) %>% 
-#         mutate(.,
-#                stim_timing = if_else(stim_timing == 1, 
-#                                      max(.$n_activity), 
-#                                      min(.$n_activity))
-#         ) -> data_shifted
-#     p_1 <- ggplot(data = data_shifted)
-#     p_2 <- p_1 + 
-#         geom_line(aes(x = time_frame, 
-#                       y = n_activity, 
-#                       colour = "n_activity")
-#         ) +
-#         geom_line(aes(x = time_frame, 
-#                       y = y_shift, 
-#                       colour = "n_yshift")
-#         ) +
-#         geom_line(aes(x = time_frame, 
-#                       y = stim_timing, 
-#                       colour = "stim_timing"),
-#                   linetype = "dotted", 
-#                   alpha = 0.5
-#         ) +
-#         scale_colour_manual(values = c("black", "red", "purple"),
-#                             breaks = c("n_activity", "n_yshift", "stim_timing")) +
-#         eval(parse(text=paste0("ggtitle('celltype_",list_cell_type[x],"')"))) +
-#         t_1 +
-#         t_2 +
-#         t_3 +
-#         sX
-#     return(p_2)
-# }
-# # plot one cell 4coloar
-# plot_yshift = function(x) {
-#     df_merged_yshift %>% 
-#         filter(., cell_type == list_cell_type[x]) %>% 
-#         mutate(.,
-#                stim_timing = if_else(stim_timing == 1, 
-#                                      max(.$n_activity), 
-#                                      min(.$n_activity))
-#         ) -> data_shifted
-#     df_merged_yshift %>% 
-#         filter(., cell_type == list_cell_type[match(args_shift,list_cell_type)]) %>% 
-#         mutate(.,
-#                stim_timing = if_else(stim_timing == 1, 
-#                                      max(.$n_activity), 
-#                                      min(.$n_activity))
-#         ) -> data_shifted_ASER
-#     p_1 <- ggplot(data = data_shifted)
-#     p_2 <- p_1 + 
-#         geom_line(aes(x = time_frame, 
-#                       y = n_activity, 
-#                       colour = "n_activity")
-#         ) +
-#         geom_line(aes(x = time_frame, 
-#                       y = y_shift, 
-#                       colour = "n_yshift")
-#         ) +
-#         geom_line(data = data_shifted_ASER, 
-#                   aes(x = time_frame, 
-#                       y = n_activity, 
-#                       colour = args_shift),
-#                   linetype = "dashed"
-#         ) +
-#         geom_line(aes(x = time_frame, 
-#                       y = stim_timing, 
-#                       colour = "stim_timing"),
-#                   linetype = "dotted", 
-#                   alpha = 0.5
-#         ) +
-#         scale_colour_manual(values = c("black", "red", "green", "purple"),
-#                             breaks = c("n_activity", "n_yshift", args_shift,"stim_timing")) +
-#         eval(parse(text=paste0("ggtitle('celltype_",list_cell_type[x],"')"))) +
-#         t_1 +
-#         t_2 +
-#         t_3 +
-#         sX
-#     return(p_2)
-# }
+
+# サンプル番号を読み込んで，loadする関数
+load_tempdata = function(x) {
+    args_number <- args_numbers[x]
+    args_tempdata <- paste(args_tempdata_dir,args_number, sep = "")
+    eval(parse(text=paste0("tempdata <- c('",args_tempdata,".RData')")))
+    load(tempdata)
+    df_tempdata$sample_number <- rep(args_number,nrow(df_tempdata))
+    df_tempdata$cell_type %>% 
+        check_args_shift() -> args_shift
+    filter_clusters(df_tempdata,args_shift) -> cls_n
+    cls_n$cls %>% unique() -> cls_num
+    df_tempdata$cls_number <- rep(cls_num,nrow(df_tempdata))
+    df <- df_tempdata
+    return(df)
+}
+#### table_cell####
+table_cell = function(x) {
+    df_table <- x
+    # cell_typeのリストを取得(stim = 1になっている行のみ)
+    df_table %>% 
+        filter(stim==1) %>%
+            select(cell_type) %>% 
+                .$cell_type %>% 
+                    unique() %>% 
+                        sort() -> stim_cell_type
+    # フィルター 取得したcell_type列のみの行にする，sample_number，細胞名，stimのみ残す
+    df_table %>% 
+        filter(cell_type %in% stim_cell_type) %>%
+            select(sample_number, 
+                   cell_type, 
+                   stim, 
+                   NeuronType) -> df_stim_table
+    # create table neuron
+    df_stim_table %>%
+        # 数字の細胞除去
+        filter(NeuronType %in% c("Sensory","Interneuron","Endorgan","Motorneuron")) %>%
+            pivot_wider(id_cols = sample_number,
+                        names_from = cell_type,
+                        values_from = stim) -> table_neuron
+    # create table rmSensory
+    df_stim_table %>%
+        # 数字の細胞除去
+        filter(NeuronType %in% c("Interneuron","Endorgan","Motorneuron")) %>%
+            pivot_wider(id_cols = sample_number,
+                        names_from = cell_type,
+                        values_from = stim) -> table_rmSensory
+    output_table <- list(table_neuron,table_rmSensory)
+    return(output_table)
+}
+#### table_cls####
+table_cls = function(x) {
+    df_table <- x
+    df_table %>% 
+        filter(cls==cls_number) %>%
+            select(sample_number,
+                   cell_type,
+                   cls,
+                   NeuronType) -> df_cls_table
+    df_cls_table$cls <- 1
+    # create table neuron
+    df_cls_table %>% 
+        # 数字の細胞除去
+        filter(NeuronType %in% c("Sensory","Interneuron","Endorgan","Motorneuron")) %>%
+            pivot_wider(id_cols = sample_number,
+                        names_from = cell_type,
+                        values_from = cls) -> table_neuron
+    table_neuron[is.na(table_neuron)] <- 0
+    # create table rmSensory
+    df_cls_table %>% 
+        # 数字の細胞除去
+        filter(NeuronType %in% c("Interneuron","Endorgan","Motorneuron")) %>%
+            pivot_wider(id_cols = sample_number,
+                        names_from = cell_type,
+                        values_from = cls) -> table_rmSensory
+    table_rmSensory[is.na(table_rmSensory)] <- 0
+    output_table <- list(table_neuron,table_rmSensory)
+    return(output_table)
+}

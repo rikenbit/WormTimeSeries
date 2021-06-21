@@ -50,7 +50,7 @@ args_range <- args[11]
 # args_eval <- c("ARI")
 # # 次元圧縮手法
 # args_DimRedu <- c("tsne")
-# # フィルタリング
+# # ラベリング
 # args_filter <- c("stim_cell")
 # # args_filter <- c("stim_cluster")
 # # y-shift計算対象の細胞

@@ -10,12 +10,12 @@ N_SAMPLES.remove('25')
 dist_data = ["EUCL","DTW","SBD"]
 
 # Dimensionality Reduction Method
-# DR_Method = ["tsne","umap"]
-DR_Method = ["tsne"]
+DR_Method = ["tsne","umap"]
+# DR_Method = ["tsne"]
 
 # Clustering Evaluation Method
-# cls_eval = ["purity", "ARI", "Fmeasure", "Entropy"]
-cls_eval = ["ARI"]
+cls_eval = ["purity", "ARI", "Fmeasure", "Entropy"]
+# cls_eval = ["ARI"]
 
 # data time range
 time_range = ["all"]
