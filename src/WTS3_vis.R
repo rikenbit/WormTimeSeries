@@ -20,16 +20,18 @@ args_data <- c("normalize_1")
 args_eval <- args[5]
 # 次元圧縮手法
 args_DimRedu <- args[6]
-# #######################
+# time range
+args_range <- args[7]
+#######################
 # #### test args####
 # # select animal number 個体番号の指定
 # args_sample <- c("1")
 # # output
-# args_output <- c("output/WTS3/normalize_1/SBD/ARI/tsne/cls_plot/SampleNumber_1.png")
+# args_output <- c("output/WTS3/normalize_1/all/SBD/ARI/tsne/cls_plot/SampleNumber_1.png")
 # # output 中間データ
-# args_tempdata <- c("output/WTS3/normalize_1/SBD/ARI/tsne/cls_tempdata/SampleNumber_1.RData")
+# args_tempdata <- c("output/WTS3/normalize_1/all/SBD/ARI/tsne/cls_tempdata/SampleNumber_1.RData")
 # # input 距離データ
-# args_dist <- c("output/WTS3/SBD/normalize_1/all/SampleNumber_1/SBD.RData")
+# args_dist <- c("output/WTS3/normalize_1/all/SBD/SampleNumber_1/SBD.RData")
 # # input igraph
 # args_igraph <- c("data/igraph/Fig1_HNS.RData")
 # # input PeriodicACF
@@ -40,6 +42,8 @@ args_DimRedu <- args[6]
 # args_eval <- c("ARI")
 # # 次元圧縮手法
 # args_DimRedu <- c("tsne")
+# # time range
+# args_range <- c("all")
 # #######################
 
 ### SBD####
