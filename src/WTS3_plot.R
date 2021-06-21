@@ -27,6 +27,8 @@ args_DimRedu <- args[9]
 args_filter <- args[10]
 # y-shift計算対象の細胞
 args_shift <- c("ASER")
+# time range
+args_range <- args[11]
 ##################################################
 # #### test args 2####
 # args_sample <- c("2")
@@ -39,9 +41,9 @@ args_shift <- c("ASER")
 # # input_Position ファイル名
 # args_input_Position <- c("data/Position/Position_2.RData")
 # # input_tempdat ファイル名
-# args_input_tempdata <- c("output/WTS3/SBD/normalize_1/all/tsne/ARI/cls_tempdata/SampleNumber_2.RData")
+# args_input_tempdata <- c("output/WTS3/normalize_1/all/SBD/ARI/tsne/cls_tempdata/SampleNumber_2.RData")
 # # outputファイル名
-# args_output <- c("output/WTS3/SBD/normalize_1/all/tsne/ARI/plot/SampleNumber_2.png")
+# args_output <- c("output/WTS3/normalize_1/all/SBD/ARI/tsne/shift_plot/stim_cell/SampleNumber_2.png")
 # # select data データの指定
 # args_data <- c("normalize_1")
 # # クラスター評価手法
@@ -53,7 +55,8 @@ args_shift <- c("ASER")
 # # args_filter <- c("stim_cluster")
 # # y-shift計算対象の細胞
 # args_shift <- c("ASER")
-
+# # time range
+# args_range <- c("all")
 
 #### input Neuron Activity Data####
 load(args_input_n)
