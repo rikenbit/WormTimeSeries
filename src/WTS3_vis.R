@@ -22,7 +22,6 @@ args_eval <- args[5]
 args_DimRedu <- args[6]
 # time range
 args_range <- args[7]
-#######################
 # #### test args####
 # # select animal number 個体番号の指定
 # args_sample <- c("1")
@@ -44,9 +43,8 @@ args_range <- args[7]
 # args_DimRedu <- c("tsne")
 # # time range
 # args_range <- c("all")
-# #######################
 
-### SBD####
+### load SBD####
 load(args_dist)
 
 #### Dimensionality Reduction####
@@ -90,7 +88,7 @@ df_merged_stim <- merge(df_merged,
 df_merged_stim %>% 
     replace_na(., replace = list(stim = 0)) -> df_merged_stim0
 
-#### ggplot neuron group####
+#### GGplot neuron group####
 g_col <- c('NeuronType')
 gg_nt <- gg_n_stim(g_col)
 g_col <- c('NeuronGroup')
@@ -108,7 +106,6 @@ eval_type <- switch(args_eval,
               "Entropy" = cls_Entropy,
               stop("Only can use cls_purity,ARI,Fmeasure,Entropy")
 )
-
 # evaluation
 set_cutree %>% 
     purrr::map_dbl(., eval_type) -> eval_value
@@ -116,7 +113,7 @@ ClusterP_df <- data.frame(set_cutree = set_cutree,
                           eval_value = eval_value
                           )
 
-#### ggplot clustering group####
+#### GGplot clustering group####
 gg_cls <- switch(args_eval,
                  "purity" = max_eval(ClusterP_df),
                  "ARI" = max_eval(ClusterP_df),
@@ -125,7 +122,7 @@ gg_cls <- switch(args_eval,
                  stop("Only can use cls_purity,ARI,Fmeasure,Entropy")
 )
             
-#### table of eval_value####
+#### GGplot table of eval_value####
 ClusterP_df %>% 
     dplyr::summarise_all(list(round), digits=5) %>% 
         # ggpubr
@@ -160,7 +157,7 @@ df_cell_cls_stim0 %>%
 # save tempdata
 save(df_tempdata, file=args_tempdata)
 
-#### patchwork####
+#### patchwork & save####
 # append(list(gg_nt), list(gg_ng)) -> gg_cls
 append(list(gg_nt), list(gg_ng)) %>% 
     append(., gg_cls) -> gg_cls

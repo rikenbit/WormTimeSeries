@@ -48,21 +48,21 @@ wts_umap = function(x) {
 }
 
 #### ggplot Neuron type/group####
-gg_n = function(x) {
-    # ggplot
-    g_col <- x
-    gg_n <- eval(parse(text=paste0("ggplot(df_merged, 
-                                    aes(x = cord_1,
-                                        y = cord_2, 
-                                        label = cell_type, 
-                                        color = ",factor(g_col),"))"))) +
-            geom_point() +
-            geom_text_repel(max.overlaps = Inf,
-                            min.segment.length = 0) +
-            ggtitle(g_col) +
-            theme(plot.title = element_text(size = 30, hjust = 0.5))
-    return(gg_n)
-}
+# gg_n = function(x) {
+#     # ggplot
+#     g_col <- x
+#     gg_n <- eval(parse(text=paste0("ggplot(df_merged, 
+#                                     aes(x = cord_1,
+#                                         y = cord_2, 
+#                                         label = cell_type, 
+#                                         color = ",factor(g_col),"))"))) +
+#             geom_point() +
+#             geom_text_repel(max.overlaps = Inf,
+#                             min.segment.length = 0) +
+#             ggtitle(g_col) +
+#             theme(plot.title = element_text(size = 30, hjust = 0.5))
+#     return(gg_n)
+# }
 
 #### ggplot Neuron type/group StimShape####
 gg_n_stim = function(x) {
@@ -100,15 +100,22 @@ gg_clusters = function(x) {
     cls_n <- x
     first_cls_diff <- set_cutree[1] - 1
     i <- cls_n - first_cls_diff
-    df_cls <- df_cls_cord[[i]]
+    # df_cls <- df_cls_cord[[i]]
+    # cls_nの値と同じかどうか
+    df_cls_cord[[i]] %>% 
+        mutate(., cls_stim = if_else(cls == cls_n, 
+                                     true = 1, 
+                                     false = 0)) -> df_cls
     #### ggplot#### 
     gg_cls_n <- ggplot(df_cls, 
                        aes(x = cord_1, 
                            y = cord_2, 
                            label = cell_type, 
+                           shape = factor(cls_stim),
                            color = factor(cls))) +
                             # color = forcats::fct_explicit_na(factor(cls)))) +
-                geom_point() +
+                geom_point(size = 8.0) +
+                scale_shape_manual(values=c(4,15)) +
                 geom_text_repel(max.overlaps = Inf, 
                                 min.segment.length = 0)
     eval(parse(text=paste0("title <- ggtitle('cutree_",cls_n,"')")))
