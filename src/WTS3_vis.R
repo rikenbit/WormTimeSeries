@@ -87,13 +87,11 @@ df_merged_stim <- merge(df_merged,
                         all.x = TRUE)
 df_merged_stim %>% 
     replace_na(., replace = list(stim = 0)) -> df_merged_stim0
-
 #### GGplot neuron group####
 g_col <- c('NeuronType')
 gg_nt <- gg_n_stim(g_col)
 g_col <- c('NeuronGroup')
 gg_ng <- gg_n_stim(g_col)
-
 #### clustering evaluation####
 set_cutree <- seq(3,10)
 set_cutree %>% 
@@ -122,7 +120,7 @@ gg_cls <- switch(args_eval,
                  stop("Only can use cls_purity,ARI,Fmeasure,Entropy")
 )
             
-#### GGplot table of eval_value####
+#### GGpubr table of eval_value####
 ClusterP_df %>% 
     dplyr::summarise_all(list(round), digits=5) %>% 
         # ggpubr
@@ -156,7 +154,6 @@ df_cell_cls_stim0 %>%
                   acf) -> df_tempdata
 # save tempdata
 save(df_tempdata, file=args_tempdata)
-
 #### patchwork & save####
 # append(list(gg_nt), list(gg_ng)) -> gg_cls
 append(list(gg_nt), list(gg_ng)) %>% 

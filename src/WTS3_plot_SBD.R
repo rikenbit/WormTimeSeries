@@ -14,6 +14,7 @@ args_input_mCherry <- args[4]
 # input_Position ファイル名
 args_input_Position <- args[5]
 # input_tempdat ファイル名
+# inputデータはallディレクトリを選択
 args_input_tempdata <- args[6]
 # outputファイル名
 args_output <- args[7]
@@ -29,8 +30,6 @@ args_filter <- args[10]
 args_shift <- c("ASER")
 # time range
 args_range <- args[11]
-# output yshift table
-args_output_table <- args[12]
 ##################################################
 # #### test args 2####
 # args_sample <- c("2")
@@ -45,7 +44,7 @@ args_output_table <- args[12]
 # # input_tempdat ファイル名
 # args_input_tempdata <- c("output/WTS3/normalize_1/all/SBD/ARI/tsne/cls_tempdata/SampleNumber_2.RData")
 # # outputファイル名
-# args_output <- c("output/WTS3/normalize_1/all/SBD/ARI/tsne/shift_plot/stim_cell/SampleNumber_2.png")
+# args_output <- c("output/WTS3/normalize_1/after/SBD/ARI/tsne/shift_plot/stim_cell/SampleNumber_2.png")
 # # select data データの指定
 # args_data <- c("normalize_1")
 # # クラスター評価手法
@@ -58,14 +57,28 @@ args_output_table <- args[12]
 # # y-shift計算対象の細胞
 # args_shift <- c("ASER")
 # # time range
-# args_range <- c("all")
-# # output yshift table
-# args_output_table <- c("output/WTS3/normalize_1/all/SBD/ARI/tsne/shift_table/stim_cell/SampleNumber_2.RData")
+# args_range <- c("after")
+# # args_range <- c("all")
 
 #### input Neuron Activity Data####
 load(args_input_n)
 # input_n <- ReadData_1
 eval(parse(text=paste0("input_n <- ReadData_",args_sample)))
+# TimeFrame
+rownames(input_n) %>% as.numeric() -> timeframe
+
+##### First Stim TimeFrame####
+# Stimulation Data
+load(args_input_stim)
+eval(parse(text=paste0("input_stim <- stim_",args_sample)))
+input_stim %>% as.numeric() -> input_stim
+first_stim <- switch(args_range,
+                     "all" = range_all(input_stim),
+                     "after" = range_after(input_stim),
+                     stop("Only can use all,after")
+)
+########
+input_n[first_stim:length(timeframe),] -> input_n
 # rownamesを一行目に追加したデータフレーム作成
 input_n %>% 
     rownames_to_column("time_frame") %>% 
@@ -76,30 +89,24 @@ input_n %>%
 as.numeric(df_input_n$time_frame) -> df_input_n$time_frame
 
 #### input other Data####
-# TimeFrame
-rownames(input_n) %>% 
-    as.numeric() -> timeframe
-# Stimulation Data
-load(args_input_stim)
-eval(parse(text=paste0("input_stim <- stim_",args_sample)))
-input_stim %>%
-    as.numeric() -> stimtiming
-stimtiming[1:length(timeframe)] -> stimtiming
+# stimtiming
+input_stim[first_stim:length(timeframe)] -> stimtiming
+
 # mCherry
 load(args_input_mCherry)
 eval(parse(text=paste0("input_mCherry <- mCherry_",args_sample)))
 input_mCherry[,1] %>% 
     as.numeric() -> mcherry
-mcherry[1:length(timeframe)] -> mcherry
+mcherry[first_stim:length(timeframe)] -> mcherry
 # Position
 load(args_input_Position)
 eval(parse(text=paste0("input_Position <- Position_",args_sample)))
 input_Position$MoveX %>% 
     as.numeric() -> position
-position[1:length(timeframe)] -> position
+position[first_stim:length(timeframe)] -> position
 
 data.frame(
-    time_frame = timeframe,
+    time_frame = timeframe[first_stim:length(timeframe)],
     stim_timing = stimtiming,
     m_cherry = mcherry,
     position = position,
@@ -115,7 +122,10 @@ df_input_n %>%
             all.x = TRUE) -> df_merged_other
 
 #### merge tempdata####
+
+#### ERROR####
 load(args_input_tempdata)
+########
 merge(df_merged_other,
       df_tempdata,
       by.x = "cell_type", 
@@ -132,8 +142,7 @@ df_merged <- switch(args_filter,
               "stim_cell" = filter_stim(df_merged_temp),
               "stim_cluster" = filter_clusters(df_merged_temp,args_shift),
               stop("Only can use stim_cell")
-              )
-
+)
 #### check filtered args_shift####
 # フィルターした細胞の中ににASERがあるかないか
 df_merged$cell_type %>%
@@ -168,33 +177,19 @@ merge(x=df_merged,
       by.y=c("time_frame", "cell_type"),
       all.x = TRUE) -> df_merged_yshift
 
-#### ggtheme####
+#### ggplot####
+# ggplot theme
 sX <- scale_x_continuous(name = "TimeFrame(1frame/0.2sec)",
                          breaks = seq(0, length(timeframe), by= 1000)
 )
 t_1 <- theme(plot.title = element_text(size = 30, hjust = 0.5, family ="HiraKakuPro-W3"))
 t_2 <- theme(axis.title = element_text(size = 20))
 t_3 <- theme(legend.title = element_text(size = 28),
-             legend.text = element_text(size = 20)
-             )
-
-#### data_shifted_list####
+             legend.text = element_text(size = 20))
+# plot Neuron Activity Data
 seq(1:length(list_cell_type)) %>% 
-    purrr::map(., df_yshift) -> data_shifted_list
-
-#### save tempdata y-shift table####
-seq(1:length(list_cell_type)) %>% 
-    purrr::map_dbl(., y_shift_dbl) -> y_shift_value
-y_shift_table <- data.frame(cell_type = list_cell_type, 
-                          y_shift = y_shift_value
-                            )
-save(y_shift_table, file=args_output_table)
-
-#### plot Neuron Activity Data####
-seq(1:length(data_shifted_list)) %>%
     purrr::map(., plot_yshift) -> gg_cells
-
-#### plot other data####
+# plot other data
 p_1 <- ggplot(data = df_merged_yshift,
               aes(x = time_frame))
 gg_m <- p_1 +        
@@ -223,7 +218,7 @@ gg_list %>%
         caption = 'made with patchwork::wrap_plots',
         theme = theme(plot.title = element_text(size = 48, hjust = 0.5))
     ) -> gg
-    
+
 #### ggsave####
 ggsave(filename = args_output, 
        plot = gg, 

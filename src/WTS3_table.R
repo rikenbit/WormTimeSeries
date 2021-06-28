@@ -14,7 +14,7 @@ args_filter <- args[2]
 args_output_neuron <- args[3]
 # output table stim_cell
 args_output_rmSensory <- args[4]
-# #### args####
+# #### test args####
 # # サンプル番号一覧取得
 # args_numbers <- c("1","2","4","5","6","7","9","10","11","12","13","14","15","16","17","18","19","21","22","23","24","26","27","28")
 # # y-shift計算対象の細胞

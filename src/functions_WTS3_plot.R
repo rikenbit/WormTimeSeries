@@ -59,34 +59,38 @@ sbd_y = function(x) {
                          return.shifted = TRUE)
     return(sbd$yshift)
 }
-##########
-
-#### plot one cell 3coloar y-shift value####
-plot_yshift = function(x) {
+#### func df_yshift####
+df_yshift = function(x) {
     df_merged_yshift %>% 
         filter(., cell_type == list_cell_type[x]) %>% 
-        mutate(.,
-               stim_timing = if_else(stim_timing == 1, 
-                                     max(.$n_activity), 
-                                     min(.$n_activity))
+            mutate(.,
+                   stim_timing = if_else(stim_timing == 1, 
+                                         max(.$n_activity), 
+                                         min(.$n_activity))
         ) -> data_shifted
-    # get y-shift value
     data_shifted %>% 
         dplyr::arrange(time_frame) -> data_shifted
-    if (data_shifted$y_shift[1]==0) {
+    return(data_shifted)
+}
+#### func plot_yshift####
+plot_yshift = function(x) {
+    data_shifted <- data_shifted_list[[x]]
+    if (x==1) {
+        y_shift_value <- 0
+    } else if (data_shifted$y_shift[1]==0) {
         # はじめて0でない要素番号の取得
         data_shifted %>% 
             filter(y_shift != 0) %>% 
-                slice_head() %>% 
-                    .$time_frame -> first_not_0
+            slice_head() %>% 
+            .$time_frame -> first_not_0
         # y_shift_valueの計算
         y_shift_value <- first_not_0 -1
     } else {
         # はじめて0になる要素番号の取得
         data_shifted %>% 
             filter(y_shift == 0) %>% 
-                slice_head() %>% 
-                    .$time_frame -> first_0
+            slice_head() %>% 
+            .$time_frame -> first_0
         # y_shift_valueの計算
         y_shift_value <- first_0 -1 -length(data_shifted$time_frame)
     }
@@ -116,8 +120,89 @@ plot_yshift = function(x) {
         sX
     return(p_2)
 }
+#### func y_shift_dbl####
+y_shift_dbl = function(x) {
+    data_shifted <- data_shifted_list[[x]]
+    if (x==1) {
+        y_shift_value <- 0
+    } else if (data_shifted$y_shift[1]==0) {
+        # はじめて0でない要素番号の取得
+        data_shifted %>% 
+            filter(y_shift != 0) %>% 
+            slice_head() %>% 
+            .$time_frame -> first_not_0
+        # y_shift_valueの計算
+        y_shift_value <- first_not_0 -1
+    } else {
+        # はじめて0になる要素番号の取得
+        data_shifted %>% 
+            filter(y_shift == 0) %>% 
+            slice_head() %>% 
+            .$time_frame -> first_0
+        # y_shift_valueの計算
+        y_shift_value <- first_0 -1 -length(data_shifted$time_frame)
+    }
+    return(y_shift_value)
+}
+# #### plot one cell 3coloar y-shift value####
+# plot_yshift = function(x) {
+#     df_merged_yshift %>% 
+#         filter(., cell_type == list_cell_type[x]) %>% 
+#         mutate(.,
+#                stim_timing = if_else(stim_timing == 1, 
+#                                      max(.$n_activity), 
+#                                      min(.$n_activity))
+#         ) -> data_shifted
+#     # get y-shift value
+#     data_shifted %>% 
+#         dplyr::arrange(time_frame) -> data_shifted
+#     if (data_shifted$y_shift[1]==0) {
+#         # はじめて0でない要素番号の取得
+#         data_shifted %>% 
+#             filter(y_shift != 0) %>% 
+#                 slice_head() %>% 
+#                     .$time_frame -> first_not_0
+#         # y_shift_valueの計算
+#         y_shift_value <- first_not_0 -1
+#     } else {
+#         # はじめて0になる要素番号の取得
+#         data_shifted %>% 
+#             filter(y_shift == 0) %>% 
+#                 slice_head() %>% 
+#                     .$time_frame -> first_0
+#         # y_shift_valueの計算
+#         y_shift_value <- first_0 -1 -length(data_shifted$time_frame)
+#     }
+#     
+#     p_1 <- ggplot(data = data_shifted)
+#     p_2 <- p_1 + 
+#         geom_line(aes(x = time_frame, 
+#                       y = n_activity, 
+#                       colour = "n_activity")
+#         ) +
+#         geom_line(aes(x = time_frame, 
+#                       y = y_shift, 
+#                       colour = "n_yshift")
+#         ) +
+#         geom_line(aes(x = time_frame, 
+#                       y = stim_timing, 
+#                       colour = "stim_timing"),
+#                   linetype = "dotted", 
+#                   alpha = 0.5
+#         ) +
+#         scale_colour_manual(values = c("black", "red", "purple"),
+#                             breaks = c("n_activity", "n_yshift", "stim_timing")) +
+#         eval(parse(text=paste0("ggtitle('celltype_",list_cell_type[x],"_平行移動 ",y_shift_value,"')"))) +
+#         t_1 +
+#         t_2 +
+#         t_3 +
+#         sX
+#     return(p_2)
+# }
 
-# サンプル番号を読み込んで，loadする関数
+
+
+##### サンプル番号を読み込んで，loadする関数#####
 load_tempdata = function(x) {
     args_number <- args_numbers[x]
     args_tempdata <- paste(args_tempdata_dir,args_number, sep = "")
@@ -132,6 +217,7 @@ load_tempdata = function(x) {
     df <- df_tempdata
     return(df)
 }
+
 #### table_cell####
 table_cell = function(x) {
     df_table <- x
@@ -195,3 +281,21 @@ table_cls = function(x) {
     output_table <- list(table_neuron,table_rmSensory)
     return(output_table)
 }
+
+# ##### First Stim TimeFrame####
+# range_all = function(x) {
+#     first_stim <- 1
+#     return(first_stim)
+# }
+# range_after = function(x) {
+#     data.frame(
+#         TimeFrame = timeframe,
+#         StimTiming = x,
+#         stringsAsFactors = FALSE
+#     ) -> input_stim_df
+#     input_stim_df %>% 
+#         filter(StimTiming != 0) %>%
+#             slice_head() %>%
+#                 .$TimeFrame -> first_stim
+#     return(first_stim)
+# }

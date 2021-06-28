@@ -28,7 +28,6 @@ wts_tsne = function(x) {
                           )
     return(df_tSNE)
 }
-
 #### UMAP####
 wts_umap = function(x) {
     d <- x
@@ -46,24 +45,6 @@ wts_umap = function(x) {
                           )
     return(df_umap)
 }
-
-#### ggplot Neuron type/group####
-# gg_n = function(x) {
-#     # ggplot
-#     g_col <- x
-#     gg_n <- eval(parse(text=paste0("ggplot(df_merged, 
-#                                     aes(x = cord_1,
-#                                         y = cord_2, 
-#                                         label = cell_type, 
-#                                         color = ",factor(g_col),"))"))) +
-#             geom_point() +
-#             geom_text_repel(max.overlaps = Inf,
-#                             min.segment.length = 0) +
-#             ggtitle(g_col) +
-#             theme(plot.title = element_text(size = 30, hjust = 0.5))
-#     return(gg_n)
-# }
-
 #### ggplot Neuron type/group StimShape####
 gg_n_stim = function(x) {
   # ggplot
@@ -82,7 +63,6 @@ gg_n_stim = function(x) {
     theme(plot.title = element_text(size = 30, hjust = 0.5))
   return(gg_n)
 }
-
 #### dataframe for evaluation ####
 cls_cord = function(x) {
     #### clustering#### 
@@ -94,7 +74,6 @@ cls_cord = function(x) {
     df_cls <- mutate(df_cord, cls = c(g_cls))
     return(df_cls)
 }
-
 #### ggplot ward.D2 clustering####
 gg_clusters = function(x) {
     cls_n <- x
@@ -125,7 +104,6 @@ gg_clusters = function(x) {
         t_1
     return(gg_cls_n)
 }
-
 #### eval purity####
 ClusterPurity <- function(clusters, classes) {
     sum(apply(table(classes, clusters), 2, max)) / length(clusters)
@@ -149,7 +127,6 @@ cls_purity = function(x) {
     ClusterP <- ClusterPurity(clusters, classes)
     return(ClusterP)
 }
-
 #### eval ARI####
 cls_ARI = function(x) {
     cls_n <- x
@@ -170,7 +147,6 @@ cls_ARI = function(x) {
     ClusterARI <- adjustedRandIndex(clusters, classes)
     return(ClusterARI)
 }
-
 #### eval Fmeasure####
 Fmeasure <- function(cluster, label){
   # クロス集計
@@ -207,7 +183,6 @@ cls_Fmeasure = function(x) {
     ClusterFmeasure <- Fmeasure(clusters, classes)
     return(ClusterFmeasure)
 }
-
 #### eval Entropy####
 calcEntropy0 <- function(pv){
     p1 <- pv / sum(pv)
