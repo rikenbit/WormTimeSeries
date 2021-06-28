@@ -72,12 +72,10 @@ df_yshift = function(x) {
         dplyr::arrange(time_frame) -> data_shifted
     return(data_shifted)
 }
-#### func plot_yshift####
-plot_yshift = function(x) {
+#### func y_shift_dbl####
+y_shift_dbl = function(x) {
     data_shifted <- data_shifted_list[[x]]
-    if (x==1) {
-        y_shift_value <- 0
-    } else if (data_shifted$y_shift[1]==0) {
+    if (data_shifted$y_shift[1]==0) {
         # はじめて0でない要素番号の取得
         data_shifted %>% 
             filter(y_shift != 0) %>% 
@@ -94,21 +92,60 @@ plot_yshift = function(x) {
         # y_shift_valueの計算
         y_shift_value <- first_0 -1 -length(data_shifted$time_frame)
     }
-    
+    # yshiftが0の場合，numeric(0)になるので,0を代入
+    if (length(y_shift_value) == 0) {
+        y_shift_value <- 0
+    }
+    return(y_shift_value)
+}
+# #### plot one cell 3coloar y-shift value####
+plot_yshift = function(x) {
+    df_merged_yshift %>%
+        filter(., cell_type == list_cell_type[x]) %>%
+        mutate(.,
+               stim_timing = if_else(stim_timing == 1,
+                                     max(.$n_activity),
+                                     min(.$n_activity))
+        ) -> data_shifted
+    # get y-shift value
+    data_shifted %>%
+        dplyr::arrange(time_frame) -> data_shifted
+    if (data_shifted$y_shift[1]==0) {
+        # はじめて0でない要素番号の取得
+        data_shifted %>% 
+            filter(y_shift != 0) %>% 
+            slice_head() %>% 
+            .$time_frame -> first_not_0
+        # y_shift_valueの計算
+        y_shift_value <- first_not_0 -1
+    } else {
+        # はじめて0になる要素番号の取得
+        data_shifted %>% 
+            filter(y_shift == 0) %>% 
+            slice_head() %>% 
+            .$time_frame -> first_0
+        # y_shift_valueの計算
+        y_shift_value <- first_0 -1 -length(data_shifted$time_frame)
+    }
+    # yshiftが0の場合，numeric(0)になるので,0を代入
+    if (length(y_shift_value) == 0) {
+        y_shift_value <- 0
+    }
+
     p_1 <- ggplot(data = data_shifted)
-    p_2 <- p_1 + 
-        geom_line(aes(x = time_frame, 
-                      y = n_activity, 
+    p_2 <- p_1 +
+        geom_line(aes(x = time_frame,
+                      y = n_activity,
                       colour = "n_activity")
         ) +
-        geom_line(aes(x = time_frame, 
-                      y = y_shift, 
+        geom_line(aes(x = time_frame,
+                      y = y_shift,
                       colour = "n_yshift")
         ) +
-        geom_line(aes(x = time_frame, 
-                      y = stim_timing, 
+        geom_line(aes(x = time_frame,
+                      y = stim_timing,
                       colour = "stim_timing"),
-                  linetype = "dotted", 
+                  linetype = "dotted",
                   alpha = 0.5
         ) +
         scale_colour_manual(values = c("black", "red", "purple"),
@@ -120,85 +157,6 @@ plot_yshift = function(x) {
         sX
     return(p_2)
 }
-#### func y_shift_dbl####
-y_shift_dbl = function(x) {
-    data_shifted <- data_shifted_list[[x]]
-    if (x==1) {
-        y_shift_value <- 0
-    } else if (data_shifted$y_shift[1]==0) {
-        # はじめて0でない要素番号の取得
-        data_shifted %>% 
-            filter(y_shift != 0) %>% 
-            slice_head() %>% 
-            .$time_frame -> first_not_0
-        # y_shift_valueの計算
-        y_shift_value <- first_not_0 -1
-    } else {
-        # はじめて0になる要素番号の取得
-        data_shifted %>% 
-            filter(y_shift == 0) %>% 
-            slice_head() %>% 
-            .$time_frame -> first_0
-        # y_shift_valueの計算
-        y_shift_value <- first_0 -1 -length(data_shifted$time_frame)
-    }
-    return(y_shift_value)
-}
-# #### plot one cell 3coloar y-shift value####
-# plot_yshift = function(x) {
-#     df_merged_yshift %>% 
-#         filter(., cell_type == list_cell_type[x]) %>% 
-#         mutate(.,
-#                stim_timing = if_else(stim_timing == 1, 
-#                                      max(.$n_activity), 
-#                                      min(.$n_activity))
-#         ) -> data_shifted
-#     # get y-shift value
-#     data_shifted %>% 
-#         dplyr::arrange(time_frame) -> data_shifted
-#     if (data_shifted$y_shift[1]==0) {
-#         # はじめて0でない要素番号の取得
-#         data_shifted %>% 
-#             filter(y_shift != 0) %>% 
-#                 slice_head() %>% 
-#                     .$time_frame -> first_not_0
-#         # y_shift_valueの計算
-#         y_shift_value <- first_not_0 -1
-#     } else {
-#         # はじめて0になる要素番号の取得
-#         data_shifted %>% 
-#             filter(y_shift == 0) %>% 
-#                 slice_head() %>% 
-#                     .$time_frame -> first_0
-#         # y_shift_valueの計算
-#         y_shift_value <- first_0 -1 -length(data_shifted$time_frame)
-#     }
-#     
-#     p_1 <- ggplot(data = data_shifted)
-#     p_2 <- p_1 + 
-#         geom_line(aes(x = time_frame, 
-#                       y = n_activity, 
-#                       colour = "n_activity")
-#         ) +
-#         geom_line(aes(x = time_frame, 
-#                       y = y_shift, 
-#                       colour = "n_yshift")
-#         ) +
-#         geom_line(aes(x = time_frame, 
-#                       y = stim_timing, 
-#                       colour = "stim_timing"),
-#                   linetype = "dotted", 
-#                   alpha = 0.5
-#         ) +
-#         scale_colour_manual(values = c("black", "red", "purple"),
-#                             breaks = c("n_activity", "n_yshift", "stim_timing")) +
-#         eval(parse(text=paste0("ggtitle('celltype_",list_cell_type[x],"_平行移動 ",y_shift_value,"')"))) +
-#         t_1 +
-#         t_2 +
-#         t_3 +
-#         sX
-#     return(p_2)
-# }
 
 
 
