@@ -187,14 +187,14 @@ load(args_load_table)
 # load timing table load
 stimtimng_sheet <- read.xlsx("data/stimulation/stimulation_timing.xlsx",
                       sheet = "Sheet1",
-                      rowNames = TRUE,
+                      rowNames = FALSE,
                       colNames =TRUE)
 # create df
 stimtimng_sheet %>% 
     dplyr::select(sample_number = 1, 
-                  frame_sec = 5,
-                  stim_first = 6,
-                  half_period = 7) %>% 
+                  frame_sec = 6,
+                  stim_first = 7,
+                  half_period = 8) %>% 
         mutate(period = half_period*2,
                shift_max = half_period*2 + 50,
                shift_min = -half_period*2 - 50) -> stimtimng_sheet
