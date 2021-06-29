@@ -1,5 +1,6 @@
 # library
 ##################################################
+library(openxlsx)
 library(tidyverse)
 library(patchwork)
 library(dtwclust)
@@ -159,7 +160,6 @@ plot_yshift = function(x) {
 }
 
 
-
 ##### サンプル番号を読み込んで，loadする関数#####
 load_tempdata = function(x) {
     args_number <- args_numbers[x]
@@ -210,6 +210,7 @@ table_cell = function(x) {
     output_table <- list(table_neuron,table_rmSensory)
     return(output_table)
 }
+
 #### table_cls####
 table_cls = function(x) {
     df_table <- x
@@ -238,6 +239,18 @@ table_cls = function(x) {
     table_rmSensory[is.na(table_rmSensory)] <- 0
     output_table <- list(table_neuron,table_rmSensory)
     return(output_table)
+}
+
+#### func load_shift_table####
+load_shift_table = function(x) {
+    args_number <- args_numbers[x]
+    args_shift_table <- paste(args_shift_dir,args_number, sep = "")
+    eval(parse(text=paste0("tempdata <- c('",args_shift_table,".RData')")))
+    load(tempdata)
+    y_shift_table %>% 
+        mutate(sample_number = x) %>% 
+        select(sample_number, cell_type, y_shift)-> y_shift_table
+    return(y_shift_table)
 }
 
 # ##### First Stim TimeFrame####

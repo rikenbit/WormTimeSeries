@@ -14,6 +14,11 @@ args_filter <- args[2]
 args_output_neuron <- args[3]
 # output table stim_cell
 args_output_rmSensory <- args[4]
+# input
+args_shift_dir <- args[5]
+# output shift_table
+args_output_shift <- args[6]
+
 # #### test args####
 # # サンプル番号一覧取得
 # args_numbers <- c("1","2","4","5","6","7","9","10","11","12","13","14","15","16","17","18","19","21","22","23","24","26","27","28")
@@ -26,9 +31,13 @@ args_output_rmSensory <- args[4]
 # # output table stim_cell
 # args_output_neuron <- c("output/WTS3/normalize_1/all/SBD/ARI/tsne/table/stim_cell/table_neuron.csv")
 # args_output_rmSensory <- c("output/WTS3/normalize_1/all/SBD/ARI/tsne/table/stim_cell/table_rmSensory.csv")
+# # input
+# args_shift_dir <- c("output/WTS3/normalize_1/all/SBD/ARI/tsne/shift_table/stim_cell/SampleNumber_")
+# # output shift_table
+# args_output_shift <- c("output/WTS3/normalize_1/all/SBD/ARI/tsne/shift_table/stim_cell/shift_table.csv")
 # ########
 
-#### prepare dataframe####
+#### prepare tempdata####
 # df_temp_list 24サンプルのdfのリストを作成
 seq(1,length(args_numbers)) %>% 
     purrr::map(.,load_tempdata) -> df_temp_list
@@ -43,3 +52,12 @@ output_table <- switch(args_filter,
 # write_excel_csv
 write_excel_csv(output_table[[1]], args_output_neuron) 
 write_excel_csv(output_table[[2]], args_output_rmSensory)
+
+#### create shift_table####
+# load
+seq(1,length(args_numbers)) %>% 
+    purrr::map(.,load_shift_table) -> df_shift_list
+# bind 24 sample list
+plyr::join_all(df_shift_list, type = 'full') -> df_table
+# write
+write_excel_csv(df_table, args_output_shift) 

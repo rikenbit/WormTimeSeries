@@ -35,14 +35,22 @@ rule all:
             dim_method=Dim_Method,
             dist=dist_data,
             df_f=df_filter,
+            range=time_range),
+        expand('output/WTS3/normalize_1/{range}/{dist}/{eval}/{dim_method}/shift_table/{df_f}/shift_table.csv',
+            eval=cls_eval, 
+            dim_method=Dim_Method,
+            dist=dist_data,
+            df_f=df_filter,
             range=time_range)
 
 rule WTS3_table:
     output:
         csv_1 = 'output/WTS3/normalize_1/{range}/{dist}/{eval}/{dim_method}/table/{df_f}/table_neuron.csv',
-        csv_2 = 'output/WTS3/normalize_1/{range}/{dist}/{eval}/{dim_method}/table/{df_f}/table_rmSensory.csv'
+        csv_2 = 'output/WTS3/normalize_1/{range}/{dist}/{eval}/{dim_method}/table/{df_f}/table_rmSensory.csv',
+        shift_csv_1 = 'output/WTS3/normalize_1/{range}/{dist}/{eval}/{dim_method}/shift_table/{df_f}/shift_table.csv'
     params:
-        args1 = 'output/WTS3/normalize_1/{range}/{dist}/{eval}/{dim_method}/cls_tempdata/SampleNumber_'
+        tempdata_dir = 'output/WTS3/normalize_1/{range}/{dist}/{eval}/{dim_method}/cls_tempdata/SampleNumber_',
+        shift_dir = 'output/WTS3/normalize_1/{range}/{dist}/{eval}/{dim_method}/shift_table/{df_f}/SampleNumber_'
     benchmark:
         'benchmarks/WTS3/normalize_1/{range}/{dist}/{eval}/{dim_method}/table/{df_f}/table.txt'
     conda:
@@ -52,5 +60,5 @@ rule WTS3_table:
     log:
         'logs/WTS3/normalize_1/{range}/{dist}/{eval}/{dim_method}/table/{df_f}/table.log'
     shell:
-        'src/WTS3_table.sh {params.args1} {wildcards.df_f} {output.csv_1} {output.csv_2} >& {log}'
+        'src/WTS3_table.sh {params.tempdata_dir} {wildcards.df_f} {output.csv_1} {output.csv_2}  {params.shift_dir} {output.shift_csv_1}>& {log}'
 ###################################################
