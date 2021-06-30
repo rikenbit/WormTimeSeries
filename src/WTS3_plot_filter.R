@@ -1,5 +1,4 @@
 source("src/functions_WTS3_plot.R")
-
 # # args setting
 ##################################################
 args <- commandArgs(trailingOnly = T)
@@ -72,51 +71,51 @@ load(args_input_n)
 eval(parse(text=paste0("input_n <- ReadData_",args_sample)))
 # rownamesを一行目に追加したデータフレーム作成
 input_n %>% 
-    rownames_to_column("time_frame") %>% 
-    pivot_longer(-time_frame, 
-                 names_to = "cell_type", 
-                 values_to = "n_activity") -> df_input_n
+  rownames_to_column("time_frame") %>% 
+  pivot_longer(-time_frame, 
+               names_to = "cell_type", 
+               values_to = "n_activity") -> df_input_n
 # convert type
 as.numeric(df_input_n$time_frame) -> df_input_n$time_frame
 
 #### input other Data####
 # TimeFrame
 rownames(input_n) %>% 
-    as.numeric() -> timeframe
+  as.numeric() -> timeframe
 # Stimulation Data
 load(args_input_stim)
 eval(parse(text=paste0("input_stim <- stim_",args_sample)))
 input_stim %>%
-    as.numeric() -> stimtiming
+  as.numeric() -> stimtiming
 stimtiming[1:length(timeframe)] -> stimtiming
 # mCherry
 load(args_input_mCherry)
 eval(parse(text=paste0("input_mCherry <- mCherry_",args_sample)))
 input_mCherry[,1] %>% 
-    as.numeric() -> mcherry
+  as.numeric() -> mcherry
 mcherry[1:length(timeframe)] -> mcherry
 # Position
 load(args_input_Position)
 eval(parse(text=paste0("input_Position <- Position_",args_sample)))
 input_Position$MoveX %>% 
-    as.numeric() -> position
+  as.numeric() -> position
 position[1:length(timeframe)] -> position
 
 data.frame(
-    time_frame = timeframe,
-    stim_timing = stimtiming,
-    m_cherry = mcherry,
-    position = position,
-    stringsAsFactors = FALSE
+  time_frame = timeframe,
+  stim_timing = stimtiming,
+  m_cherry = mcherry,
+  position = position,
+  stringsAsFactors = FALSE
 ) -> df_input_other
 
 #### merge input####
 df_input_n %>% 
-      merge(., 
-            df_input_other, 
-            by.x = "time_frame", 
-            by.y = "time_frame", 
-            all.x = TRUE) -> df_merged_other
+  merge(., 
+        df_input_other, 
+        by.x = "time_frame", 
+        by.y = "time_frame", 
+        all.x = TRUE) -> df_merged_other
 
 #### merge tempdata####
 load(args_input_tempdata)
@@ -129,21 +128,21 @@ merge(df_merged_other,
 #### check args_shift####
 # サンプルの全細胞内にASERがあるかないか
 df_tempdata$cell_type %>% 
-    check_args_shift() -> args_shift
+  check_args_shift() -> args_shift
 
 #### filter####
 df_merged <- switch(args_filter,
-              "stim_cell" = filter_stim(df_merged_temp),
-              "stim_cluster" = filter_clusters(df_merged_temp,args_shift),
-              stop("Only can use stim_cell")
-              )
+                    "stim_cell" = filter_stim(df_merged_temp),
+                    "stim_cluster" = filter_clusters(df_merged_temp,args_shift),
+                    stop("Only can use stim_cell")
+)
 
 #### check filtered args_shift####
 # フィルターした細胞の中ににASERがあるかないか
 df_merged$cell_type %>%
-    unique() -> list_cell_type
+  unique() -> list_cell_type
 list_cell_type %>%
-    check_args_shift() -> args_shift
+  check_args_shift() -> args_shift
 # 先頭をyshiftの基準となる細胞にする
 match(args_shift,list_cell_type) -> yshift_order
 c(list_cell_type[yshift_order], list_cell_type[-yshift_order]) -> list_cell_type
@@ -155,15 +154,15 @@ input_n.list <- asplit(input_n, 2)
 eval(parse(text=paste0("shift_1 <- input_n.list$",args_shift," %>% as.numeric()")))
 # sbd y-shift
 list_cell_type %>% 
-    purrr::map(., sbd_y) %>%
-        as.data.frame() -> sbd_yshift_df_wide
+  purrr::map(., sbd_y) %>%
+  as.data.frame() -> sbd_yshift_df_wide
 colnames(sbd_yshift_df_wide) <- list_cell_type
 # convert long df
 sbd_yshift_df_wide %>% 
-    rownames_to_column("time_frame") %>% 
-    pivot_longer(-time_frame, 
-                 names_to = "cell_type", 
-                 values_to = "y_shift") -> sbd_yshift_df
+  rownames_to_column("time_frame") %>% 
+  pivot_longer(-time_frame, 
+               names_to = "cell_type", 
+               values_to = "y_shift") -> sbd_yshift_df
 
 #### merge yshift#####
 merge(x=df_merged, 
@@ -180,77 +179,82 @@ t_1 <- theme(plot.title = element_text(size = 30, hjust = 0.5, family ="HiraKaku
 t_2 <- theme(axis.title = element_text(size = 20))
 t_3 <- theme(legend.title = element_text(size = 28),
              legend.text = element_text(size = 20)
-             )
+)
 #################### filter yshift########################
 # load y_shift_table
 load(args_load_table)
 # load timing table load
 stimtimng_sheet <- read.xlsx("data/stimulation/stimulation_timing.xlsx",
-                      sheet = "Sheet1",
-                      rowNames = FALSE,
-                      colNames =TRUE)
+                             sheet = "Sheet1",
+                             rowNames = FALSE,
+                             colNames =TRUE)
 # create df
 stimtimng_sheet %>% 
-    dplyr::select(sample_number = 1, 
-                  frame_sec = 6,
-                  stim_first = 7,
-                  half_period = 8) %>% 
-        mutate(period = half_period*2,
-               shift_max = half_period*2 + 50,
-               shift_min = -half_period*2 - 50) -> stimtimng_sheet
+  dplyr::select(sample_number = 1, 
+                frame_sec = 6,
+                stim_first = 7,
+                half_period = 8) %>% 
+  mutate(period = half_period*2,
+         shift_max = half_period*2 + 50,
+         shift_min = -half_period*2 - 50) -> stimtimng_sheet
 # filter  y_shift_table max min
 stimtimng_sheet %>% 
-    filter(sample_number == as.numeric(args_sample)) %>% 
-        .$shift_max -> y_shift_max
+  filter(sample_number == as.numeric(args_sample)) %>% 
+  .$shift_max -> y_shift_max
 stimtimng_sheet %>% 
-    filter(sample_number == as.numeric(args_sample)) %>% 
-        .$shift_min -> y_shift_min
-# get cell_type list
+  filter(sample_number == as.numeric(args_sample)) %>% 
+  .$shift_min -> y_shift_min
+
 y_shift_table %>% 
-    filter(y_shift >= y_shift_min & y_shift <= y_shift_max) -> y_shift_table
+  filter(y_shift >= y_shift_min & y_shift <= y_shift_max)  %>% 
+  mutate(y_shift_abs=abs(y_shift)) %>%
+  arrange(y_shift_abs) -> y_shift_table
+
 y_shift_table$cell_type -> list_cell_type
-##########################################################
+match(args_shift,list_cell_type) -> yshift_order
+c(list_cell_type[yshift_order], list_cell_type[-yshift_order]) -> list_cell_type
+#####################################
 #### data_shifted_list####
 seq(1:length(list_cell_type)) %>% 
-    purrr::map(., df_yshift) -> data_shifted_list
+  purrr::map(., df_yshift) -> data_shifted_list
 
 #### save tempdata y-shift table####
 save(y_shift_table, file=args_output_table)
 
 #### plot Neuron Activity Data####
 seq(1:length(data_shifted_list)) %>%
-    purrr::map(., plot_yshift) -> gg_cells
+  purrr::map(., plot_yshift) -> gg_cells
 
 #### plot other data####
 p_1 <- ggplot(data = df_merged_yshift,
               aes(x = time_frame))
 gg_m <- p_1 +        
-        geom_line(aes(y = m_cherry, colour = "m_cherry")) +
-        scale_color_manual(values = c("red")) +
-        t_2 +
-        t_3 +
-        sX
+  geom_line(aes(y = m_cherry, colour = "m_cherry")) +
+  scale_color_manual(values = c("red")) +
+  t_2 +
+  t_3 +
+  sX
 gg_p <- p_1 +
-        geom_line(aes(y = position, colour = "position")) +
-        scale_color_manual(values = c("blue")) +
-        t_2 +
-        t_3 +
-        sX
+  geom_line(aes(y = position, colour = "position")) +
+  scale_color_manual(values = c("blue")) +
+  t_2 +
+  t_3 +
+  sX
 
 #### wrap_plots####
 # list n_activity & other data
 append(gg_cells, list(gg_m)) %>% 
-    append(., list(gg_p)) -> gg_list
+  append(., list(gg_p)) -> gg_list
 # wrap
 eval(parse(text=paste0("plot_title <- c('SampleNumber_",args_sample,"_",args_data,"')")))
 gg_list %>% 
-    wrap_plots(., ncol = 1) +
-    plot_annotation(
-        title = plot_title,
-        caption = 'made with patchwork::wrap_plots',
-        theme = theme(plot.title = element_text(size = 48, hjust = 0.5))
-    ) -> gg
-    
+  wrap_plots(., ncol = 1) +
+  plot_annotation(
+    title = plot_title,
+    caption = 'made with patchwork::wrap_plots',
+    theme = theme(plot.title = element_text(size = 48, hjust = 0.5))
+  ) -> gg
+
 #### ggsave####
 ggsave(filename = args_output, 
        plot = gg, 
