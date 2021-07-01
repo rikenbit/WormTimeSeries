@@ -79,10 +79,14 @@ gg_clusters = function(x) {
     cls_n <- x
     first_cls_diff <- set_cutree[1] - 1
     i <- cls_n - first_cls_diff
-    # df_cls <- df_cls_cord[[i]]
+    # 設定したクラスタ数のデータフレームの，args_shiftの，クラスタ番号
+    df_cls_cord[[i]] %>% 
+        filter(cell_type==args_shift) %>% 
+            .$cls -> args_shift_cls
     # cls_nの値と同じかどうか
     df_cls_cord[[i]] %>% 
-        mutate(., cls_stim = if_else(cls == cls_n, 
+        # mutate(., cls_stim = if_else(cls == cls_n,
+        mutate(., cls_stim = if_else(cls == args_shift_cls,
                                      true = 1, 
                                      false = 0)) -> df_cls
     #### ggplot#### 
@@ -93,11 +97,12 @@ gg_clusters = function(x) {
                            shape = factor(cls_stim),
                            color = factor(cls))) +
                             # color = forcats::fct_explicit_na(factor(cls)))) +
-                geom_point(size = 8.0) +
+                geom_point(size = 6.0) +
                 scale_shape_manual(values=c(4,15)) +
                 geom_text_repel(max.overlaps = Inf, 
                                 min.segment.length = 0)
-    eval(parse(text=paste0("title <- ggtitle('cutree_",cls_n,"')")))
+    # eval(parse(text=paste0("title <- ggtitle('cutree_",cls_n,"')")))
+    eval(parse(text=paste0("title <- ggtitle('cutree_",cls_n,"_",args_shift,"cluster_",args_shift_cls,"')")))
     t_1 <- theme(plot.title = element_text(size = 30, hjust = 0.5))
     gg_cls_n <- gg_cls_n +
         title + 
@@ -232,4 +237,27 @@ min_eval = function(x) {
             .$set_cutree %>%
                 purrr::map(., gg_clusters) -> gg_cls
     return(gg_cls)
+}
+#### func check args_shift####
+check_args_shift = function(x) {
+  x -> sample_cell_type
+  sample_cell_type %>% 
+    str_count(., pattern="ASER") %>%
+    sum() -> check_ASER
+  sample_cell_type %>% 
+    str_count(., pattern="BAGR") %>%
+    sum() -> check_BAGR
+  sample_cell_type %>% 
+    str_count(., pattern="BAGL") %>%
+    sum() -> check_BAGL
+  if (check_ASER >= 1) {
+    args_shift <- "ASER"
+  } else if (check_BAGR >= 1) {
+    args_shift <- "BAGR"
+  } else if (check_BAGL >= 1) {
+    args_shift <- "BAGL"
+  } else {
+    args_shift <- sample_cell_type[1]
+  }
+  return(args_shift)
 }

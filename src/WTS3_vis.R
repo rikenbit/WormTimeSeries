@@ -1,4 +1,4 @@
-source("src/functions_WTS3_new.R")
+source("src/functions_WTS3_vis.R")
 
 #### args####
 args <- commandArgs(trailingOnly = T)
@@ -22,6 +22,9 @@ args_eval <- args[5]
 args_DimRedu <- args[6]
 # time range
 args_range <- args[7]
+# ラベリングするクラスタに含まれる細胞
+args_shift <- args[8]
+
 # #### test args####
 # # select animal number 個体番号の指定
 # args_sample <- c("1")
@@ -43,6 +46,30 @@ args_range <- args[7]
 # args_DimRedu <- c("tsne")
 # # time range
 # args_range <- c("all")
+
+#### test args####
+# # select animal number 個体番号の指定
+# args_sample <- c("6")
+# # output
+# args_output <- c("output/WTS3/normalize_1/all/SBD/ARI/tsne/cls_plot/SampleNumber_6.png")
+# # output 中間データ
+# args_tempdata <- c("output/WTS3/normalize_1/all/SBD/ARI/tsne/cls_tempdata/SampleNumber_6.RData")
+# # input 距離データ
+# args_dist <- c("output/WTS3/normalize_1/all/SBD/SampleNumber_6/SBD.RData")
+# # input igraph
+# args_igraph <- c("data/igraph/Fig1_HNS.RData")
+# # input PeriodicACF
+# args_periodic <- c("output/WTS2/WTS2_PeriodicACF.csv")
+# # select data データの指定
+# args_data <- c("normalize_1")
+# # クラスター評価手法
+# args_eval <- c("ARI")
+# # 次元圧縮手法
+# args_DimRedu <- c("tsne")
+# # time range
+# args_range <- c("all")
+# # ラベリングするクラスタに含まれる細胞
+# args_shift <- c("ASER")
 
 ### load SBD####
 load(args_dist)
@@ -87,6 +114,10 @@ df_merged_stim <- merge(df_merged,
                         all.x = TRUE)
 df_merged_stim %>% 
     replace_na(., replace = list(stim = 0)) -> df_merged_stim0
+#### check args_shift####
+# サンプルの全細胞内にASERがあるかないか
+df_merged_stim0$cell_type %>% 
+    check_args_shift() -> args_shift
 #### GGplot neuron group####
 g_col <- c('NeuronType')
 gg_nt <- gg_n_stim(g_col)
@@ -171,3 +202,4 @@ ggsave(filename = args_output,
        dpi = 100, 
        width = 40.0, 
        height = 30.0)
+
