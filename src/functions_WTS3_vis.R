@@ -55,7 +55,7 @@ gg_n_stim = function(x) {
                                         label = cell_type,
                                         shape = factor(stim),
                                         color = ",factor(g_col),"))"))) +
-    geom_point(size = 8.0) +
+    geom_point(size = 6.0, alpha = 0.6) +
     scale_shape_manual(values=c(4,15)) +
     geom_text_repel(max.overlaps = Inf,
                     min.segment.length = 0) +
@@ -97,7 +97,7 @@ gg_clusters = function(x) {
                            shape = factor(cls_stim),
                            color = factor(cls))) +
                             # color = forcats::fct_explicit_na(factor(cls)))) +
-                geom_point(size = 6.0) +
+                geom_point(size = 6.0, alpha = 0.6) +
                 scale_shape_manual(values=c(4,15)) +
                 geom_text_repel(max.overlaps = Inf, 
                                 min.segment.length = 0)
