@@ -1,8 +1,8 @@
-source("src/functions_WTS3_SBD")
+source("src/functions_WTS3_SBD.R")
 
 #### args setting####
 args <- commandArgs(trailingOnly = T)
-# path NeuroActivity Data
+# sample number 
 args_sample <- args[1]
 # path NeuronActivity Data
 args_neuron <- args[2]
@@ -13,7 +13,7 @@ args_yshift <- args[4]
 # y-shift計算対象の細胞
 args_shift <- args[5]
 # #### test args####
-# # animal number 個体番号の指定
+# # sample number サンプル番号の指定
 # args_sample <- c("1")
 # # path NeuronActivity Data
 # args_neuron <- c("data/normalize_1/ReadData_1.RData")
@@ -53,6 +53,6 @@ sbd_yshift_df_wide %>%
     rownames_to_column("time_frame") %>% 
         pivot_longer(-time_frame, 
                      names_to = "cell_type", 
-                     values_to = "y_shift") -> sbd_yshift_df
+                     values_to = "yshift") -> sbd_yshift_df
 # save SBD yshift dataframe
 save(sbd_yshift_df, file=args_yshift)
