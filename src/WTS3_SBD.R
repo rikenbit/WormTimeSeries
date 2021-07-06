@@ -1,75 +1,58 @@
-source("src/functions_WTS3.R")
+source("src/functions_WTS3_SBD")
 
-#### args####
+#### args setting####
 args <- commandArgs(trailingOnly = T)
-# select animal number 個体番号の指定
+# path NeuroActivity Data
 args_sample <- args[1]
-# outputファイル名
-args_output <- args[2]
-# 中間データファイル名
+# path NeuronActivity Data
+args_neuron <- args[2]
+# output SBD距離行列
 args_SBD <- args[3]
-# # select data データの指定
-args_data <- c("normalize_1")
-#######################
+# output SBD yshift
+args_yshift <- args[4]
+# y-shift計算対象の細胞
+args_shift <- args[5]
+# #### test args####
+# # animal number 個体番号の指定
+# args_sample <- c("1")
+# # path NeuronActivity Data
+# args_neuron <- c("data/normalize_1/ReadData_1.RData")
+# # output SBD距離行列
+# args_SBD <- c("output/WTS3/normalize_1/all/SBD/SampleNumber_1/SBD.RData")
+# # output SBD yshift
+# args_yshift <- c("output/WTS3/normalize_1/all/SBD/SampleNumber_1/yshift.RData")
+# # y-shift計算対象の細胞
+# args_shift <- c("ASER")
 
 #### load NeuronActivity####
-# inputpath <- paste('data', args_data, 'ReadData_1.RData', sep = '/')
-eval(parse(text=paste0("inputpath <- paste('data', args_data, 'ReadData_",args_sample,".RData', sep = '/')")))
-load(inputpath)
+load(args_neuron)
+# 元データがディレクトリごとではなく，ファイル名で各サンプルがわかれている対応
 eval(parse(text=paste0("ReadData <- ReadData_",args_sample)))
-
+#### check args_shift####
+colnames(ReadData) %>% 
+    check_args_shift() -> args_shift
 #### SBD####
+# 行列っぽいデータを細胞ごとにlist化
 ReadData.list <- asplit(ReadData,2)
+# create sbd matrix
 hc <- tsclust(ReadData.list, distance = "sbd", trace = TRUE)
 # convert dist
 d <- stats::as.dist(hc@distmat)
-# save TempData
+# save SBD dist
 save(d, file=args_SBD)
 
-#### Rtsne####
-set.seed(1234)
-tSNE <- Rtsne(d, is_distance = TRUE, dims = 2, perplexity = 5, verbose = TRUE, max_iter = 1000)
-df_tSNE <- data.frame(tsne_1 = tSNE$Y[,1],
-                      tsne_2 = tSNE$Y[,2],
-                      celltype = attr(d, "Labels")
-                      )
-
-#### merge igraph####
-load("data/igraph/Fig1_HNS.RData")
-# node information convert dataframe
-ig_Fig1_HNS %>% 
-    igraph::as_data_frame(., what="vertices") -> df_node
-# remove space from colnames
-df_node %>% 
-    names() %>% 
-        str_replace_all(., c(" " = "")) -> names(df_node)
-# add node information
-df_merged <- merge(df_tSNE, 
-                   df_node, 
-                   by.x = "celltype", 
-                   by.y = "name", 
-                   all.x = TRUE)
-
-#### ggplot neuron group####
-g_col <- c('NeuronType')
-gg_nt <- gg_n(g_col)
-
-g_col <- c('NeuronGroup')
-gg_ng <- gg_n(g_col)
-
-#### ggplot clustering group####
-seq(3,10) %>% 
-    purrr::map(., gg_clusters) -> gg_cls
-
-#### patchwork####
-append(gg_cls, list(gg_nt)) %>% 
-    append(., list(gg_ng)) -> gg_cls
-eval(parse(text=paste0("plot_title <- c('SBD_SampleNumber_",args_sample,"')")))
-
-gg <- wrap_plots(gg_cls) +
-    plot_annotation(
-        title = plot_title,
-        caption = 'made with patchwork',
-        theme = theme(plot.title = element_text(size = 48, hjust = 0.5))
-    )
-ggsave(filename = args_output, plot = gg, dpi = 100, width = 40.0, height = 30.0)
+#### yshift####
+# prepare shift_1
+eval(parse(text=paste0("shift_1 <- ReadData.list$",args_shift," %>% as.numeric()")))
+colnames(ReadData) %>% 
+    purrr::map(., sbd_y) %>%
+        as.data.frame() -> sbd_yshift_df_wide
+colnames(sbd_yshift_df_wide) <- colnames(ReadData)
+# convert long df
+sbd_yshift_df_wide %>% 
+    rownames_to_column("time_frame") %>% 
+        pivot_longer(-time_frame, 
+                     names_to = "cell_type", 
+                     values_to = "y_shift") -> sbd_yshift_df
+# save SBD yshift dataframe
+save(sbd_yshift_df, file=args_yshift)

@@ -13,4 +13,4 @@ SLURM_RESTART_COUNT=2
 
 echo $@
 echo $CONDA_PREFIX
-$CONDA_PREFIX/bin/Rscript src/WTS3_plot.R $@
+$CONDA_PREFIX/bin/Rscript src/template.R $@

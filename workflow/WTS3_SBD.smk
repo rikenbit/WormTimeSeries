@@ -6,23 +6,40 @@ N_SAMPLES.remove('8')
 N_SAMPLES.remove('20')
 N_SAMPLES.remove('25')
 
+# Distance Data
+dist_data = ["SBD"]
+# data time range
+time_range = ["all"]
+
 rule all:
     input:
-        expand('output/WTS3/SBD/normalize_1/all/SampleNumber_{N}/SBD.png', N=N_SAMPLES),
-        expand('output/WTS3/SBD/normalize_1/all/SampleNumber_{N}/SBD.RData', N=N_SAMPLES)
-
+        expand('output/WTS3/normalize_1/{range}/{dist}/SampleNumber_{N}/SBD.RData', 
+            N=N_SAMPLES,
+            dist=dist_data,
+            range=time_range
+            ),
+        expand('output/WTS3/normalize_1/{range}/{dist}/SampleNumber_{N}/yshift.RData', 
+            N=N_SAMPLES,
+            dist=dist_data,
+            range=time_range
+            )
+        
 rule SBD:
+    input:
+        RData = 'data/normalize_1/ReadData_{N}.RData'
     output:
-        png = 'output/WTS3/SBD/normalize_1/all/SampleNumber_{N}/SBD.png',
-        RData = 'output/WTS3/SBD/normalize_1/all/SampleNumber_{N}/SBD.RData'
+        SBD = 'output/WTS3/normalize_1/{range}/{dist}/SampleNumber_{N}/SBD.RData',
+        yshift = 'output/WTS3/normalize_1/{range}/{dist}/SampleNumber_{N}/yshift.RData'
+    params:
+        args_shift = 'ASER'
     benchmark:
-        'benchmarks/WTS3/SBD/normalize_1/all/SampleNumber_{N}/SBD.txt'
+        'benchmarks/WTS3/normalize_1/{range}/{dist}/SampleNumber_{N}/SBD.txt'
     conda:
-        '../envs/myenv_WTS3.yaml'
+        '../envs/myenv_WTS3_SBD.yaml'
     resources:
         mem_gb=200
     log:
-        'logs/WTS3/SBD/normalize_1/all/SampleNumber_{N}/SBD.log'
+        'logs/WTS3/normalize_1/{range}/{dist}/SampleNumber_{N}/SBD.log'
     shell:
-        'src/WTS3_SBD.sh {wildcards.N} {output.png} {output.RData} >& {log}'
+        'src/WTS3_SBD.sh {wildcards.N} {input.RData} {output.SBD} {output.yshift} {params.args_shift} >& {log}'
 ###################################################
