@@ -29,8 +29,8 @@ load(args_neuron)
 # 元データがディレクトリごとではなく，ファイル名で各サンプルがわかれている対応
 eval(parse(text=paste0("ReadData <- ReadData_",args_sample)))
 #### check args_shift####
-colnames(ReadData) %>% 
-    check_args_shift() -> args_shift
+# colnames(ReadData) %>% 
+#     check_args_shift() -> args_shift
 #### SBD####
 # 行列っぽいデータを細胞ごとにlist化
 ReadData.list <- asplit(ReadData,2)
