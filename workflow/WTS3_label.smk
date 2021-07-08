@@ -43,7 +43,7 @@ rule label:
     input:
         RData = 'output/WTS3/normalize_1/{range}/{dist}/SampleNumber_{N}/SBD.RData'
     output:
-        label = 'output/WTS3/normalize_1/{range}/{dist}/{eval}/SampleNumber_{N}/label_table.RData',
+        label_table = 'output/WTS3/normalize_1/{range}/{dist}/{eval}/SampleNumber_{N}/label_table.RData',
         cutree = 'output/WTS3/normalize_1/{range}/{dist}/{eval}/SampleNumber_{N}/cutree_table.RData'
     params:
         args_igraph = 'data/igraph/Fig1_HNS.RData',
@@ -58,5 +58,5 @@ rule label:
     log:
         'logs/WTS3/normalize_1/{range}/{dist}/{eval}/SampleNumber_{N}/label_table.log'
     shell:
-        'src/WTS3_label.sh {wildcards.N} {input.RData} {params.args_igraph} {params.args_periodic} {wildcards.eval} {params.args_shift} {output.label} {output.cutree} >& {log}'
+        'src/WTS3_label.sh {wildcards.N} {input.RData} {params.args_igraph} {params.args_periodic} {wildcards.eval} {params.args_shift} {output.label_table} {output.cutree} >& {log}'
 ###################################################
