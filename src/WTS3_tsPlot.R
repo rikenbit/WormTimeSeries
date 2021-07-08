@@ -1,6 +1,7 @@
 source("src/functions_WTS3_tsPlot.R")
 
 #### args setting####
+args <- commandArgs(trailingOnly = T)
 # select animal number 個体番号の指定
 args_sample <- args[1]
 # input_Neuron Activity 
