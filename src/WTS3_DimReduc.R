@@ -1,23 +1,41 @@
 source("src/functions_WTS3_DimReduc.R")
 
 #### args setting####
-#### test args####
+args <- commandArgs(trailingOnly = T)
 # select animal number 個体番号の指定
-args_sample <- c("1")
+args_sample <- args[1]
 # input 距離データ
-args_dist <- c("output/WTS3/normalize_1/all/SBD/SampleNumber_1/SBD.RData")
+args_dist <- args[2]
 # input SBD yshift df
-args_yshift_value <- c("output/WTS3/normalize_1/all/SBD/SampleNumber_1/yshift_value.RData")
+args_yshift_value <- args[3]
 # input label_table
-args_label <- c("output/WTS3/normalize_1/all/SBD/ARI/SampleNumber_1/label_table.RData")
+args_label <- args[4]
 # input cutree_table
-args_cutree <- c("output/WTS3/normalize_1/all/SBD/ARI/SampleNumber_1/cutree_table.RData")
-# 次元圧縮手法
-args_DimReduc <- c("tsne")
-# クラスタリング評価
-args_eval <- c("ARI")
+args_cutree <- args[5]
+# dimentionaly reduction
+args_DimReduc <- args[6]
+# evaluation method(clustering result)
+args_eval <- args[7]
 # output plot
-args_output <- c("output/WTS3/normalize_1/all/SBD/ARI/DimReduc/SampleNumber_1.png")
+args_output <- args[8]
+
+# #### test args####
+# # select animal number 個体番号の指定
+# args_sample <- c("1")
+# # input 距離データ
+# args_dist <- c("output/WTS3/normalize_1/all/SBD/SampleNumber_1/SBD.RData")
+# # input SBD yshift df
+# args_yshift_value <- c("output/WTS3/normalize_1/all/SBD/SampleNumber_1/yshift_value.RData")
+# # input label_table
+# args_label <- c("output/WTS3/normalize_1/all/SBD/ARI/SampleNumber_1/label_table.RData")
+# # input cutree_table
+# args_cutree <- c("output/WTS3/normalize_1/all/SBD/ARI/SampleNumber_1/cutree_table.RData")
+# # dimentionaly reduction
+# args_DimReduc <- c("tsne")
+# # evaluation method(clustering result)
+# args_eval <- c("ARI")
+# # output plot
+# args_output <- c("output/WTS3/normalize_1/all/SBD/ARI/tsne/SampleNumber_1.png")
 
 ### load SBD####
 load(args_dist)

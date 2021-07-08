@@ -39,7 +39,7 @@ rule all:
             eval=cls_eval
             )
         
-rule SBD:
+rule label:
     input:
         RData = 'output/WTS3/normalize_1/{range}/{dist}/SampleNumber_{N}/SBD.RData'
     output:
