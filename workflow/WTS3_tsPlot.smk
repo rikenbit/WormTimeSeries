@@ -50,7 +50,7 @@ rule tsPlot:
         input_mCherry = 'data/mCherry/mCherry_{N}.RData',
         input_Position = 'data/Position/Position_{N}.RData',
         yshift = 'output/WTS3/normalize_1/{range}/{dist}/SampleNumber_{N}/yshift.RData',
-        yshift_value = 'output/WTS3/normalize_1/all/SBD/SampleNumber_1/yshift_value.RData',
+        yshift_value = 'output/WTS3/normalize_1/{range}/{dist}/SampleNumber_{N}/yshift_value.RData',
         label_table = 'output/WTS3/normalize_1/{range}/{dist}/{eval}/SampleNumber_{N}/label_table.RData'
     output:
         tsPlot = 'output/WTS3/normalize_1/{range}/{dist}/{eval}/tsPlot/{label}/SampleNumber_{N}.png'
