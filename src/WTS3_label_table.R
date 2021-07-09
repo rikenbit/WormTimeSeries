@@ -52,9 +52,14 @@ output_table <- switch(args_label,
                        "label_cls" = .table_cls(df_table, df_yshift_table),
                        stop("Only can use label_acf,label_cls")
 )
+#### 加工####
+output_table[[1]] %>% 
+    .add_sum_sort() -> output_neuron
+output_table[[2]] %>% 
+    .add_sum_sort() -> output_rmSensory
 #### save 塩刺激 write_excel_csv####
-write_excel_csv(output_table[[1]], args_output_neuron) 
-write_excel_csv(output_table[[2]], args_output_rmSensory)
+write_excel_csv(output_neuron, args_output_neuron) 
+write_excel_csv(output_rmSensory, args_output_rmSensory)
 
 #### create yshift table####
 output_yshift_table <- switch(args_label,
@@ -68,8 +73,8 @@ output_yshift_table %>%
 output_yshift_table[,order(as.numeric(colnames(output_yshift_table)))] -> output_yshift_table
 #### sort inorm####
 seq(1, nrow(output_yshift_table)) %>% 
-  purrr::map_dbl(., yshift_norm) %>% 
-  trunc()  -> yshift_i_norms
+  purrr::map_dbl(., .yshift_norm) %>% 
+      trunc()  -> yshift_i_norms
 output_yshift_table %>%
     mutate(i_norm = yshift_i_norms) %>%
         dplyr::arrange(i_norm) -> output_yshift_table_sort

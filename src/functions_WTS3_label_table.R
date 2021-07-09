@@ -129,11 +129,24 @@ library(tidyverse)
     return(return_object)
 }
 
-yshift_norm = function(x) {
+.yshift_norm = function(x) {
     output_yshift_table[x,] %>% 
         .[is.na(.)==F] %>% 
         as.matrix() %>% 
         # norm(.,"F") -> norm_value #フロベニウスノルム
         norm(.,"I") -> norm_value 
     return(norm_value)
+}
+.add_sum_sort = function(x) {
+    x %>% 
+        column_to_rownames(var = "sample_number") %>% 
+            t() %>% 
+                as.data.frame() -> output_neuron
+    output_neuron %>% 
+        rowSums(.,na.rm = TRUE,dims = 1) -> sort_vec
+    output_neuron %>% 
+        mutate(sum_sample = sort_vec) %>% 
+            dplyr::arrange(desc(sum_sample)) %>% 
+                rownames_to_column(var ="cell_type") -> return_object
+    return(return_object)
 }
