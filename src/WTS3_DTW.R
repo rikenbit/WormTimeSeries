@@ -32,9 +32,7 @@ args_DTW <- args[5]
 load(args_neuron)
 # 元データがディレクトリごとではなく，ファイル名で各サンプルがわかれている対応
 eval(parse(text=paste0("ReadData <- ReadData_",args_sample)))
-#### test####
-ReadData <- ReadData_1[,1:3]
-#### test####
+
 #### switch time range & DTW calc####
 d <- switch(args_time,
             "all" = .dtw_cal_all(ReadData),
