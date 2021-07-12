@@ -13,7 +13,6 @@ library(openxlsx)
                          return.shifted = TRUE)
     return(sbd$yshift)
 }
-
 .ReadData_stimAfter = function(x,y) {
     #### load stim timing extra####
     stimtimng_sheet <- read.xlsx(y,

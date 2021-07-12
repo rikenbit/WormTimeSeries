@@ -45,7 +45,7 @@ ReadData <- switch(args_time,
                    "all" = .ReadData_all(ReadData),
                    "stimAfter" = .ReadData_stimAfter(ReadData, args_stim_xlsx),
                    stop("Only can use all, stimAfter ")
-)
+                   )
 
 #### SBD####
 # 行列っぽいデータを細胞ごとにlist化
@@ -66,7 +66,8 @@ colnames(ReadData) %>%
 colnames(sbd_yshift_df_wide) <- colnames(ReadData)
 # convert long df
 sbd_yshift_df_wide %>% 
-    rownames_to_column("time_frame") %>% 
+    # rownames_to_column("time_frame") %>% 
+    mutate(time_frame = rownames(ReadData)) %>% 
         pivot_longer(-time_frame, 
                      names_to = "cell_type", 
                      values_to = "yshift") -> sbd_yshift_df

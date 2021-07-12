@@ -20,7 +20,7 @@ N_SAMPLES.remove('28')
 dist_data = ["SBD"]
 
 # data time range
-time_range = ["all"]
+time_range = ["all","stimAfter"]
 
 # Clustering Evaluation Method
 cls_eval = ["ARI"]
@@ -55,6 +55,7 @@ rule tsPlot:
     output:
         tsPlot = 'output/WTS3/normalize_1/{range}/{dist}/{eval}/tsPlot/{label}/SampleNumber_{N}.png'
     params:
+        stim_xlsx = 'data/stimulation/stimulation_timing.xlsx',
         args_shift = 'ASER'
     benchmark:
         'benchmarks/WTS3/normalize_1/{range}/{dist}/{eval}/tsPlot/{label}/SampleNumber_{N}.txt'
@@ -65,5 +66,5 @@ rule tsPlot:
     log:
         'logs/WTS3/normalize_1/{range}/{dist}/{eval}/tsPlot/{label}/SampleNumber_{N}.log'
     shell:
-        'src/WTS3_tsPlot.sh {wildcards.N} {input.input_n} {input.input_stim} {input.input_mCherry} {input.input_Position} {input.yshift} {input.yshift_value} {input.label_table} {wildcards.label} {params.args_shift} {output.tsPlot} >& {log}'
+        'src/WTS3_tsPlot.sh {wildcards.N} {input.input_n} {input.input_stim} {input.input_mCherry} {input.input_Position} {input.yshift} {input.yshift_value} {input.label_table} {wildcards.label} {params.args_shift} {output.tsPlot} {params.stim_xlsx} {wildcards.range} >& {log}'
 ###################################################

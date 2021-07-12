@@ -2,6 +2,7 @@
 ##################################################
 library(tidyverse)
 library(patchwork)
+library(openxlsx)
 ##################################################
 .plot_yshift= function(x) {
     df_tsPlot %>%
@@ -36,5 +37,26 @@ library(patchwork)
         t_2 +
         t_3 +
         sX
+    return(return_object)
+}
+
+.ReadData_stimAfter = function(x,y) {
+    #### load stim timing extra####
+    stimtimng_sheet <- read.xlsx(y,
+                                 sheet = "Sheet1",
+                                 rowNames = FALSE,
+                                 colNames =TRUE)
+    stimtimng_sheet %>% 
+        dplyr::select(sample_number = 1, 
+                      stim_first = 7,
+                      ) %>% 
+            filter(sample_number == args_sample) %>% 
+                .$stim_first %>% 
+                    trunc() -> stimtimng #切り捨て
+    return_object <- x[stimtimng:nrow(x),]
+    return(return_object)
+}
+.ReadData_all = function(x) {
+    return_object <- x
     return(return_object)
 }
