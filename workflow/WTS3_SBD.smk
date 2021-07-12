@@ -19,7 +19,7 @@ N_SAMPLES.remove('28')
 # Distance Data
 dist_data = ["SBD"]
 # data time range
-time_range = ["all"]
+time_range = ["all","stimAfter"]
 
 rule all:
     input:
@@ -41,6 +41,7 @@ rule SBD:
         SBD = 'output/WTS3/normalize_1/{range}/{dist}/SampleNumber_{N}/SBD.RData',
         yshift = 'output/WTS3/normalize_1/{range}/{dist}/SampleNumber_{N}/yshift.RData'
     params:
+        stim_xlsx = 'data/stimulation/stimulation_timing.xlsx',
         args_shift = 'ASER'
     benchmark:
         'benchmarks/WTS3/normalize_1/{range}/{dist}/SampleNumber_{N}/SBD.txt'
@@ -51,5 +52,5 @@ rule SBD:
     log:
         'logs/WTS3/normalize_1/{range}/{dist}/SampleNumber_{N}/SBD.log'
     shell:
-        'src/WTS3_SBD.sh {wildcards.N} {input.RData} {output.SBD} {output.yshift} {params.args_shift} >& {log}'
+        'src/WTS3_SBD.sh {wildcards.N} {input.RData} {wildcards.range} {params.stim_xlsx} {params.args_shift} {output.SBD} {output.yshift}  >& {log}'
 ###################################################
