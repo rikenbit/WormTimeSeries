@@ -19,18 +19,18 @@ args_output_yshift <- args[6]
 
 # #### test args####
 # # select animal number 個体番号一覧取得
-# args_numbers <- c("1","2","5","6","10","11","12","13","14","17","18","19","21","23","24","27")
+# args_numbers <- c("1","2","5","6","7","10","11","12","13","14","17","18","19","21","23","24","27")
 # # input df_label
-# args_label_dir <- c("output/WTS3/normalize_1/all/SBD/ARI/SampleNumber_")
+# args_label_dir <- c("output/WTS3/normalize_1/stimAfter/SBD/ARI/SampleNumber_")
 # # input df_label
-# args_yshift_value_dir <- c("output/WTS3/normalize_1/all/SBD/SampleNumber_")
+# args_yshift_value_dir <- c("output/WTS3/normalize_1/stimAfter/SBD/SampleNumber_")
 # # input select label
 # args_label <- c("label_acf")
 # # output table stim_cell
-# args_output_neuron <- c("output/WTS3/normalize_1/all/SBD/ARI/table/label_acf/table_neuron.csv")
-# args_output_rmSensory <- c("output/WTS3/normalize_1/all/SBD/ARI/table/label_acf/table_rmSensory.csv")
+# args_output_neuron <- c("output/WTS3/normalize_1/stimAfter/SBD/ARI/table/label_acf/table_neuron.csv")
+# args_output_rmSensory <- c("output/WTS3/normalize_1/stimAfter/SBD/ARI/table/label_acf/table_rmSensory.csv")
 # # output yshift
-# args_output_yshift <- c("output/WTS3/normalize_1/all/SBD/ARI/table/label_acf/table_yshift.csv")
+# args_output_yshift <- c("output/WTS3/normalize_1/stimAfter/SBD/ARI/table/label_acf/table_yshift.csv")
 
 #### prepare label_table####
 # 16サンプルのdfのリストを作成
@@ -51,7 +51,7 @@ output_table <- switch(args_label,
                        "label_acf" = .table_acf(df_table, df_yshift_table),
                        "label_cls" = .table_cls(df_table, df_yshift_table),
                        stop("Only can use label_acf,label_cls")
-)
+                       )
 #### 加工####
 output_table[[1]] %>% 
     .add_sum_sort() -> output_neuron

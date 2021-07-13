@@ -19,7 +19,7 @@ N_SAMPLES.remove('28')
 # Distance Data
 dist_data = ["SBD"]
 # data time range
-time_range = ["all"]
+time_range =  ["all","stimAfter"]
 # Clustering Evaluation Method
 cls_eval = ["ARI"]
 # cls_eval = ["purity", "ARI", "Fmeasure", "Entropy"]
