@@ -23,7 +23,7 @@ args_output_cutree <- args[8]
 # # select animal number 個体番号の指定
 # args_sample <- c("1")
 # # input 距離データ
-# args_dist <- c("output/WTS3/normalize_1/all/SBD/SampleNumber_1/SBD.RData")
+# args_dist <- c("output/WTS3/normalize_1/stimAfter/SBD/SampleNumber_1/SBD.RData")
 # # input igraph
 # args_igraph <- c("data/igraph/Fig1_HNS.RData")
 # # input PeriodicACF
@@ -33,9 +33,9 @@ args_output_cutree <- args[8]
 # # ラベリングするクラスタに含まれる細胞
 # args_shift <- c("ASER")
 # # output
-# args_output_label <- c("output/WTS3/normalize_1/all/SBD/ARI/SampleNumber_1/label_table.RData")
+# args_output_label <- c("output/WTS3/normalize_1/stimAfter/SBD/ARI/SampleNumber_1/label_table.RData")
 # # output
-# args_output_cutree <- c("output/WTS3/normalize_1/all/SBD/ARI/SampleNumber_1/cutree_table.RData")
+# args_output_cutree <- c("output/WTS3/normalize_1/stimAfter/SBD/ARI/SampleNumber_1/cutree_table.RData")
 
 #### load SBD####
 load(args_dist)
@@ -43,10 +43,6 @@ data.frame(
     cell_type = attr(d, "Labels"),
     stringsAsFactors = FALSE
     ) -> df_cell_type
-#### check args_shift####
-# df_cell_type %>%
-#     .$cell_type %>% 
-#         .check_args_shift() -> args_shift
 #### load ACF label####
 periodic_sheet <- read.csv(args_periodic, 
                            colClasses=c("numeric", 
@@ -82,7 +78,7 @@ eval_type <- switch(args_eval,
                     "Fmeasure" = .cls_Fmeasure,
                     "Entropy" = .cls_Entropy,
                     stop("Only can use cls_purity, ARI, Fmeasure, Entropy")
-)
+                    )
 # evaluation
 set_cutree %>% 
     purrr::map_dbl(., eval_type) -> eval_value

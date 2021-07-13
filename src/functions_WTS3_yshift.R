@@ -16,7 +16,7 @@ library(tidyverse)
         data_shifted %>% 
             filter(yshift != 0) %>% 
                 slice_head() %>% 
-                    .$time_frame -> first_not_0
+                    .$time_frame - data_shifted$time_frame[1] -> first_not_0
         # yshift_valueの計算
         return_object <- first_not_0 -1
     } else {
@@ -26,7 +26,8 @@ library(tidyverse)
                 slice_head() %>% 
                     .$time_frame -> first_0
         # yshift_valueの計算
-        return_object <- first_0 -1 -length(data_shifted$time_frame)
+        # max()に直した，length()だと値がずれる
+        return_object <- first_0 -1 -max(data_shifted$time_frame)
     }
     # yshiftが0の場合，numeric(0)になるので,0を代入
     if (length(return_object) == 0) {

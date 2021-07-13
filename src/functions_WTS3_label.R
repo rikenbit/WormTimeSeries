@@ -4,29 +4,6 @@ library(mclust)
 library(igraph)
 library(tidyverse)
 ##################################################
-.check_args_shift = function(x) {
-  x -> sample_cell_type
-  sample_cell_type %>% 
-    str_count(., pattern="ASER") %>%
-    sum() -> check_ASER
-  sample_cell_type %>% 
-    str_count(., pattern="BAGR") %>%
-    sum() -> check_BAGR
-  sample_cell_type %>% 
-    str_count(., pattern="BAGL") %>%
-    sum() -> check_BAGL
-  if (check_ASER >= 1) {
-    return_object <- "ASER"
-  } else if (check_BAGR >= 1) {
-    return_object <- "BAGR"
-  } else if (check_BAGL >= 1) {
-    return_object <- "BAGL"
-  } else {
-    return_object <- sample_cell_type[1]
-  }
-  return(return_object)
-}
-
 .cls_ward = function(x) {
     # clustering
     cls_n <- x

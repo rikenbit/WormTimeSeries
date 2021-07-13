@@ -31,37 +31,37 @@ args_stim_xlsx <- args[12]
 # time range
 args_time <- args[13]
 
-#### test args####
-# select animal number 個体番号の指定
-args_sample <- c("1")
-# input_Neuron Activity 
-args_input_n <- c("data/normalize_1/ReadData_1.RData")
-# input_stim 
-args_input_stim <- c("data/stimulation/stim_1.RData")
-# input_mCherry
-args_input_mCherry <- c("data/mCherry/mCherry_1.RData")
-# input_Position
-args_input_Position <- c("data/Position/Position_1.RData")
+# #### test args####
+# # select animal number 個体番号の指定
+# args_sample <- c("1")
+# # input_Neuron Activity 
+# args_input_n <- c("data/normalize_1/ReadData_1.RData")
+# # input_stim 
+# args_input_stim <- c("data/stimulation/stim_1.RData")
+# # input_mCherry
+# args_input_mCherry <- c("data/mCherry/mCherry_1.RData")
+# # input_Position
+# args_input_Position <- c("data/Position/Position_1.RData")
 
-# input SBD yshift Neuron
-args_yshift <- c("output/WTS3/normalize_1/stimAfter/SBD/SampleNumber_1/yshift.RData")
-# input yshift filter
-args_yshift_value <- c("output/WTS3/normalize_1/stimAfter/SBD/SampleNumber_1/yshift_value.RData")
-# input label filter df_label
-args_label_table <- c("output/WTS3/normalize_1/stimAfter/SBD/ARI/SampleNumber_1/label_table.RData")
-# input select label
-args_label <- c("label_acf")
-# args_label <- c("label_cls")
-# input select shift cell_type
-args_shift <- c("ASER")
-# output tsPlot
-args_output <- c("output/WTS3/normalize_1/stimAfter/SBD/ARI/tsPlot/label_acf/SampleNumber_1.png")
-# args_output <- c("output/WTS3/normalize_1/stimAfter/SBD/ARI/tsPlot/label_cls/SampleNumber_1.png")
+# # input SBD yshift Neuron
+# args_yshift <- c("output/WTS3/normalize_1/stimAfter/SBD/SampleNumber_1/yshift.RData")
+# # input yshift filter
+# args_yshift_value <- c("output/WTS3/normalize_1/stimAfter/SBD/SampleNumber_1/yshift_value.RData")
+# # input label filter df_label
+# args_label_table <- c("output/WTS3/normalize_1/stimAfter/SBD/ARI/SampleNumber_1/label_table.RData")
+# # input select label
+# args_label <- c("label_acf")
+# # args_label <- c("label_cls")
+# # input select shift cell_type
+# args_shift <- c("ASER")
+# # output tsPlot
+# args_output <- c("output/WTS3/normalize_1/stimAfter/SBD/ARI/tsPlot/label_acf/SampleNumber_1.png")
+# # args_output <- c("output/WTS3/normalize_1/stimAfter/SBD/ARI/tsPlot/label_cls/SampleNumber_1.png")
 
-# stimtiming
-args_stim_xlsx <- c("data/stimulation/stimulation_timing.xlsx")
-# time range
-args_time <- c("stimAfter")
+# # stimtiming
+# args_stim_xlsx <- c("data/stimulation/stimulation_timing.xlsx")
+# # time range
+# args_time <- c("stimAfter")
 
 #### load Neuron Activity Data####
 load(args_input_n)

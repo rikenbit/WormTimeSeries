@@ -1,6 +1,7 @@
 #library
 ##################################################
 library(dtwclust)
+RNGkind(kind = "Mersenne-Twister")
 library(tidyverse)
 library(openxlsx)
 ##################################################
@@ -26,6 +27,7 @@ library(openxlsx)
             filter(sample_number == args_sample) %>% 
                 .$stim_first %>% 
                     trunc() -> stimtimng #切り捨て
+                    # ceiling() -> stimtimng #切り上げ
     return_object <- x[stimtimng:nrow(x),]
     return(return_object)
 }
