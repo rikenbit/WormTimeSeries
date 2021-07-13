@@ -23,7 +23,7 @@ args_output_cutree <- args[8]
 # # select animal number 個体番号の指定
 # args_sample <- c("1")
 # # input 距離データ
-# args_dist <- c("output/WTS3/normalize_1/stimAfter/SBD/SampleNumber_1/SBD.RData")
+# args_dist <- c("output/WTS3/normalize_1/stimAfter/EUCL/SampleNumber_1/EUCL.RData")
 # # input igraph
 # args_igraph <- c("data/igraph/Fig1_HNS.RData")
 # # input PeriodicACF
@@ -33,9 +33,9 @@ args_output_cutree <- args[8]
 # # ラベリングするクラスタに含まれる細胞
 # args_shift <- c("ASER")
 # # output
-# args_output_label <- c("output/WTS3/normalize_1/stimAfter/SBD/ARI/SampleNumber_1/label_table.RData")
+# args_output_label <- c("output/WTS3/normalize_1/stimAfter/EUCL/ARI/SampleNumber_1/label_table.RData")
 # # output
-# args_output_cutree <- c("output/WTS3/normalize_1/stimAfter/SBD/ARI/SampleNumber_1/cutree_table.RData")
+# args_output_cutree <- c("output/WTS3/normalize_1/stimAfter/EUCL/ARI/SampleNumber_1/cutree_table.RData")
 
 #### load SBD####
 load(args_dist)

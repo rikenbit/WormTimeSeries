@@ -1,4 +1,4 @@
-# WTS3 SBD 
+# WTS3 EUCL DTW 
 ###################################################
 N_SAMPLES = list(map(str, range(1, 29)))
 # remove artifact
@@ -17,7 +17,7 @@ N_SAMPLES.remove('26')
 N_SAMPLES.remove('28')
 
 # Distance Data
-dist_data = ["SBD"]
+dist_data = ["DTW","EUCL"]
 
 # data time range
 time_range = ["all","stimAfter"]
@@ -42,8 +42,7 @@ rule all:
         
 rule DimReduc:
     input:
-        RData = 'output/WTS3/normalize_1/{range}/{dist}/SampleNumber_{N}/SBD.RData',
-        yshift_value = 'output/WTS3/normalize_1/{range}/{dist}/SampleNumber_{N}/yshift_value.RData',
+        RData = 'output/WTS3/normalize_1/{range}/{dist}/SampleNumber_{N}/{dist}.RData',
         label = 'output/WTS3/normalize_1/{range}/{dist}/{eval}/SampleNumber_{N}/label_table.RData',
         cutree = 'output/WTS3/normalize_1/{range}/{dist}/{eval}/SampleNumber_{N}/cutree_table.RData'
     output:
@@ -57,5 +56,5 @@ rule DimReduc:
     log:
         'logs/WTS3/normalize_1/{range}/{dist}/{eval}/{DR}/SampleNumber_{N}.log'
     shell:
-        'src/WTS3_DimReduc.sh {wildcards.N} {input.RData} {input.yshift_value} {input.label} {input.cutree} {wildcards.DR} {wildcards.eval} {output.DimReduc} >& {log}'
+        'src/WTS3_DimReduc_EUCL.sh {wildcards.N} {input.RData} {input.label} {input.cutree} {wildcards.DR} {wildcards.eval} {output.DimReduc} >& {log}'
 ###################################################

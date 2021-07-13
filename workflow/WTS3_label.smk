@@ -20,6 +20,7 @@ N_SAMPLES.remove('28')
 # dist_data = ["SBD"]
 dist_data = ["SBD","DTW","EUCL"]
 # data time range
+# time_range = ["all"]
 time_range = ["all","stimAfter"]
 # Clustering Evaluation Method
 cls_eval = ["ARI"]
@@ -43,6 +44,7 @@ rule all:
 rule label:
     input:
         RData = 'output/WTS3/normalize_1/{range}/{dist}/SampleNumber_{N}/{dist}.RData'
+        # RData = 'output/WTS3/normalize_1/{range}/{dist}/SampleNumber_{N}/SBD.RData'
     output:
         label_table = 'output/WTS3/normalize_1/{range}/{dist}/{eval}/SampleNumber_{N}/label_table.RData',
         cutree = 'output/WTS3/normalize_1/{range}/{dist}/{eval}/SampleNumber_{N}/cutree_table.RData'
