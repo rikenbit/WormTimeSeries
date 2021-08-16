@@ -5,6 +5,9 @@
 library(tidyverse)
 library(openxlsx)
 ##################################################
+# setting Random number generator
+# RNGkind(kind = "Mersenne-Twister")
+# dtwclust_rngkind <- "Mersenne-Twister"
 
 # https://github.com/asardaes/dtwclust/blob/f4a5978ce051585d3c989e658c84d6b4b0fb77d4/R/DISTANCES-sbd.R#L96
 #### SBD_abs####
@@ -207,9 +210,7 @@ sbd_proxy <- function(x, y = NULL, znorm = FALSE, ..., error.check = TRUE, pairw
     D
 }
 
-# setting Random number generator
-RNGkind(kind = "Mersenne-Twister")
-dtwclust_rngkind <- "Mersenne-Twister"
+
 ########
 
 # https://github.com/asardaes/dtwclust/blob/f4a5978ce051585d3c989e658c84d6b4b0fb77d4/R/CLUSTERING-tsclust.R
@@ -1632,12 +1633,1920 @@ control_classes <- c(partitional = "PtCtrl",
                      args = "TscArgs")
 ########
 
-# 
-# 
+# check_consistency(distance, "dist", trace = trace, diff_lengths = diff_lengths,  でエラー:オブジェクト 'pr_DB' がありません
+# https://github.com/asardaes/dtwclust/blob/bc6008c26b46ff7105b59135dd9ad004a99f7d87/R/pkg.R
 ########
+#' Time series clustering along with optimizations for the Dynamic Time Warping distance
+#'
+#' Time series clustering with a wide variety of strategies and a series of optimizations specific
+#' to the Dynamic Time Warping (DTW) distance and its corresponding lower bounds (LBs).
+#'
+#' @name dtwclust-package
+#'
+#' @details
+#'
+#' Many of the algorithms implemented in this package are specifically tailored to DTW, hence its
+#' name. However, the main clustering function is flexible so that one can test many different
+#' clustering approaches, using either the time series directly, or by applying suitable
+#' transformations and then clustering in the resulting space. Other implementations included in the
+#' package provide some alternatives to DTW.
+#'
+#' DTW is a dynamic programming algorithm that tries to find the optimum warping path between two
+#' series. Over the years, several variations have appeared in order to make the procedure faster or
+#' more efficient. Please refer to the included references for more information, especially Giorgino
+#' (2009), which is a good practical introduction.
+#'
+#' Most optimizations require equal dimensionality, which means time series should have equal
+#' length. DTW itself does not require this, but it is relatively expensive to compute. Other
+#' distance definitions may be used, or series could be reinterpolated to a matching length
+#' (Ratanamahatana and Keogh 2004).
+#'
+#' The main clustering function and entry point for this package is [tsclust()], with a convenience
+#' wrapper for multiple tests in [compare_clusterings()], and a shiny app in
+#' [interactive_clustering()]. There is another less-general-purpose shiny app in [ssdtwclust()].
+#'
+#' Please note the random number generator is set to L'Ecuyer-CMRG when \pkg{dtwclust} is attached
+#' in an attempt to preserve reproducibility. You are free to change this afterwards if you wish
+#' (see [base::RNGkind()]), but \pkg{dtwclust} will always use L'Ecuyer-CMRG internally.
+#'
+#' For more information, please read the included package vignettes, which can be accessed by typing
+#' `browseVignettes("dtwclust")`.
+#'
+#' @note
+#'
+#' This software package was developed independently of any organization or institution that is or
+#' has been associated with the author.
+#'
+#' This package can be used without attaching it with [base::library()] with some caveats:
+#'
+#' - The \pkg{methods} [package][methods::methods-package] must be attached. `R` usually does this
+#'   automatically, but [utils::Rscript()] only does so in R versions 3.5.0 and above.
+#' - If you want to use the \pkg{proxy} version of [dtw::dtw()] (e.g. for clustering), you have to
+#'   attach the \pkg{dtw} package manually.
+#'
+#' Be careful with reproducibility, `R`'s random number generator is only changed session-wide if
+#' \pkg{dtwclust} is attached.
+#'
+#' @author Alexis Sarda-Espinosa
+#'
+#' @references
+#'
+#' Please refer to the package's vignette's references.
+#'
+#' @seealso
+#'
+#' [tsclust()], [compare_clusterings()], [interactive_clustering()], [ssdtwclust()], [dtw_basic()],
+#' [proxy::dist()].
+#'
+#' @useDynLib dtwclust, .registration = TRUE
+#' @import foreach
+#' @importFrom Rcpp evalCpp
+#' @importFrom RcppParallel RcppParallelLibs
+#'
+"_PACKAGE"
+
+# PREFUN for some of my proxy distances so that they support 'pairwise' directly
+proxy_prefun <- function(x, y, pairwise, params, reg_entry) {
+    params$pairwise <- pairwise
+    list(x = x, y = y, pairwise = pairwise, p = params, reg_entry = reg_entry)
+}
+
+.onLoad <- function(lib, pkg) {
+    # Register DTW2
+    if (!check_consistency("DTW2", "dist", silent = TRUE))
+        proxy::pr_DB$set_entry(FUN = dtw2_proxy, names=c("DTW2", "dtw2"),
+                               loop = TRUE, type = "metric", distance = TRUE,
+                               description = "DTW with L2 norm",
+                               PACKAGE = "dtwclust")
+    # Register DTW_BASIC
+    if (!check_consistency("DTW_BASIC", "dist", silent = TRUE))
+        proxy::pr_DB$set_entry(FUN = dtw_basic_proxy, names=c("DTW_BASIC", "dtw_basic"),
+                               loop = FALSE, type = "metric", distance = TRUE,
+                               description = "Basic and maybe faster DTW distance",
+                               PACKAGE = "dtwclust", PREFUN = proxy_prefun)
+    # Register LB_Keogh
+    if (!check_consistency("LB_Keogh", "dist", silent = TRUE))
+        proxy::pr_DB$set_entry(FUN = lb_keogh_proxy, names=c("LBK", "LB_Keogh", "lbk"),
+                               loop = FALSE, type = "metric", distance = TRUE,
+                               description = "Keogh's DTW lower bound for the Sakoe-Chiba band",
+                               PACKAGE = "dtwclust", PREFUN = proxy_prefun)
+    # Register LB_Improved
+    if (!check_consistency("LB_Improved", "dist", silent = TRUE))
+        proxy::pr_DB$set_entry(FUN = lb_improved_proxy, names=c("LBI", "LB_Improved", "lbi"),
+                               loop = FALSE, type = "metric", distance = TRUE,
+                               description = "Lemire's improved DTW lower bound for the Sakoe-Chiba band",
+                               PACKAGE = "dtwclust", PREFUN = proxy_prefun)
+    # Register SBD
+    if (!check_consistency("SBD", "dist", silent = TRUE))
+        proxy::pr_DB$set_entry(FUN = sbd_proxy, names=c("SBD", "sbd"),
+                               loop = FALSE, type = "metric", distance = TRUE,
+                               description = "Paparrizos and Gravanos' shape-based distance for time series",
+                               PACKAGE = "dtwclust", PREFUN = proxy_prefun,
+                               convert = function(d) { 2 - d })
+    # Register DTW_LB
+    if (!check_consistency("DTW_LB", "dist", silent = TRUE))
+        proxy::pr_DB$set_entry(FUN = dtw_lb, names=c("DTW_LB", "dtw_lb"),
+                               loop = FALSE, type = "metric", distance = TRUE,
+                               description = "DTW distance aided with Lemire's lower bound",
+                               PACKAGE = "dtwclust", PREFUN = proxy_prefun)
+    # Register GAK
+    if (!check_consistency("GAK", "dist", silent = TRUE))
+        proxy::pr_DB$set_entry(FUN = gak_proxy, names=c("GAK", "gak"),
+                               loop = FALSE, type = "metric", distance = TRUE,
+                               description = "Fast (triangular) global alignment kernel distance",
+                               PACKAGE = "dtwclust", PREFUN = proxy_prefun,
+                               convert = function(d) { 1 - d })
+    # Register uGAK
+    if (!check_consistency("uGAK", "dist", silent = TRUE))
+        proxy::pr_DB$set_entry(FUN = gak_simil, names=c("uGAK", "ugak"),
+                               loop = FALSE, type = "metric", distance = FALSE,
+                               description = "Fast (triangular) global alignment kernel similarity",
+                               PACKAGE = "dtwclust", PREFUN = proxy_prefun)
+    # Register soft-DTW
+    if (!check_consistency("sdtw", "dist", silent = TRUE))
+        proxy::pr_DB$set_entry(FUN = sdtw_proxy, names=c("sdtw", "SDTW", "soft-DTW"),
+                               loop = FALSE, type = "metric", distance = TRUE,
+                               description = "Soft-DTW",
+                               PACKAGE = "dtwclust", PREFUN = proxy_prefun)
+
+    # avoids default message if no backend exists
+    if (is.null(foreach::getDoParName())) foreach::registerDoSEQ()
+}
+
+#' @importFrom utils packageVersion
+#'
+.onAttach <- function(lib, pkg) {
+    RNGkind(dtwclust_rngkind)
+
+    packageStartupMessage("dtwclust:\n",
+                          "Setting random number generator to L'Ecuyer-CMRG (see RNGkind()).\n",
+                          'To read the included vignettes type: browseVignettes("dtwclust").\n',
+                          'See news(package = "dtwclust") after package updates.')
+
+    if (grepl("\\.9000$", utils::packageVersion("dtwclust")))
+        packageStartupMessage("This is a developer version of dtwclust.")
+}
+
+.onUnload <- function(libpath) {
+    # Unegister distances
+    if (check_consistency("DTW2", "dist", silent = TRUE)) proxy::pr_DB$delete_entry("DTW2")
+    if (check_consistency("DTW_BASIC", "dist", silent = TRUE)) proxy::pr_DB$delete_entry("DTW_BASIC")
+    if (check_consistency("LB_Keogh", "dist", silent = TRUE)) proxy::pr_DB$delete_entry("LB_Keogh")
+    if (check_consistency("LB_Improved", "dist", silent = TRUE)) proxy::pr_DB$delete_entry("LB_Improved")
+    if (check_consistency("SBD", "dist", silent = TRUE)) proxy::pr_DB$delete_entry("SBD")
+    if (check_consistency("DTW_LB", "dist", silent = TRUE)) proxy::pr_DB$delete_entry("DTW_LB")
+    if (check_consistency("GAK", "dist", silent = TRUE)) proxy::pr_DB$delete_entry("GAK")
+    if (check_consistency("uGAK", "dist", silent = TRUE)) proxy::pr_DB$delete_entry("uGAK")
+    if (check_consistency("sdtw", "dist", silent = TRUE)) proxy::pr_DB$delete_entry("sdtw")
+    library.dynam.unload("dtwclust", libpath)
+}
+
+release_questions <- function() {
+    c(
+        "Changed .Rbuildignore to exclude test rds files?",
+        "Built the binary with --compact-vignettes?",
+        "Set vignette's cache to FALSE?"
+    )
+}
 ########
 
+# pr_DB
+# https://github.com/asardaes/dtwclust/blob/bc6008c26b46ff7105b59135dd9ad004a99f7d87/R/CLUSTERING-ddist2.R
+########
+# ==================================================================================================
+# Helpers
+# ==================================================================================================
 
+# Use existing distmat if available
+use_distmat <- function(distmat, x, centroids) {
+    if (!inherits(distmat, "Distmat"))
+        stop("Invalid distance matrix in control.") # nocov
+    # internal class, sparse or full
+    i <- 1L:length(x)
+    j <- if (is.null(centroids)) i else distmat$id_cent
+    distmat[i, j, drop = FALSE]
+}
+
+# Extra distance parameters in case of parallel computation
+# They can be for the function or for proxy::dist
+#' @importFrom proxy dist
+#'
+get_dots <- function(dist_entry, x, centroids, ...) {
+    dots <- list(...)
+
+    # Added defaults
+    if (is.null(dots$window.size)) {
+        dots$window.type <- "none"
+    }
+    else if (is.null(dots$window.type)) {
+        dots$window.type <- "slantedband"
+    }
+
+    dots$error.check <- FALSE
+
+    # dtw uses L2 by default, but in dtwclust I want dtw to use L1 by default
+    # Important for multivariate series
+    if (tolower(dist_entry$names[1L]) == "dtw" && is.null(dots$dist.method) && is_multivariate(c(x, centroids))) {
+        dots$dist.method <- "L1" # nocov
+    }
+
+    # If the function doesn't have '...', remove invalid arguments from 'dots'
+    valid_args <- names(dots)
+    if (is.function(dist_entry$FUN)) {
+        if (!has_dots(dist_entry$FUN)) {
+            valid_args <- union(names(formals(proxy::dist)), names(formals(dist_entry$FUN)))
+        }
+    }
+    else {
+        valid_args <- names(formals(proxy::dist))
+    }
+
+    dots[intersect(names(dots), valid_args)]
+}
+
+# Function to split indices for the symmetric, parallel, proxy case
+#' @importFrom parallel splitIndices
+#'
+split_parallel_symmetric <- function(n, num_workers, adjust = 0L) {
+    if (num_workers <= 2L || n <= 4L) {
+        mid_point <- as.integer(n / 2)
+        # indices for upper part of the lower triangular
+        ul_trimat <- 1L:mid_point + adjust
+        # indices for lower part of the lower triangular
+        ll_trimat <- (mid_point + 1L):n + adjust
+        # put triangular parts together for load balance
+        trimat <- list(ul = ul_trimat, ll = ll_trimat)
+        attr(trimat, "trimat") <- TRUE
+        trimat <- list(trimat)
+        mid_point <- mid_point + adjust
+        attr(ul_trimat, "rows") <- ll_trimat
+        mat <- list(ul_trimat)
+        ids <- c(trimat, mat)
+    }
+    else {
+        mid_point <- as.integer(n / 2)
+        # recursion
+        rec1 <- split_parallel_symmetric(mid_point, as.integer(num_workers / 4), adjust)
+        rec2 <- split_parallel_symmetric(n - mid_point, as.integer(num_workers / 4), mid_point + adjust)
+        endpoints <- parallel::splitIndices(mid_point, max(length(rec1) + length(rec2), num_workers))
+        endpoints <- endpoints[lengths(endpoints) > 0L]
+        mat <- lapply(endpoints, function(ids) {
+            ids <- ids + adjust
+            attr(ids, "rows") <- (mid_point + 1L):n + adjust
+            ids
+        })
+        ids <- c(rec1, rec2, mat)
+    }
+    chunk_sizes <- unlist(lapply(ids, function(x) {
+        if (is.null(attr(x, "trimat"))) length(x) else median(lengths(x))
+    }))
+    # return
+    ids[sort(chunk_sizes, index.return = TRUE)$ix]
+}
+
+# calculate only half the distance matrix in parallel
+#' @importFrom bigmemory attach.big.matrix
+#' @importFrom proxy dist
+#'
+parallel_symmetric <- function(d_desc, ids, x, distance, dots) {
+    dd <- bigmemory::attach.big.matrix(d_desc)
+    if (isTRUE(attr(ids, "trimat"))) {
+        # assign upper part of lower triangular
+        ul <- ids$ul
+        if (length(ul) > 1L) {
+            dd[ul,ul] <- base::as.matrix(quoted_call(
+                proxy::dist,
+                x = x[ul],
+                y = NULL,
+                method = distance,
+                dots = dots
+            ))
+        }
+
+        # assign lower part of lower triangular
+        ll <- ids$ll
+        if (length(ll) > 1L) {
+            dd[ll,ll] <- base::as.matrix(quoted_call(
+                proxy::dist,
+                x = x[ll],
+                y = NULL,
+                method = distance,
+                dots = dots
+            ))
+        }
+    }
+    else {
+        # assign matrix chunks
+        rows <- attr(ids, "rows")
+        mat_chunk <- base::as.matrix(quoted_call(
+            proxy::dist,
+            x = x[rows],
+            y = x[ids],
+            method = distance,
+            dots = dots
+        ))
+
+        dd[rows,ids] <- mat_chunk
+        dd[ids,rows] <- t(mat_chunk)
+    }
+}
+
+# ==================================================================================================
+# Return a custom distance function that calls registered functions of proxy
+# ==================================================================================================
+
+#' @importFrom bigmemory big.matrix
+#' @importFrom bigmemory describe
+#' @importFrom proxy dist
+#' @importFrom proxy pr_DB
+#'
+ddist2 <- function(distance, control) {
+    # I need to re-register any custom distances in each parallel worker
+    dist_entry <- proxy::pr_DB$get_entry(distance)
+    symmetric <- isTRUE(control$symmetric)
+
+    # variables/functions from the parent environments that should be exported
+    export <- c("check_consistency", "quoted_call", "parallel_symmetric", "distance", "dist_entry")
+
+    ret <- function(result, ...) {
+        ret <- structure(result, method = toupper(distance), ...)
+        if (!is.null(attr(ret, "call"))) {
+            attr(ret, "call") <- NULL
+        }
+        ret
+    }
+
+    # Closures capture the values of the objects from the environment where they're created
+    distfun <- function(x, centroids = NULL, ...) {
+        x <- tslist(x)
+        if (!is.null(centroids)) centroids <- tslist(centroids)
+
+        if (length(x) == 1L && is.null(centroids)) {
+            return(ret(base::matrix(0, 1L, 1L),
+                       class = "crossdist",
+                       dimnames = list(names(x), names(x))))
+        }
+
+        if (!is.null(control$distmat)) {
+            return(ret(use_distmat(control$distmat, x, centroids)))
+        }
+
+        dots <- get_dots(dist_entry, x, centroids, ...)
+
+        if (!dist_entry$loop) {
+            # CUSTOM LOOP, LET THEM HANDLE OPTIMIZATIONS
+            dm <- base::as.matrix(quoted_call(
+                proxy::dist, x = x, y = centroids, method = distance, dots = dots
+            ))
+
+            if (isTRUE(dots$pairwise)) {
+                dim(dm) <- NULL
+                return(ret(dm, class = "pairdist"))
+            }
+            else {
+                return(ret(dm, class = "crossdist"))
+            }
+        }
+
+        if (is.null(centroids) && symmetric && !isTRUE(dots$pairwise)) {
+            if (foreach::getDoParWorkers() > 1L) {
+                # WHOLE SYMMETRIC DISTMAT IN PARALLEL
+                # Only half of it is computed
+                # proxy can do this if y = NULL, but not in parallel
+                len <- length(x)
+
+                # undo bigmemory's seed change, backwards reproducibility
+                seed <- get0(".Random.seed", .GlobalEnv, mode = "integer")
+                d <- bigmemory::big.matrix(len, len, "double", 0)
+                d_desc <- bigmemory::describe(d)
+                assign(".Random.seed", seed, .GlobalEnv)
+
+                ids <- integer() # "initialize", so CHECK doesn't complain about globals
+                foreach(
+                    ids = split_parallel_symmetric(len, foreach::getDoParWorkers()),
+                    .combine = c,
+                    .multicombine = TRUE,
+                    .noexport = c("d"),
+                    .packages = c(control$packages, "bigmemory"),
+                    .export = export
+                ) %op% {
+                    if (!check_consistency(dist_entry$names[1L], "dist")) {
+                        do.call(proxy::pr_DB$set_entry, dist_entry, TRUE) # nocov
+                    }
+
+                    parallel_symmetric(d_desc, ids, x, distance, dots)
+                    NULL
+                }
+
+                # coerce to normal matrix
+                return(ret(d[,], class = "crossdist", dimnames = list(names(x), names(x))))
+            }
+            else {
+                # WHOLE SYMMETRIC DISTMAT WITH CUSTOM LOOP OR SEQUENTIAL proxy LOOP
+                dm <- base::as.matrix(quoted_call(
+                    proxy::dist, x = x, y = NULL, method = distance, dots = dots
+                ))
+
+                return(ret(dm, class = "crossdist"))
+            }
+        }
+
+        # WHOLE DISTMAT OR SUBDISTMAT OR NOT SYMMETRIC
+        if (is.null(centroids)) centroids <- x
+        dim_names <- list(names(x), names(centroids)) # x and centroids may change in parallel!
+        x <- split_parallel(x)
+
+        if (isTRUE(dots$pairwise)) {
+            centroids <- split_parallel(centroids)
+            validate_pairwise(x, centroids)
+            combine <- c
+        }
+        else {
+            centroids <- lapply(1L:foreach::getDoParWorkers(), function(dummy) { centroids })
+            if (length(centroids) > length(x)) centroids <- centroids[1L:length(x)] # nocov
+            combine <- rbind
+        }
+
+        d <- foreach(
+            x = x, centroids = centroids,
+            .combine = combine,
+            .multicombine = TRUE,
+            .packages = control$packages,
+            .export = export
+        ) %op% {
+            if (!check_consistency(dist_entry$names[1L], "dist")) {
+                do.call(proxy::pr_DB$set_entry, dist_entry, TRUE)
+            }
+
+            quoted_call(proxy::dist, x = x, y = centroids, method = distance, dots = dots)
+        }
+
+        if (isTRUE(dots$pairwise)) {
+            attr(d, "class") <- "pairdist"
+        }
+        else {
+            attr(d, "class") <- "crossdist"
+            attr(d, "dimnames") <- dim_names
+        }
+        # return
+        ret(d)
+    }
+
+    # return closure
+    distfun
+}
+########
+
+# pr_DB
+# https://github.com/asardaes/dtwclust/blob/bc6008c26b46ff7105b59135dd9ad004a99f7d87/R/CLUSTERING-compare-clusterings.R
+########
+#' Helper function for preprocessing/distance/centroid configurations
+#'
+#' Create preprocessing, distance and centroid configurations for [compare_clusterings_configs()].
+#'
+#' @export
+#' @importFrom dplyr bind_rows
+#'
+#' @param type Which type of function is being targeted by this configuration.
+#' @param ... Any number of named lists with functions and arguments that will be shared by all
+#'   clusterings. See details.
+#' @param partitional A named list of lists with functions and arguments for partitional
+#'   clusterings.
+#' @param hierarchical A named list of lists with functions and arguments for hierarchical
+#'   clusterings.
+#' @param fuzzy A named list of lists with functions and arguments for fuzzy clusterings.
+#' @param tadpole A named list of lists with functions and arguments for TADPole clusterings.
+#' @param share.config A character vector specifying which clusterings should include the shared
+#'   lists (the ones specified in `...`). It must be any combination of (possibly abbreviated):
+#'   partitional, hierarchical, fuzzy, tadpole.
+#'
+#' @details
+#'
+#' The named lists are interpreted in the following way: the name of the list will be considered to
+#' be a function name, and the elements of the list will be the possible parameters for the
+#' function. Each function must have at least an empty list. The parameters may be vectors that
+#' specify different values to be tested.
+#'
+#' For preprocessing, the special name `none` signifies no preprocessing.
+#'
+#' For centroids, the special name `default` leaves the centroid unspecified.
+#'
+#' Please see the examples in [compare_clusterings()] to see how this is used.
+#'
+#' @return
+#'
+#' A list for each clustering, each of which includes a data frame with the computed configurations.
+#'
+pdc_configs <- function(type = c("preproc", "distance", "centroid"), ...,
+                        partitional = NULL, hierarchical = NULL, fuzzy = NULL, tadpole = NULL,
+                        share.config = c("p", "h", "f", "t"))
+{
+    type <- match.arg(type)
+    shared <- list(...)
+    specific <- list(partitional = partitional,
+                     hierarchical = hierarchical,
+                     fuzzy = fuzzy,
+                     tadpole = tadpole)
+    specific <- specific[!sapply(specific, is.null)]
+    share_missing <- missing(share.config)
+    share.config <- match.arg(share.config, supported_clusterings, TRUE)
+    if (type == "distance") {
+        if (!is.null(specific$tadpole) || (!share_missing && "tadpole" %in% share.config))
+            warning("TADPole ignores distance configurations.")
+        specific$tadpole <- NULL
+        share.config <- setdiff(share.config, "tadpole")
+    }
+
+    # ==============================================================================================
+    # Shared configs
+    # ==============================================================================================
+
+    if (length(shared) > 0L && length(share.config) > 0L) {
+        # careful, singular and plural below
+        shared_cfg <- Map(shared, names(shared), f = function(shared_args, fun) {
+            cfg <- quoted_call(expand.grid, foo = fun, stringsAsFactors = FALSE, dots = shared_args)
+            names(cfg)[1L] <- type
+            cfg
+        })
+        shared_cfg <- dplyr::bind_rows(shared_cfg)
+        shared_cfgs <- lapply(share.config, function(dummy) { shared_cfg })
+        names(shared_cfgs) <- share.config
+        shared_cfgs <- shared_cfgs[setdiff(share.config, names(specific))]
+    }
+    else {
+        shared_cfg <- NULL
+        shared_cfgs <- list()
+    }
+
+    # ==============================================================================================
+    # Specific configs
+    # ==============================================================================================
+
+    if (length(specific) > 0L) {
+        cfgs <- Map(specific, names(specific), f = function(config, clus_type) {
+            config_names <- names(config)
+            if (!is.list(config) || is.null(config_names))
+                stop("All parameters must be named lists.") # nocov
+            cfg <- Map(config, config_names, f = function(config_args, fun) {
+                cfg <- quoted_call(expand.grid, foo = fun, stringsAsFactors = FALSE, dots = config_args)
+                names(cfg)[1L] <- type
+                cfg
+            })
+            cfg <- dplyr::bind_rows(cfg)
+            if (clus_type %in% share.config)
+                cfg <- dplyr::bind_rows(shared_cfg, cfg) # singular shared
+            cfg
+        })
+        cfgs <- c(cfgs, shared_cfgs) # plural shared
+    }
+    else {
+        cfgs <- shared_cfgs
+    }
+    # return
+    cfgs
+}
+
+#' Create clustering configurations.
+#'
+#' Create configurations for [compare_clusterings()]
+#'
+#' @export
+#' @importFrom dplyr bind_cols
+#'
+#' @param k A numeric vector with one or more elements specifying the number of clusters to test.
+#' @param types Clustering types. It must be any combination of (possibly abbreviated): partitional,
+#'   hierarchical, fuzzy, tadpole.
+#' @param controls A named list of [tsclust-controls]. `NULL` means defaults. See details.
+#' @param preprocs Preprocessing configurations. See details.
+#' @param distances Distance configurations. See details.
+#' @param centroids Centroid configurations. See details.
+#' @param no.expand A character vector indicating parameters that should *not* be expanded between
+#'   [pdc_configs()] configurations. See examples.
+#'
+#' @details
+#'
+#' Preprocessing, distance and centroid configurations are specified with the helper function
+#' [pdc_configs()], refer to the examples in [compare_clusterings()] to see how this is used.
+#'
+#' The controls list may be specified with the usual [tsclust-controls] functions. The names of the
+#' list must correspond to "partitional", "hierarchical", "fuzzy" or "tadpole" clustering. Again,
+#' please refer to the examples in [compare_clusterings()].
+#'
+#' @return
+#'
+#' A list for each clustering type, each of which includes a data frame with the computed and merged
+#' configurations. Each data frame has an extra attribute `num.configs` specifying the number of
+#' configurations.
+#'
+#' @examples
+#'
+#' # compare this with leaving no.expand empty
+#' compare_clusterings_configs(
+#'     distances = pdc_configs("d", dtw_basic = list(window.size = 1L:2L, norm = c("L1", "L2"))),
+#'     centroids = pdc_configs("c", dba = list(window.size = 1L:2L, norm = c("L1", "L2"))),
+#'     no.expand = c("window.size", "norm")
+#' )
+#'
+compare_clusterings_configs <- function(types = c("p", "h", "f"), k = 2L, controls = NULL,
+                                        preprocs = pdc_configs("preproc", none = list()),
+                                        distances = pdc_configs("distance", dtw_basic = list()),
+                                        centroids = pdc_configs("centroid", default = list()),
+                                        no.expand = character(0L))
+{
+    # ==============================================================================================
+    # Start
+    # ==============================================================================================
+
+    types <- match.arg(types, supported_clusterings, TRUE)
+
+    # ----------------------------------------------------------------------------------------------
+    # Check controls specification
+    # ----------------------------------------------------------------------------------------------
+
+    if (is.null(controls)) {
+        controls <- lapply(types, function(type) { do.call(paste0(type, "_control"), list()) })
+        names(controls) <- types
+    }
+    else if (!is.list(controls) || is.null(names(controls))) {
+        stop("The 'controls' argument must be NULL or a named list")
+    }
+    else if (!all(types %in% names(controls))) {
+        stop("The names of the 'controls' argument do not correspond to the provided 'types'")
+    }
+    else {
+        controls <- controls[intersect(names(controls), types)]
+    }
+
+    # ----------------------------------------------------------------------------------------------
+    # Check preprocessings specification
+    # ----------------------------------------------------------------------------------------------
+
+    if (missing(preprocs))
+        force(preprocs)
+    else if (!is.list(preprocs) || (length(preprocs) > 0L && is.null(names(preprocs))))
+        stop("The 'preprocs' argument must be a list with named elements")
+    else if (!all(types %in% names(preprocs)))
+        stop("The names of the 'preprocs' argument do not correspond to the provided 'types'")
+
+    preprocs <- preprocs[intersect(names(preprocs), types)]
+
+    # ----------------------------------------------------------------------------------------------
+    # Check distance specification
+    # ----------------------------------------------------------------------------------------------
+
+    if (missing(distances))
+        force(distances)
+    else if (!is.list(distances) || (length(distances) > 0L && is.null(names(distances))))
+        stop("The 'distances' argument must be a list with named elements")
+    else if (!all(setdiff(types, "tadpole") %in% names(distances)))
+        stop("The names of the 'distances' argument do not correspond to the provided 'types'")
+
+    distances <- distances[intersect(names(distances), types)]
+
+    # ----------------------------------------------------------------------------------------------
+    # Check centroids specification
+    # ----------------------------------------------------------------------------------------------
+
+    if (missing(centroids))
+        force(centroids)
+    else if (!is.list(centroids) || (length(centroids) > 0L && is.null(names(centroids))))
+        stop("The 'centroids' argument must be a list with named elements")
+    else if (!all(types %in% names(centroids)))
+        stop("The names of the 'centroids' argument do not correspond to the provided 'types'")
+
+    centroids <- centroids[intersect(names(centroids), types)]
+
+    # ==============================================================================================
+    # Create configs
+    # ==============================================================================================
+
+    # return here
+    Map(types, controls[types], preprocs[types], distances[types], centroids[types],
+        f = function(type, control, preproc, distance, centroid) {
+            # --------------------------------------------------------------------------------------
+            # Control configs
+            # --------------------------------------------------------------------------------------
+
+            if (class(control) != control_classes[type]) stop("Invalid ", type, " control") # nocov
+
+            # if it's within a list, it's to prevent expansion
+            cfg <- switch(
+                type,
+                partitional = {
+                    quoted_call(
+                        expand.grid,
+                        k = list(k),
+                        pam.precompute = control$pam.precompute,
+                        iter.max = control$iter.max,
+                        nrep = control$nrep,
+                        symmetric = control$symmetric,
+                        version = control$version,
+                        stringsAsFactors = FALSE
+                    )
+                },
+                hierarchical = {
+                    quoted_call(
+                        expand.grid,
+                        k = list(k),
+                        method = list(control$method),
+                        symmetric = control$symmetric,
+                        stringsAsFactors = FALSE
+                    )
+                },
+                fuzzy = {
+                    quoted_call(
+                        expand.grid,
+                        k = list(k),
+                        fuzziness = control$fuzziness,
+                        iter.max = control$iter.max,
+                        delta = control$delta,
+                        symmetric = control$symmetric,
+                        version = control$version,
+                        stringsAsFactors = FALSE
+                    )
+                },
+                tadpole = {
+                    quoted_call(
+                        expand.grid,
+                        k = list(k),
+                        dc = list(control$dc),
+                        window.size = control$window.size,
+                        lb = control$lb,
+                        stringsAsFactors = FALSE
+                    )
+                }
+            )
+
+            # --------------------------------------------------------------------------------------
+            # Merge configs
+            # --------------------------------------------------------------------------------------
+
+            need_adjustment <- character(0L)
+
+            # preproc
+            if (!is.null(preproc) && nrow(preproc)) {
+                nms <- names(preproc)
+                if (any(nms %in% no.expand)) need_adjustment <- c(need_adjustment, "preproc")
+                nms_args <- nms != "preproc" & !(nms %in% no.expand)
+                if (any(nms_args)) names(preproc)[nms_args] <- paste0(nms[nms_args], "_preproc")
+                cfg <- base::merge(cfg, preproc, all = TRUE)
+            }
+            # distance
+            if (type != "tadpole" && !is.null(distance) && nrow(distance)) {
+                nms <- names(distance)
+                if (any(nms %in% no.expand)) need_adjustment <- c(need_adjustment, "distance")
+                nms_args <- nms != "distance" & !(nms %in% no.expand)
+                if (any(nms_args)) names(distance)[nms_args] <- paste0(nms[nms_args], "_distance")
+                cfg <- base::merge(cfg, distance, all = TRUE)
+            }
+            # centroid
+            if (!is.null(centroid) && nrow(centroid)) {
+                nms <- names(centroid)
+                if (any(nms %in% no.expand)) need_adjustment <- c(need_adjustment, "centroid")
+                nms_args <- nms != "centroid" & !(nms %in% no.expand)
+                if (any(nms_args)) names(centroid)[nms_args] <- paste0(nms[nms_args], "_centroid")
+                cfg <- base::merge(cfg, centroid, all = TRUE)
+            }
+            # special case: tadpole
+            tadpole_controls <- names(formals(tadpole_control))
+            if (type == "tadpole" && any(no.expand %in% tadpole_controls)) {
+                need_adjustment <- c(need_adjustment, "tadpole")
+                tadpole <- cfg[, tadpole_controls, drop = FALSE]
+            }
+
+            # adjust no.expand columns
+            if (length(need_adjustment) > 0L) {
+                adjust_cols <- cfg[, no.expand, drop = FALSE]
+                cfg <- cfg[, -which(names(cfg) %in% no.expand), drop = FALSE]
+                adjusted_cols <- lapply(need_adjustment, function(suffix) {
+                    pdc_cfg <- get_from_callers(suffix, mode = "list")
+                    cols <- intersect(names(pdc_cfg), no.expand)
+                    adjusted_cols <- adjust_cols[, cols, drop = FALSE]
+                    if (suffix != "tadpole")
+                        names(adjusted_cols) <- paste0(names(adjusted_cols), "_", suffix)
+                    adjusted_cols
+                })
+                cfg <- dplyr::bind_cols(cfg, adjusted_cols)
+            }
+
+            # for info
+            attr(cfg, "num.configs") <- switch(
+                type,
+                partitional = length(k) * sum(cfg$nrep),
+                hierarchical = length(k) * length(cfg$method[[1L]]) * nrow(cfg),
+                fuzzy = length(k) * nrow(cfg),
+                tadpole = length(k) * length(cfg$dc[[1L]]) * nrow(cfg)
+            )
+            # return Map
+            cfg
+        })
+}
+
+#' Compare different clustering configurations
+#'
+#' Compare many different clustering algorithms with support for parallelization.
+#'
+#' @export
+#' @importFrom dplyr bind_rows
+#' @importFrom dplyr inner_join
+#' @importFrom proxy pr_DB
+#'
+#' @param series A list of series, a numeric matrix or a data frame. Matrices and data frames are
+#'   coerced to a list row-wise (see [tslist()]).
+#' @param types Clustering types. It must be any combination of (possibly abbreviated):
+#'   "partitional", "hierarchical", "fuzzy", "tadpole."
+#' @param configs The list of data frames with the desired configurations to run. See
+#'   [pdc_configs()] and [compare_clusterings_configs()].
+#' @param seed Seed for random reproducibility.
+#' @param trace Logical indicating that more output should be printed to screen.
+#' @param ... Further arguments for [tsclust()], `score.clus` or `pick.clus`.
+#' @param score.clus A function that gets the list of results (and `...`) and scores each one. It
+#'   may also be a named list of functions, one for each type of clustering. See Scoring section.
+#' @param pick.clus A function to pick the best result. See Picking section.
+#' @param shuffle.configs Randomly shuffle the order of configs, which can be useful to balance load
+#'   when using parallel computation.
+#' @param return.objects Logical indicating whether the objects returned by [tsclust()] should be
+#'   given in the result.
+#' @param packages A character vector with the names of any packages needed for any functions used
+#'   (distance, centroid, preprocessing, etc.). The name "dtwclust" is added automatically. Relevant
+#'   for parallel computation.
+#' @param .errorhandling This will be passed to [foreach::foreach()]. See Parallel section below.
+#'
+#' @details
+#'
+#' This function calls [tsclust()] with different configurations and evaluates the results with the
+#' provided functions. Parallel support is included. See the examples.
+#'
+#' Parameters specified in `configs` whose values are `NA` will be ignored automatically.
+#'
+#' The scoring and picking functions are for convenience, if they are not specified, the `scores`
+#' and `pick` elements of the result will be `NULL`.
+#'
+#' See [repeat_clustering()] for when `return.objects = FALSE`.
+#'
+#' @return
+#'
+#' A list with:
+#'
+#' - `results`: A list of data frames with the flattened configs and the corresponding scores
+#' returned by `score.clus`.
+#' - `scores`: The scores given by `score.clus`.
+#' - `pick`: The object returned by `pick.clus`.
+#' - `proc_time`: The measured execution time, using [base::proc.time()].
+#' - `seeds`: A list of lists with the random seeds computed for each configuration.
+#'
+#' The cluster objects are also returned if `return.objects` `=` `TRUE`.
+#'
+#' @section Parallel computation:
+#'
+#'   The configurations for each clustering type can be evaluated in parallel (multi-processing)
+#'   with the \pkg{foreach} package. A parallel backend can be registered, e.g., with
+#'   \pkg{doParallel}.
+#'
+#'   If the `.errorhandling` parameter is changed to "pass" and a custom `score.clus` function is
+#'   used, said function should be able to deal with possible error objects.
+#'
+#'   If it is changed to "remove", it might not be possible to attach the scores to the results data
+#'   frame, or it may be inconsistent. Additionally, if `return.objects` is `TRUE`, the names given
+#'   to the objects might also be inconsistent.
+#'
+#'   Parallelization can incur a lot of deep copies of data when returning the cluster objects,
+#'   since each one will contain a copy of `datalist`. If you want to avoid this, consider
+#'   specifying `score.clus` and setting `return.objects` to `FALSE`, and then using
+#'   [repeat_clustering()].
+#'
+#' @section Scoring:
+#'
+#'   The clustering results are organized in a *list of lists* in the following way (where only
+#'   applicable `types` exist; first-level list names in bold):
+#'
+#'   - **partitional** - list with
+#'     + Clustering results from first partitional config
+#'     + etc.
+#'   - **hierarchical** - list with
+#'     + Clustering results from first hierarchical config
+#'     + etc.
+#'   - **fuzzy** - list with
+#'     + Clustering results from first fuzzy config
+#'     + etc.
+#'   - **tadpole** - list with
+#'     + Clustering results from first tadpole config
+#'     + etc.
+#'
+#'   If `score.clus` is a function, it will be applied to the available partitional, hierarchical,
+#'   fuzzy and/or tadpole results via:
+#'
+#'   ```
+#'   scores <- lapply(list_of_lists, score.clus, ...)
+#'   ```
+#'
+#'   Otherwise, `score.clus` should be a list of functions with the same names as the list above, so
+#'   that `score.clus$partitional` is used to score `list_of_lists$partitional` and so on (via
+#'   [base::Map()]).
+#'
+#'   Therefore, the scores returned shall always be a list of lists with first-level names as above.
+#'
+#' @section Picking:
+#'
+#'   If `return.objects` is `TRUE`, the results' data frames and the list of [TSClusters-class]
+#'   objects are given to `pick.clus` as first and second arguments respectively, followed by `...`.
+#'   Otherwise, `pick.clus` will receive only the data frames and the contents of `...` (since the
+#'   objects will not be returned by the preceding step).
+#'
+#' @section Limitations:
+#'
+#'   Note that the configurations returned by the helper functions assign special names to
+#'   preprocessing/distance/centroid arguments, and these names are used internally to recognize
+#'   them.
+#'
+#'   If some of these arguments are more complex (e.g. matrices) and should *not* be expanded,
+#'   consider passing them directly via the ellipsis (`...`) instead of using [pdc_configs()]. This
+#'   assumes that said arguments can be passed to all functions without affecting their results.
+#'
+#'   The distance matrices (if calculated) are not re-used across configurations. Given the way the
+#'   configurations are created, this shouldn't matter, because clusterings with arguments that can
+#'   use the same distance matrix are already grouped together by [compare_clusterings_configs()]
+#'   and [pdc_configs()].
+#'
+#' @author Alexis Sarda-Espinosa
+#'
+#' @seealso
+#'
+#' [compare_clusterings_configs()], [tsclust()]
+#'
+#' @example man-examples/comparison-examples.R
+#'
+compare_clusterings <- function(series = NULL, types = c("p", "h", "f", "t"),
+                                configs = compare_clusterings_configs(types),
+                                seed = NULL, trace = FALSE, ...,
+                                score.clus = function(...) stop("No scoring"),
+                                pick.clus = function(...) stop("No picking"),
+                                shuffle.configs = FALSE, return.objects = FALSE,
+                                packages = character(0L), .errorhandling = "stop")
+{
+    # ==============================================================================================
+    # Start
+    # ==============================================================================================
+
+    tic <- proc.time()
+    handle_rngkind() # UTILS-rng.R
+    set.seed(seed)
+    score_missing <- missing(score.clus)
+    pick_missing <- missing(pick.clus)
+
+    # nocov start
+    if (is.null(series))
+        stop("No series provided.")
+
+    if (!return.objects && score_missing)
+        stop("Returning no objects and specifying no scoring function would return no useful results.")
+
+    types <- match.arg(types, supported_clusterings, TRUE)
+    .errorhandling <- match.arg(.errorhandling, c("stop", "remove", "pass"))
+
+    # coerce to list if necessary
+    if (is.data.frame(series) || !is.list(series))
+        series <- tslist(series, TRUE)
+    check_consistency(series, "vltslist")
+
+    if (!is.function(score.clus) && !(is.list(score.clus) && all(sapply(score.clus, is.function))))
+        stop("Invalid evaluation function(s)")
+    else if (is.list(score.clus)) {
+        if (!all(types %in% names(score.clus)))
+            stop("The names of the 'score.clus' argument do not correspond to the provided 'types'")
+
+        score.clus <- score.clus[types]
+    }
+
+    if (!is.function(pick.clus))
+        stop("Invalid pick function") # nocov end
+
+    # ----------------------------------------------------------------------------------------------
+    # Misc parameters
+    # ----------------------------------------------------------------------------------------------
+
+    packages <- unique(c("dtwclust", packages))
+    dots <- list(...)
+    configs <- configs[types]
+    if (any(sapply(configs, is.null)))
+        stop("The configuration for one of the chosen clustering types is missing.") # nocov
+    if (shuffle.configs) {
+        configs <- lapply(configs, function(config) {
+            config[sample(nrow(config)), , drop = FALSE]
+        })
+    }
+
+    # ----------------------------------------------------------------------------------------------
+    # Obtain random seeds
+    # ----------------------------------------------------------------------------------------------
+
+    num_seeds <- cumsum(sapply(configs, nrow))
+    seeds <- rng_seq(num_seeds[length(num_seeds)], seed = seed, simplify = FALSE) # UTILS-rng.R
+    seeds <- Map(c(1L, num_seeds[-length(num_seeds)] + 1L), num_seeds,
+                 f = function(first, last) { seeds[first:last] })
+    setnames_inplace(seeds, names(configs)) # UTILS-utils.R
+
+    # ==============================================================================================
+    # Preprocessings
+    # ==============================================================================================
+
+    if (trace) message("=================================== Preprocessing ",
+                       "series ===================================\n")
+
+    processed_series <- Map(configs, types, f = function(config, type) {
+        preproc_cols <- grepl("_?preproc$", names(config))
+        preproc_df <- unique(config[, preproc_cols, drop = FALSE])
+        preproc_args <- grepl("_preproc$", names(preproc_df))
+
+        if (trace) {
+            message("-------------- Applying ", type, " preprocessings: --------------")
+            print(preproc_df)
+        }
+
+        config$.preproc_id_ <- seq_len(nrow(config))
+        lapply(seq_len(nrow(preproc_df)), function(i) {
+            preproc_char <- preproc_df$preproc[i]
+            if (preproc_char != "none") {
+                # find all configs that have this preproc to assign them as attribute at the end
+                df <- dplyr::inner_join(config,
+                                        preproc_df[i, , drop = FALSE],
+                                        by = names(config)[preproc_cols])
+
+                preproc_fun <- get_from_callers(preproc_char, "function")
+
+                if (any(preproc_args)) {
+                    this_config <- preproc_df[i, preproc_args, drop = FALSE]
+                    names(this_config) <- sub("_preproc$", "", names(this_config))
+                    preproc_args <- as.list(this_config)
+                    preproc_args <- preproc_args[!sapply(preproc_args, is.na)]
+                }
+                else
+                    preproc_args <- list()
+
+                ret <- quoted_call(preproc_fun, series, dots = preproc_args)
+                attr(ret, "config_ids") <- df$.preproc_id_
+            }
+            else {
+                ret <- series
+            }
+            ret
+        })
+    })
+
+    # UTILS-utils.R
+    setnames_inplace(processed_series, names(configs))
+
+    # ==============================================================================================
+    # Clusterings
+    # ==============================================================================================
+
+    if (trace) cat("\n")
+    objs_by_type <- Map(configs, names(configs), seeds, f = function(config, type, seeds) {
+        if (trace) message("=================================== Performing ",
+                           type,
+                           " clusterings ===================================\n")
+        series <- processed_series[[type]]
+
+        # ------------------------------------------------------------------------------------------
+        # distance entries to re-register in parallel workers
+        # ------------------------------------------------------------------------------------------
+
+        if (type != "tadpole") {
+            dist_names <- unique(config$distance)
+            dist_entries <- lapply(dist_names, function(dist) { proxy::pr_DB$get_entry(dist) })
+            setnames_inplace(dist_entries, dist_names)
+        }
+
+        # ------------------------------------------------------------------------------------------
+        # export any necessary preprocessing and centroid functions
+        # ------------------------------------------------------------------------------------------
+
+        custom_preprocs <- setdiff(unique(config$preproc), "none")
+        custom_centroids <- setdiff(unique(config$centroid), c("default", centroids_included))
+
+        for (custom_preproc in custom_preprocs)
+            assign(custom_preproc, get_from_callers(custom_preproc, "function"))
+
+        for (custom_centroid in custom_centroids)
+            assign(custom_centroid, get_from_callers(custom_centroid, "function"))
+
+        export <- c("trace", "score.clus", "return.objects",
+                    "dots",
+                    "centroids_included",
+                    "check_consistency", "quoted_call", "enlist", "subset_dots", "get_from_callers",
+                    "setnames_inplace",
+                    custom_preprocs, custom_centroids)
+
+        # ------------------------------------------------------------------------------------------
+        # perform clusterings
+        # ------------------------------------------------------------------------------------------
+
+        force(seeds)
+        i <- nrow(config)
+        objs <- foreach::foreach(
+            i = seq_len(i),
+            .combine = c,
+            .multicombine = TRUE,
+            .packages = packages,
+            .export = export,
+            .errorhandling = .errorhandling
+        ) %op% {
+            cfg <- config[i, , drop = FALSE]
+            seed <- seeds[[i]]
+            if (trace) {
+                message("-------------- Using configuration: --------------")
+                print(cfg)
+            }
+
+            # ----------------------------------------------------------------------------------
+            # obtain args from configuration
+            # ----------------------------------------------------------------------------------
+
+            args <- lapply(c("preproc", "distance", "centroid"), function(func) {
+                col_ids <- grepl(paste0("_", func, "$"), names(cfg))
+                if (cfg[[func]] != "none" && any(col_ids)) {
+                    this_args <- as.list(cfg[, col_ids, drop = FALSE])
+                    names(this_args) <- sub(paste0("_", func, "$"),
+                                            "",
+                                            names(this_args))
+                    # return
+                    this_args[!sapply(this_args, is.na)]
+                }
+                else list()
+            })
+
+            setnames_inplace(args, c("preproc", "dist", "cent"))
+            args <- do.call(tsclust_args, args, TRUE)
+
+            # ----------------------------------------------------------------------------------
+            # controls for this configuration
+            # ----------------------------------------------------------------------------------
+
+            control_fun <- match.fun(paste0(type, "_control"))
+            control_args <- subset_dots(as.list(cfg), control_fun)
+            control_args <- lapply(control_args, unlist, recursive = FALSE)
+            control <- do.call(control_fun, control_args, TRUE)
+
+            # ----------------------------------------------------------------------------------
+            # get processed series
+            # ----------------------------------------------------------------------------------
+
+            preproc_char <- cfg$preproc
+
+            config_ids <- lapply(series, attr, which = "config_ids")
+            if (preproc_char == "none")
+                this_series <- which(sapply(config_ids, is.null))
+            else
+                this_series <- which(sapply(config_ids, function(cfg_id) { i %in% cfg_id }))
+
+            if (length(this_series) > 1L) # nocov start
+                stop("Could not find unique processed series for ", type,
+                     " clustering and config row=", i)
+            else # nocov end
+                this_series <- series[[this_series]]
+
+            # ----------------------------------------------------------------------------------
+            # distance entry to re-register in parallel worker
+            # ----------------------------------------------------------------------------------
+
+            if (type != "tadpole") {
+                distance <- cfg$distance
+                dist_entry <- dist_entries[[distance]]
+                if (!check_consistency(dist_entry$names[1L], "dist"))
+                    do.call(proxy::pr_DB$set_entry, dist_entry, TRUE) # nocov
+            }
+            else distance <- NULL # dummy
+
+            # ----------------------------------------------------------------------------------
+            # centroid for this configuration
+            # ----------------------------------------------------------------------------------
+
+            centroid_char <- cfg$centroid
+
+            # ----------------------------------------------------------------------------------
+            # call tsclust
+            # ----------------------------------------------------------------------------------
+
+            this_args <- enlist(series = this_series,
+                                type = type,
+                                k = unlist(cfg$k),
+                                distance = distance,
+                                seed = seed,
+                                trace = trace,
+                                args = args,
+                                control = control,
+                                error.check = FALSE,
+                                dots = dots)
+
+            if (type == "tadpole")
+                this_args$distance <- NULL
+
+            if (centroid_char == "default") {
+                # do not specify centroid
+                tsc <- do.call(tsclust, this_args, TRUE)
+            }
+            else if (type %in% c("partitional", "fuzzy") && centroid_char %in% centroids_included) {
+                # with included centroid
+                tsc <- quoted_call(tsclust, centroid = centroid_char, dots = this_args)
+            }
+            else {
+                # with centroid function
+                tsc <- quoted_call(tsclust,
+                                   centroid = get_from_callers(centroid_char, "function"),
+                                   dots = this_args)
+            }
+
+            if (inherits(tsc, "TSClusters"))
+                tsc <- list(tsc)
+
+            ret <- lapply(tsc, function(tsc) {
+                tsc@preproc <- preproc_char
+                if (preproc_char != "none")
+                    tsc@family@preproc <- get_from_callers(preproc_char, "function")
+                if (centroid_char != "default")
+                    tsc@centroid <- centroid_char
+                tsc
+            })
+
+            # ----------------------------------------------------------------------------------
+            # evaluate
+            # ----------------------------------------------------------------------------------
+
+            if (!return.objects) {
+                if (!is.function(score.clus)) score.clus <- score.clus[[type]]
+                ret <- list(quoted_call(score.clus, ret, dots = dots))
+            }
+            # return config result from foreach()
+            ret
+        }
+
+        class(objs) <- NULL
+        if (.errorhandling == "pass") {
+            failed_cfgs <- sapply(objs, function(obj) { !inherits(obj, "TSClusters") })
+            if (any(failed_cfgs)) {
+                warning("At least one of the ", type, " configurations resulted in an error.")
+
+                # a simple error is a list with 2 elements: message and call, so I need to re-pack
+                # each pair of elements in a single element of the objs list
+                which_failed <- which(failed_cfgs)[seq(from = 1L, by = 2L, length.out = sum(failed_cfgs) / 2)]
+                for (failed_cfg_id in which_failed) {
+                    objs[[failed_cfg_id]] <- structure(objs[failed_cfg_id:(failed_cfg_id + 1L)],
+                                                       class = c("simpleError", "error", "condition"))
+                }
+                names(objs)[which_failed] <- paste0("failure_", seq_along(which_failed))
+                objs[which_failed + 1L] <- NULL
+            }
+        }
+
+        objs
+    })
+
+    # ==============================================================================================
+    # Evaluations
+    # ==============================================================================================
+
+    if (return.objects) {
+        if (is.function(score.clus))
+            scores <- try(lapply(objs_by_type, score.clus, ...), silent = TRUE)
+        else
+            scores <- try(mapply(objs_by_type, score.clus[names(objs_by_type)],
+                                 SIMPLIFY = FALSE,
+                                 MoreArgs = dots,
+                                 FUN = function(objs, score_fun, ...) { score_fun(objs, ...) }),
+                          silent = TRUE)
+
+        if (inherits(scores, "try-error")) {
+            if (!score_missing) warning("The score.clus function(s) did not execute successfully:\n",
+                                        attr(scores, "condition")$message)
+            scores <- NULL
+        }
+    }
+    else {
+        scores <- lapply(objs_by_type, function(objs) {
+            failed_cfgs <- sapply(objs, function(obj) { inherits(obj, "error") })
+
+            if (any(failed_cfgs))
+                passed_objs <- objs[!failed_cfgs]
+            else
+                passed_objs <- objs
+
+            if (length(passed_objs) == 0L) return(objs)
+
+            if (any(sapply(passed_objs, function(score) { is.null(dim(score)) })))
+                unlist(passed_objs, recursive = FALSE)
+            else
+                dplyr::bind_rows(lapply(passed_objs, base::as.data.frame))
+        })
+    }
+
+    # ==============================================================================================
+    # Data frame with results
+    # ==============================================================================================
+
+    # create initial IDs
+    i_cfg <- 1L
+    config_ids <- lapply(sapply(configs, nrow), function(nr) {
+        ids <- seq(from = i_cfg, by = 1L, length.out = nr)
+        i_cfg <<- i_cfg + nr
+        ids
+    })
+
+    # change to config names and assign to seeds (before flattening)
+    config_ids <- Map(config_ids, seeds, f = function(ids, seed) {
+        nms <- paste0("config", ids)
+        try(setnames_inplace(seed, nms), silent = TRUE)
+        nms
+    })
+
+    # flatten
+    configs_out <- Map(configs, config_ids, types, f = function(config, ids, type) {
+        config <- data.frame(config_id = ids, config, stringsAsFactors = FALSE)
+        k <- unlist(config$k[1L])
+        dfs <- switch(
+            type,
+            partitional = {
+                lapply(seq_len(nrow(config)), function(i) {
+                    this_config <- config[i, , drop = FALSE]
+                    rep <- 1L:this_config$nrep
+                    this_config <- this_config[setdiff(names(this_config), c("k", "nrep"))]
+                    df <- expand.grid(rep = rep, k = k)
+                    make_unique_ids(df, this_config) # see EOF
+                })
+            },
+            hierarchical = {
+                lapply(seq_len(nrow(config)), function(i) {
+                    this_config <- config[i, , drop = FALSE]
+                    method <- unlist(this_config$method)
+                    this_config <- this_config[setdiff(names(this_config), c("k", "method"))]
+                    df <- expand.grid(k = k, method = method, stringsAsFactors = FALSE)
+                    make_unique_ids(df, this_config) # see EOF
+                })
+            },
+            fuzzy = {
+                lapply(seq_len(nrow(config)), function(i) {
+                    this_config <- config[i, , drop = FALSE]
+                    this_config <- this_config[setdiff(names(this_config), c("k"))]
+                    df <- expand.grid(k = k)
+                    make_unique_ids(df, this_config) # see EOF
+                })
+            },
+            tadpole = {
+                lapply(seq_len(nrow(config)), function(i) {
+                    this_config <- config[i, , drop = FALSE]
+                    dc <- unlist(this_config$dc)
+                    this_config <- this_config[setdiff(names(this_config), c("k", "dc"))]
+                    df <- expand.grid(k = k, dc = dc)
+                    make_unique_ids(df, this_config) # see EOF
+                })
+            }
+        )
+        # return Map
+        dplyr::bind_rows(dfs)
+    })
+
+    # ----------------------------------------------------------------------------------------------
+    # Add scores and pick
+    # ----------------------------------------------------------------------------------------------
+
+    # in case ordering is required below
+    if (shuffle.configs)
+        configs_cols <- lapply(configs_out, function(config) {
+            setdiff(colnames(config), c("config_id", "rep", "k", "method", "dc",  "window.size", "lb"))
+        })
+
+    if (!is.null(scores)) {
+        results <- try(Map(configs_out, scores,
+                           f = function(config, score) {
+                               cbind(config, base::as.data.frame(score))
+                           }),
+                       silent = TRUE)
+
+        if (inherits(results, "try-error")) {
+            warning("The scores could not be appended to the results data frame:\n",
+                    attr(results, "condition")$message)
+            results <- configs_out
+            pick <- NULL
+        }
+        else {
+            if (return.objects) {
+                pick <- try(pick.clus(results, objs_by_type, ...), silent = TRUE)
+                if (inherits(pick, "try-error")) {
+                    if (!pick_missing) warning("The pick.clus function did not execute successfully:\n",
+                                               attr(pick, "condition")$message)
+                    pick <- NULL
+                }
+            }
+            else {
+                pick <- try(pick.clus(results, ...), silent = TRUE)
+                if (inherits(pick, "try-error")) {
+                    if (!pick_missing) warning("The pick.clus function did not execute successfully:\n",
+                                               attr(pick, "condition")$message)
+                    pick <- NULL
+                }
+            }
+        }
+    }
+    else {
+        results <- configs_out
+        pick <- NULL
+    }
+
+    # ==============================================================================================
+    # List with all results
+    # ==============================================================================================
+
+    results <- list(results = results,
+                    scores = scores,
+                    pick = pick,
+                    proc_time = proc.time() - tic,
+                    seeds = seeds)
+
+    if (return.objects) {
+        setnames_res <- try(Map(objs_by_type, results$results,
+                                f = function(objs, res) { setnames_inplace(objs, res$config_id) }),
+                            silent = TRUE)
+        if (inherits(setnames_res, "try-error"))
+            warning("Could not assign names to returned objects:\n",
+                    attr(setnames_res, "condition")$message)
+        results <- c(results, objects = objs_by_type)
+    }
+
+    if (shuffle.configs)
+        results$results <- Map(results$results, configs_cols[names(results$results)],
+                               f = function(result, cols) {
+                                   order_args <- as.list(result[cols])
+                                   names(order_args) <- NULL
+                                   result[do.call(base::order, order_args, TRUE), , drop = FALSE]
+                               })
+    # return results
+    results
+}
+
+# ==================================================================================================
+# compare_clusterings helpers
+# ==================================================================================================
+
+make_unique_ids <- function(df, this_config) {
+    rownames(this_config) <- NULL
+    this_config <- cbind(this_config[, 1L, drop = FALSE], df, this_config[, -1L, drop = FALSE])
+    nr <- nrow(this_config)
+    if (nr > 1L) this_config$config_id <- paste0(this_config$config_id, "_", 1L:nr)
+    this_config
+}
+########
+
+# pr_DB
+# https://github.com/asardaes/dtwclust/blob/bc6008c26b46ff7105b59135dd9ad004a99f7d87/R/S4-tsclustFamily.R
+########
+#' Class definition for `tsclustFamily`
+#'
+#' Formal S4 class with a family of functions used in [tsclust()].
+#'
+#' @exportClass tsclustFamily
+#' @importFrom methods setClass
+#'
+#' @details
+#'
+#' The custom implementations also handle parallelization.
+#'
+#' Since the distance function makes use of \pkg{proxy}, it also supports any extra [proxy::dist()]
+#' parameters in `...`.
+#'
+#' The prototype includes the `cluster` function for partitional methods, as well as a pass-through
+#' `preproc` function. The initializer expects a control from [tsclust-controls]. See more below.
+#'
+#' @slot dist The function to calculate the distance matrices.
+#' @slot allcent The function to calculate centroids on each iteration.
+#' @slot cluster The function used to assign a series to a cluster.
+#' @slot preproc The function used to preprocess the data (relevant for [stats::predict()]).
+#'
+#' @section Distance function:
+#'
+#'   The family's dist() function works like [proxy::dist()] but supports parallelization and
+#'   optimized symmetric calculations. If you like, you can use the function more or less directly,
+#'   but provide a control argument when creating the family (see examples). However, bear in mind
+#'   the following considerations.
+#'
+#'   - The second argument is called `centroids` (inconsistent with [proxy::dist()]).
+#'   - If `control$distmat` is *not* `NULL`, the function will try to subset it.
+#'   - If `control$symmetric` is `TRUE`, `centroids` is `NULL`, *and* there is no argument
+#'   `pairwise` that is `TRUE`, only half the distance matrix will be computed.
+#'     + If the distance was registered in [proxy::pr_DB] with `loop = TRUE` and more than one
+#'     parallel worker is detected, the computation will be in parallel (using multi-processing with
+#'     [foreach::foreach()]), otherwise it will be sequential with [proxy::dist()].
+#'   - The function always returns a `crossdist` matrix.
+#'
+#'   Note that all distances implemented as part of \pkg{dtwclust} have custom proxy loops that use
+#'   multi-threading independently of \pkg{foreach}, so see their respective documentation to see
+#'   what optimizations apply to each one.
+#'
+#'   For distances *not* included in \pkg{dtwclust}, the symmetric, parallel case mentioned above
+#'   makes chunks for parallel workers, but they are not perfectly balanced, so some workers might
+#'   finish before the others.
+#'
+#' @section Centroid function:
+#'
+#'   The default partitional allcent() function is a closure with the implementations of the
+#'   included centroids. The ones for [DBA()], [shape_extraction()] and [sdtw_cent()] can use
+#'   multi-process parallelization with [foreach::foreach()]. Its formal arguments are described in
+#'   the Centroid Calculation section from [tsclust()].
+#'
+#' @note
+#'
+#' This class is meant to group together the relevant functions, but they are **not** linked with
+#' each other automatically. In other words, neither `dist` nor `allcent` apply `preproc`. They
+#' essentially don't know of each other's existence.
+#'
+#' @seealso
+#'
+#' [dtw_basic()], [dtw_lb()], [gak()], [lb_improved()], [lb_keogh()], [sbd()], [sdtw()].
+#'
+#' @examples
+#'
+#' \dontrun{
+#' data(uciCT)
+#' # See "GAK" documentation
+#' fam <- new("tsclustFamily", dist = "gak")
+#'
+#' # This is done with symmetric optimizations, regardless of control$symmetric
+#' crossdist <- fam@@dist(CharTraj, window.size = 18L)
+#'
+#' # This is done without symmetric optimizations, regardless of control$symmetric
+#' crossdist <- fam@@dist(CharTraj, CharTraj, window.size = 18L)
+#'
+#' # For non-dtwclust distances, symmetric optimizations only apply
+#' # with an appropriate control AND a single data argument:
+#' fam <- new("tsclustFamily", dist = "dtw",
+#'            control = partitional_control(symmetric = TRUE))
+#' fam@@dist(CharTraj[1L:5L])
+#'
+#' # If you want the fuzzy family, use fuzzy = TRUE
+#' ffam <- new("tsclustFamily", control = fuzzy_control(), fuzzy = TRUE)
+#' }
+#'
+tsclustFamily <- methods::setClass(
+    "tsclustFamily",
+    slots = c(dist = "function",
+              allcent = "function",
+              cluster = "function",
+              preproc = "function"),
+    prototype = prototype(preproc = function(x, ...) { x },
+                          cluster = function(distmat = NULL, ...) {
+                              max.col(-distmat, "first")
+                          })
+)
+
+# ==================================================================================================
+# Membership update for fuzzy clustering
+# ==================================================================================================
+
+f_cluster <- function(distmat, m) {
+    cprime <- apply(distmat, 1L, function(dist_row) { sum( (1 / dist_row) ^ (2 / (m - 1)) ) })
+    u <- 1 / apply(distmat, 2L, function(dist_col) { cprime * dist_col ^ (2 / (m - 1)) })
+    if (is.null(dim(u))) u <- rbind(u) # for predict generic
+    u[is.nan(u)] <- 1 # in case fcmdd is used
+    u
+}
+
+# ==================================================================================================
+# Custom initialize
+# ==================================================================================================
+
+#' @importFrom methods callNextMethod
+#' @importFrom methods initialize
+#' @importFrom methods setMethod
+#'
+setMethod("initialize", "tsclustFamily",
+          function(.Object, dist, allcent, ..., control = list(), fuzzy = FALSE) {
+              dots <- list(...)
+              dots$.Object <- .Object
+              if (!missing(dist)) {
+                  if (is.character(dist))
+                      dots$dist <- ddist2(dist, control)
+                  else
+                      dots$dist <- dist
+              }
+              if (fuzzy) {
+                  dots$cluster <- f_cluster
+                  if (!missing(allcent) && is.character(allcent))
+                      allcent <- match.arg(allcent, c("fcm", "fcmdd"))
+              }
+              if (!missing(allcent)) {
+                  if (is.character(allcent)) {
+                      if (allcent %in% c("pam", "fcmdd")) {
+                          if (!is.null(control$distmat) && !inherits(control$distmat, "Distmat"))
+                              control$distmat <- Distmat$new( # see S4-Distmat.R
+                                  distmat = base::as.matrix(control$distmat)
+                              )
+                      }
+                      dots$allcent <- all_cent2(allcent, control)
+                  }
+                  else if (is.function(allcent))
+                      dots$allcent <- allcent
+                  else
+                      stop("Centroid definition must be either a function or a character")
+              }
+              do.call(methods::callNextMethod, dots, TRUE)
+          })
+########
+
+# pr_DB
+# https://github.com/asardaes/dtwclust/blob/master/R/DISTANCES-dtw-basic.R
+########
+#' Basic DTW distance
+#'
+#' This is a custom implementation of the DTW algorithm without all the functionality included in
+#' [dtw::dtw()]. Because of that, it should be faster, while still supporting the most common
+#' options.
+#'
+#' @export
+#' @importFrom dtw symmetric1
+#' @importFrom dtw symmetric2
+#'
+#' @param x,y Time series. Multivariate series must have time spanning the rows and variables
+#'   spanning the columns.
+#' @param window.size Size for slanted band window. `NULL` means no constraint.
+#' @param norm Norm for the LCM calculation, "L1" for Manhattan or "L2" for (squared) Euclidean. See
+#'   notes.
+#' @param step.pattern Step pattern for DTW. Only `symmetric1` or `symmetric2` supported here. Note
+#'   that these are *not* characters. See [dtw::stepPattern].
+#' @param backtrack Also compute the warping path between series? See details.
+#' @param normalize Should the distance be normalized? Only supported for `symmetric2`.
+#' @param sqrt.dist Only relevant for `norm = "L2"`, see notes.
+#' @param ... Currently ignored.
+#' @template error-check
+#'
+#' @details
+#'
+#' If `backtrack` is `TRUE`, the mapping of indices between series is returned in a list.
+#'
+#' @template window
+#'
+#' @return The DTW distance. For `backtrack` `=` `TRUE`, a list with:
+#'
+#'   - `distance`: The DTW distance.
+#'   - `index1`: `x` indices for the matched elements in the warping path.
+#'   - `index2`: `y` indices for the matched elements in the warping path.
+#'
+#' @template proxy
+#' @template symmetric
+#' @section Proxy version:
+#'
+#'   In order for symmetry to apply here, the following must be true: no window constraint is used
+#'   (`window.size` is `NULL`) or, if one is used, all series have the same length.
+#'
+#' @note
+#'
+#' The elements of the local cost matrix are calculated by using either Manhattan or squared
+#' Euclidean distance. This is determined by the `norm` parameter. When the squared Euclidean
+#' version is used, the square root of the resulting DTW distance is calculated at the end (as
+#' defined in Ratanamahatana and Keogh 2004; Lemire 2009; see vignette references). This can be
+#' avoided by passing `FALSE` in `sqrt.dist`.
+#'
+#' The DTW algorithm (and the functions that depend on it) might return different values in 32 bit
+#' installations compared to 64 bit ones.
+#'
+#' An infinite distance value indicates that the constraints could not be fulfilled, probably due to
+#' a too small `window.size` or a very large length difference between the series.
+#'
+#' @example man-examples/multivariate-dtw.R
+#'
+dtw_basic <- function(x, y, window.size = NULL, norm = "L1",
+                      step.pattern = dtw::symmetric2, backtrack = FALSE,
+                      normalize = FALSE, sqrt.dist = TRUE, ..., error.check = TRUE)
+{
+    if (error.check) {
+        check_consistency(x, "ts")
+        check_consistency(y, "ts")
+    }
+
+    if (is.null(window.size))
+        window.size <- -1L
+    else
+        window.size <- check_consistency(window.size, "window")
+
+    if (NCOL(x) != NCOL(y)) stop("Multivariate series must have the same number of variables.")
+
+    if (identical(step.pattern, dtw::symmetric1))
+        step.pattern <- 1
+    else if (identical(step.pattern, dtw::symmetric2))
+        step.pattern <- 2
+    else
+        stop("step.pattern must be either symmetric1 or symmetric2 (without quotes)")
+
+    norm <- match.arg(norm, c("L1", "L2"))
+    norm <- switch(norm, "L1" = 1, "L2" = 2)
+    backtrack <- isTRUE(backtrack)
+    normalize <- isTRUE(normalize)
+    sqrt.dist <- isTRUE(sqrt.dist)
+    if (normalize && step.pattern == 1) stop("Unable to normalize with chosen step pattern.")
+
+    if (backtrack)
+        gcm <- matrix(0, NROW(x) + 1L, NROW(y) + 1L)
+    else
+        gcm <- matrix(0, 2L, NROW(y) + 1L)
+
+    d <- .Call(C_dtw_basic, x, y, window.size,
+               NROW(x), NROW(y), NCOL(x),
+               norm, step.pattern, backtrack, normalize, sqrt.dist,
+               gcm, PACKAGE = "dtwclust")
+
+    if (backtrack) {
+        d$index1 <- d$index1[d$path:1L]
+        d$index2 <- d$index2[d$path:1L]
+        d$path <- NULL
+    }
+    # return
+    d
+}
+
+# ==================================================================================================
+# Wrapper for proxy::dist
+# ==================================================================================================
+
+#' @importFrom dtw symmetric1
+#' @importFrom dtw symmetric2
+#'
+dtw_basic_proxy <- function(x, y = NULL, window.size = NULL, norm = "L1",
+                            step.pattern = dtw::symmetric2,
+                            normalize = FALSE, sqrt.dist = TRUE, ...,
+                            error.check = TRUE, pairwise = FALSE)
+{
+    x <- tslist(x)
+    if (error.check) check_consistency(x, "vltslist")
+    if (is.null(y)) {
+        y <- x
+        symmetric <- is.null(window.size) || !different_lengths(x)
+    }
+    else {
+        y <- tslist(y)
+        if (error.check) check_consistency(y, "vltslist")
+        symmetric <- FALSE
+    }
+
+    fill_type <- mat_type <- dim_names <- NULL # avoid warning about undefined globals
+    eval(prepare_expr) # UTILS-expressions.R
+
+    # adjust parameters for this distance
+    if (is.null(window.size))
+        window.size <- -1L
+    else
+        window.size <- check_consistency(window.size, "window")
+
+    if (identical(step.pattern, dtw::symmetric1))
+        step.pattern <- 1
+    else if (identical(step.pattern, dtw::symmetric2))
+        step.pattern <- 2
+    else
+        stop("step.pattern must be either symmetric1 or symmetric2 (without quotes)")
+
+    normalize <- isTRUE(normalize)
+    sqrt.dist <- isTRUE(sqrt.dist)
+
+    if (normalize && step.pattern == 1) stop("Unable to normalize with chosen step pattern.")
+
+    norm <- match.arg(norm, c("L1", "L2"))
+    norm <- switch(norm, "L1" = 1, "L2" = 2)
+
+    mv <- is_multivariate(c(x, y))
+    backtrack <- FALSE
+
+    # calculate distance matrix
+    distance <- "DTW_BASIC" # read in C++, can't be temporary!
+    distargs <- list(
+        window.size = window.size,
+        norm = norm,
+        step.pattern = step.pattern,
+        backtrack = backtrack,
+        normalize = normalize,
+        sqrt.dist = sqrt.dist
+    )
+    num_threads <- get_nthreads()
+    .Call(C_distmat_loop,
+          D, x, y, distance, distargs, fill_type, mat_type, num_threads,
+          PACKAGE = "dtwclust")
+
+    # adjust D's attributes
+    if (pairwise) {
+        dim(D) <- NULL
+        class(D) <- "pairdist"
+    }
+    else {
+        dimnames(D) <- dim_names
+        class(D) <- "crossdist"
+    }
+    attr(D, "method") <- "DTW_BASIC"
+    # return
+    D
+}
+########
+
+# pr_DB
+# https://github.com/asardaes/dtwclust/blob/master/R/S4-Distmat.R
+########
+# ==================================================================================================
+# Distmat RC and methods to transparently handle PAM centroids
+# ==================================================================================================
+
+#' Distance matrix
+#'
+#' Reference class that is used internally for cross-distance matrices.
+#'
+#' @importFrom methods setRefClass
+#'
+#' @field distmat A distance matrix.
+#' @field series Time series list.
+#' @field distfun The distance function to calculate the distance matrix.
+#' @field dist_args Arguments for the distance function.
+#' @field id_cent Indices of the centroids (if any).
+#'
+#' @keywords internal
+#'
+Distmat <- methods::setRefClass("Distmat",
+                       fields = list(
+                           distmat = "ANY",
+                           series = "list",
+                           distfun = "function",
+                           dist_args = "list",
+                           id_cent = "integer"
+                       ),
+                       methods = list(
+                           initialize = function(..., distmat, series, distance, control, error.check = TRUE) {
+                               "Initialization based on needed parameters"
+
+                               if (missing(distmat)) {
+                                   if (tolower(distance) == "dtw_lb") distance <- "dtw_basic"
+                                   if (error.check) {
+                                       check_consistency(series, "vltslist")
+                                       check_consistency(distance,
+                                                         "dist",
+                                                         trace = FALSE,
+                                                         diff_lengths = different_lengths(series),
+                                                         silent = FALSE)
+                                       if (class(control) != "PtCtrl")
+                                           stop("Invalid control provided.") # nocov
+                                   }
+                                   # need another dist closure, otherwise it would be recursive
+                                   control$distmat <- NULL
+                                   initFields(...,
+                                              series = series,
+                                              distfun = ddist2(distance, control))
+                               }
+                               else
+                                   initFields(..., distmat = distmat)
+                               # return
+                               invisible(NULL)
+                           }
+                       )
+)
+
+#' Generics for `Distmat`
+#'
+#' Generics with methods for [Distmat-class].
+#'
+#' @name Distmat-generics
+#' @rdname Distmat-generics
+#' @keywords internal
+#' @importFrom methods setMethod
+#'
+NULL
+
+#' @rdname Distmat-generics
+#' @aliases [,Distmat,ANY,ANY,ANY
+#'
+#' @param x A [Distmat-class] object.
+#' @param i Row indices.
+#' @param j Column indices.
+#' @param ... Ignored.
+#' @param drop Logical to drop dimensions after subsetting.
+#'
+#' @details
+#'
+#' Accessing matrix elements with `[]` first calculates the values if necessary.
+#'
+setMethod(`[`, "Distmat", function(x, i, j, ..., drop = TRUE) {
+    if (inherits(x$distmat, "uninitializedField")) {
+        if (inherits(x$distfun, "uninitializedField"))
+            stop("Invalid internal Distmat instance.") # nocov
+
+        centroids <- if (identical(i,j)) NULL else x$series[j]
+        dm <- quoted_call(x$distfun, x = x$series[i], centroids = centroids, dots = x$dist_args)
+    }
+    else {
+        dm <- x$distmat[i, j, drop = drop]
+        if (identical(dim(dm), dim(x$distmat))) attributes(dm) <- attributes(x$distmat)
+    }
+    # return
+    dm
+})
+
+dim.Distmat <- function(x) { dim(x$distmat) } # nocov
+########
+
+#
+#
+########
+########
 
 .sbd_y = function(x) {
     shift_2 <- ReadData.list[[x]] %>% as.numeric()
