@@ -1605,6 +1605,33 @@ tsclust_args <- function(preproc = list(), dist = list(), cent = list()) {
 }
 ########
 
+# structure(list(pam.precompute = as.logical(pam.precompute), pam.sparse = as.logical(pam.sparse),  でエラー:オブジェクト 'control_classes' がありません
+# https://github.com/asardaes/dtwclust/blob/bc6008c26b46ff7105b59135dd9ad004a99f7d87/R/UTILS-globals-internal.R
+########
+# ==================================================================================================
+# Internal global variables
+# ==================================================================================================
+
+supported_clusterings <- c("partitional", "hierarchical", "fuzzy", "tadpole")
+dtwclust_rngkind <- "L'Ecuyer-CMRG"
+
+distances_known <- c("dtw", "dtw2", "dtw_lb", "lbk", "lbi", "sbd", "dtw_basic", "gak", "sdtw")
+distances_included <- c("dtw_lb", "lb_keogh", "lb_improved", "sbd", "dtw_basic", "gak", "sdtw")
+distances_difflength <- c("dtw", "dtw2", "sbd", "dtw_basic", "gak", "sdtw")
+distances_multivariate <- c("dtw", "dtw2", "dtw_basic", "gak", "sdtw")
+
+centroids_included <- c("mean", "median", "shape", "dba", "pam", "fcm", "fcmdd", "sdtw_cent")
+centroids_fuzzy <- c("fcm", "fcmdd")
+centroids_nonfuzzy <- setdiff(centroids_included, centroids_fuzzy)
+centroids_difflength <- c("dba", "pam", "shape", "fcmdd", "sdtw_cent")
+
+control_classes <- c(partitional = "PtCtrl",
+                     hierarchical = "HcCtrl",
+                     fuzzy = "FzCtrl",
+                     tadpole = "TpCtrl",
+                     args = "TscArgs")
+########
+
 # 
 # 
 ########
