@@ -1,3 +1,13 @@
+# install.packages("dtwclust_5.5.6.tar.gz", repos = NULL, type = "source")
+
+# find.package("dtwclust")
+# path.package("dtwclust")
+
+# no lock
+# https://stackoverflow.com/questions/14382209/r-install-packages-returns-failed-to-create-lock-directory
+# install.packages("dtwclust_abstest_5.5.6.tar.gz", repos = NULL, type = "source", INSTALL_opts = '--no-lock')
+install.packages("dtwclust_abs_5.5.6.tar.gz", repos = NULL, type = "source", INSTALL_opts = '--no-lock')
+
 source("src/functions_WTS3_SBD_abs.R")
 
 #### args setting####

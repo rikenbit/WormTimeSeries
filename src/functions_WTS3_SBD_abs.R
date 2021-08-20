@@ -2,22 +2,23 @@
 ##################################################
 library(tidyverse)
 library(openxlsx)
+library(dtwclust)
 # library(Matrix)
 ##################################################
-#' # setting Random number generator
-#' # RNGkind(kind = "Mersenne-Twister")
-#' # dtwclust_rngkind <- "Mersenne-Twister"
+# setting Random number generator
+ RNGkind(kind = "Mersenne-Twister")
+# dtwclust_rngkind <- "Mersenne-Twister"
 
 #
 # すべてsourceで読み込み
 ########
-f <- function(dat){
-    str_c("R/", dat) 
-}
-list.files("R") %>% 
-    str_subset("\\.R") %>% 
-    map_chr(., f) %>% 
-    map(~source(.x))
+# f <- function(dat){
+#     str_c("R/", dat) 
+# }
+# list.files("R") %>% 
+#     str_subset("\\.R") %>% 
+#     map_chr(., f) %>% 
+#     map(~source(.x))
 ########
 
 .sbd_y = function(x) {
