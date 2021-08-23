@@ -52,10 +52,41 @@ ReadData <- switch(args_time,
                    )
 
 #### SBD_abs####
-# 行列っぽいデータを細胞ごとにlist化
-ReadData.list <- asplit(ReadData,2)
-# create sbd matrix
-hc <- tsclust(ReadData.list, distance = "sbd", trace = TRUE)
+# # 行列っぽいデータを細胞ごとにlist化
+# ReadData.list <- asplit(ReadData,2)
+# # create sbd matrix
+# # hc <- tsclust(ReadData.list, distance = "sbd", trace = TRUE)
+
+# # sbd(時系列データの1列目, 時系列データの2列目)の値
+# sbd_dist_value <- sbd(as.numeric(ReadData.list[[1]]),
+#                as.numeric(ReadData.list[[2]]))
+
+# # sbd(時系列データの1列目, すべての時系列データ)のベクトル
+# ReadData.list[[1]] %>%
+#     as.numeric() -> shift_1
+# names(ReadData.list) %>% 
+#     purrr::map_dbl(., .sbd_d) -> sbd_dist_vec
+
+# sbd(時系列データの1列目, すべての時系列データ)の列ベクトルをまとめた行列
+SBD_zero_mat <- sapply(1:ncol(ReadData), function(x) {
+    sapply(1:ncol(ReadData), function(z){
+        if(x!=z){
+            shift_1 <- ReadData[,x]
+            shift_2 <- ReadData[,z]
+            return_object <- dtwclust::SBD(shift_1,
+                         shift_2, 
+                         znorm = FALSE, 
+                         error.check = TRUE, 
+                         return.shifted = TRUE)
+            return_object$dist
+        } else{
+            return_object <- 0
+            return_object
+        }
+    })
+})
+
+
 # convert dist
 d <- stats::as.dist(hc@distmat)
 # save SBD_abs dist
