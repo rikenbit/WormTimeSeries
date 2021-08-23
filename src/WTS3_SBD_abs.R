@@ -1,6 +1,6 @@
-install.packages("dtwclust_5.5.6.tar.gz", repos = NULL, type = "source", INSTALL_opts = '--no-lock')
-# install.packages("dtwclust_abstest_5.5.6.tar.gz", repos = NULL, type = "source", INSTALL_opts = '--no-lock')
+# install.packages("dtwclust_5.5.6.tar.gz", repos = NULL, type = "source", INSTALL_opts = '--no-lock')
 # install.packages("dtwclust_abs_5.5.6.tar.gz", repos = NULL, type = "source", INSTALL_opts = '--no-lock')
+install.packages("dtwclust_abstest_5.5.6.tar.gz", repos = NULL, type = "source", INSTALL_opts = '--no-lock')
 
 source("src/functions_WTS3_SBD_abs.R")
 
@@ -52,22 +52,7 @@ ReadData <- switch(args_time,
                    )
 
 #### SBD_abs####
-# # 行列っぽいデータを細胞ごとにlist化
-# ReadData.list <- asplit(ReadData,2)
-# # create sbd matrix
-# # hc <- tsclust(ReadData.list, distance = "sbd", trace = TRUE)
-
-# # sbd(時系列データの1列目, 時系列データの2列目)の値
-# sbd_dist_value <- sbd(as.numeric(ReadData.list[[1]]),
-#                as.numeric(ReadData.list[[2]]))
-
-# # sbd(時系列データの1列目, すべての時系列データ)のベクトル
-# ReadData.list[[1]] %>%
-#     as.numeric() -> shift_1
-# names(ReadData.list) %>% 
-#     purrr::map_dbl(., .sbd_d) -> sbd_dist_vec
-
-# sbd(時系列データの1列目, すべての時系列データ)の列ベクトルをまとめた行列
+# create sbd matrix
 SBD_zero_mat <- sapply(1:ncol(ReadData), function(x) {
     sapply(1:ncol(ReadData), function(z){
         if(x!=z){
@@ -85,14 +70,19 @@ SBD_zero_mat <- sapply(1:ncol(ReadData), function(x) {
         }
     })
 })
+# add col/row names
+colnames(SBD_zero_mat) <- colnames(ReadData)
+rownames(SBD_zero_mat) <- colnames(ReadData)
 
+# convert matrix(symmetrix ) to dist
+d <- stats::as.dist(SBD_zero_mat)
 
-# convert dist
-d <- stats::as.dist(hc@distmat)
 # save SBD_abs dist
 save(d, file=args_SBD_abs)
 
 #### yshift####
+# 行列っぽいデータを細胞ごとにlist化
+ReadData.list <- asplit(ReadData,2)
 # prepare shift_1
 eval(parse(text=paste0("shift_1 <- ReadData.list$",args_shift," %>% as.numeric()")))
 colnames(ReadData) %>% 
