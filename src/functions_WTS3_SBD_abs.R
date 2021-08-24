@@ -39,13 +39,3 @@ library(dtwclust)
     return_object <- x
     return(return_object)
 }
-
-# .sbd_d = function(x) {
-#     shift_2 <- ReadData.list[[x]] %>% as.numeric()
-#     return_object <- dtwclust::SBD(shift_1,
-#                          shift_2, 
-#                          znorm = FALSE, 
-#                          error.check = TRUE, 
-#                          return.shifted = TRUE)
-#     return(return_object$dist)
-# }
