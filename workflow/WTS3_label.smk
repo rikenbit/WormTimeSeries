@@ -18,7 +18,7 @@ N_SAMPLES.remove('28')
 
 # Distance Data
 # dist_data = ["SBD"]
-dist_data = ["SBD","DTW","EUCL"]
+dist_data = ["SBD","DTW","EUCL","SBD_abs"]
 # data time range
 # time_range = ["all"]
 time_range = ["all","stimAfter"]
