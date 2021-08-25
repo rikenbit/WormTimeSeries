@@ -17,10 +17,11 @@ N_SAMPLES.remove('26')
 N_SAMPLES.remove('28')
 
 # Distance Data
-dist_data = ["SBD"]
+dist_data = ["SBD","SBD_abs"]
 
 # data time range
-time_range = ["all","stimAfter"]
+# time_range = ["all","stimAfter"]
+time_range = ["stimAfter"]
 
 # Clustering Evaluation Method
 cls_eval = ["ARI"]
@@ -42,7 +43,7 @@ rule all:
         
 rule DimReduc:
     input:
-        RData = 'output/WTS3/normalize_1/{range}/{dist}/SampleNumber_{N}/SBD.RData',
+        RData = 'output/WTS3/normalize_1/{range}/{dist}/SampleNumber_{N}/{dist}.RData',
         yshift_value = 'output/WTS3/normalize_1/{range}/{dist}/SampleNumber_{N}/yshift_value.RData',
         label = 'output/WTS3/normalize_1/{range}/{dist}/{eval}/SampleNumber_{N}/label_table.RData',
         cutree = 'output/WTS3/normalize_1/{range}/{dist}/{eval}/SampleNumber_{N}/cutree_table.RData'

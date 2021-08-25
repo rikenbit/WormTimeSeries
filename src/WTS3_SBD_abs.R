@@ -32,7 +32,7 @@ args_stim_xlsx <- c("data/stimulation/stimulation_timing.xlsx")
 # y-shift計算対象の細胞
 args_shift <- c("ASER")
 # output SBD_abs距離行列
-args_SBD <- c("output/WTS3/normalize_1/stimAfter/SBD_abs/SampleNumber_2/SBD.RData")
+args_SBD <- c("output/WTS3/normalize_1/stimAfter/SBD_abs/SampleNumber_2/SBD_abs.RData")
 # output SBD_abs yshift
 args_yshift <- c("output/WTS3/normalize_1/stimAfter/SBD_abs/SampleNumber_2/yshift.RData")
 
