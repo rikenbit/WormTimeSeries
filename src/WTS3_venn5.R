@@ -81,13 +81,13 @@ ggsave(filename = "output/WTS3/normalize_1/stimAfter/SBD/ARI/venn5/WTS3_venn4_el
        limitsize = FALSE
        )
 
-ggsave(filename = "output/WTS3/normalize_1/stimAfter/SBD/ARI/venn5/WTS3_venn2_count.png", 
+ggsave(filename = "output/WTS3/normalize_1/stimAfter/SBD_abs/ARI/venn5/WTS3_venn2_count.png", 
        plot = gg_article_F,
        width = 10.0, 
        height = 8.0,
        limitsize = FALSE
        )
-ggsave(filename = "output/WTS3/normalize_1/stimAfter/SBD/ARI/venn5/WTS3_venn2_element.png", 
+ggsave(filename = "output/WTS3/normalize_1/stimAfter/SBD_abs/ARI/venn5/WTS3_venn2_element.png", 
        plot = gg_article_T,
        width = 10.0, 
        height = 8.0,
