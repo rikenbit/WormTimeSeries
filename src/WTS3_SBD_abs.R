@@ -1,40 +1,38 @@
-install.packages("dtwclust_abs_5.5.6.tar.gz", repos = NULL, type = "source", INSTALL_opts = '--no-lock')
-
-# #### args setting####
-# args <- commandArgs(trailingOnly = T)
-# # sample number 
-# args_sample <- args[1]
-# # path NeuronActivity Data
-# args_neuron <- args[2]
-# # args_time <- c("all")
-# args_time <- args[3]
-# # stimtiming
-# args_stim_xlsx <- args[4]
-# # y-shift計算対象の細胞
-# args_shift <- args[5]
-# # output SBD_abs距離行列
-# args_SBD <- args[6]
-# # output SBD_abs yshift
-# args_yshift <- args[7]
-
 source("src/functions_WTS3_SBD_abs.R")
 
-#### test args####
-# sample number サンプル番号の指定
-args_sample <- c("2")
+#### args setting####
+args <- commandArgs(trailingOnly = T)
+# sample number 
+args_sample <- args[1]
 # path NeuronActivity Data
-args_neuron <- c("data/normalize_1/ReadData_2.RData")
-
+args_neuron <- args[2]
 # args_time <- c("all")
-args_time <- c("stimAfter")
+args_time <- args[3]
 # stimtiming
-args_stim_xlsx <- c("data/stimulation/stimulation_timing.xlsx")
+args_stim_xlsx <- args[4]
 # y-shift計算対象の細胞
-args_shift <- c("ASER")
+args_shift <- args[5]
 # output SBD_abs距離行列
-args_SBD <- c("output/WTS3/normalize_1/stimAfter/SBD_abs/SampleNumber_2/SBD_abs.RData")
+args_SBD <- args[6]
 # output SBD_abs yshift
-args_yshift <- c("output/WTS3/normalize_1/stimAfter/SBD_abs/SampleNumber_2/yshift.RData")
+args_yshift <- args[7]
+
+# #### test args####
+# # sample number サンプル番号の指定
+# args_sample <- c("2")
+# # path NeuronActivity Data
+# args_neuron <- c("data/normalize_1/ReadData_2.RData")
+
+# # args_time <- c("all")
+# args_time <- c("stimAfter")
+# # stimtiming
+# args_stim_xlsx <- c("data/stimulation/stimulation_timing.xlsx")
+# # y-shift計算対象の細胞
+# args_shift <- c("ASER")
+# # output SBD_abs距離行列
+# args_SBD <- c("output/WTS3/normalize_1/stimAfter/SBD_abs/SampleNumber_2/SBD_abs.RData")
+# # output SBD_abs yshift
+# args_yshift <- c("output/WTS3/normalize_1/stimAfter/SBD_abs/SampleNumber_2/yshift.RData")
 
 #### load NeuronActivity####
 load(args_neuron)
