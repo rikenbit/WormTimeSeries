@@ -40,6 +40,7 @@ RNGkind(kind = "Mersenne-Twister")
     return(return_object)
 }
 
+#### abs版のSBD関数####
 # SBD関数にabsを追加し，getNamespaceで置き換え SBD <- function()のみ変更
 SBD <- function(x, y, znorm = FALSE, error.check = TRUE, return.shifted = TRUE) {
     if (is_multivariate(list(x, y))) stop("SBD does not support multivariate series.")
@@ -98,11 +99,14 @@ SBD <- function(x, y, znorm = FALSE, error.check = TRUE, return.shifted = TRUE) 
     list(dist = 1 - m, yshift = yshift)
 }
 sbd <- SBD
-# 入れ替え
+########
+
+#### 入れ替え####
+# .GlobalEnvで定義されたSBDをpackageで定義されているSBDに代入
 env <- getNamespace("dtwclust")
 assignInNamespace("SBD", SBD, ns = "dtwclust", envir = env)
 assignInNamespace("sbd", sbd, ns = "dtwclust", envir = env)
-
+########
 
 #### is_multivariate対応####
 # is_multivariate(list(x, y)) でエラー:関数 "is_multivariate" を見つけることができませんでした
@@ -110,7 +114,6 @@ assignInNamespace("sbd", sbd, ns = "dtwclust", envir = env)
 # ==================================================================================================
 # Miscellaneous
 # ==================================================================================================
-
 check_consistency <- function(obj, case, ..., clus_type,
                               diff_lengths = FALSE, cent_missing, cent_char,
                               trace = FALSE, silent = TRUE)
