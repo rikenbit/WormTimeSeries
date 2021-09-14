@@ -5,7 +5,8 @@ prot1 <- c("ASER","BAGL","BAGR","AWCR","AWCL","AWBL","ASEL","AWBR","ASIR","ASKR"
 prot2 <- c("ASER","BAGR","BAGL","ASEL","AWBL","AWCR","ASHR","ASHL","AWAL","RMED","AWCL","AUAL","AUAR","I3","AWBR")
 
 # prot3 <- c("ASHL","ASIL","ASKR","AUAL","AUAR","AWAL","BAGL","BAGR","CEPVR","OLLL","OLQVR","RIVR","SIBDR","URXL","URXR")
-prot3 <- c("BAGL","BAGR","ASKR","OLQVR","ASHL","AWAL","SIBDR","AUAL","URXL","URXR","CEPVR","AUAR","OLLL")
+# prot3 <- c("BAGL","BAGR","ASKR","OLQVR","ASHL","AWAL","SIBDR","AUAL","URXL","URXR","CEPVR","AUAR","OLLL")
+prot3 <- c("BAGL","BAGR","ASKR","OLQVR","ASHL","AWAL","SIBDR","AUAL","URXL","URXR","CEPVR","AUAR")
 
 # Zaslaver et al. 2015
 prot4 <- c("ASEL","ASER","AWCL","AWCR","AWBL","AWBR","AFDL","AFDR","ASHL","ASHR","ASJL","ASJR")
