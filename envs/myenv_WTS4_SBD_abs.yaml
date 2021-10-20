@@ -1,4 +1,4 @@
-name: WTS3_SBD_abs
+name: WTS4_SBD_abs
 channels:
   - conda-forge
   - bioconda

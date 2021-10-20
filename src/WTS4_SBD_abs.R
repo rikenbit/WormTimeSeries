@@ -1,4 +1,4 @@
-source("src/functions_WTS3_SBD_abs.R")
+source("src/functions_WTS4_SBD_abs.R")
 
 #### args setting####
 args <- commandArgs(trailingOnly = T)
@@ -23,7 +23,7 @@ args_SBD <- args[5]
 # # stimtiming
 # args_stim_xlsx <- c("data/stimulation/stimulation_timing.xlsx")
 # # output SBD_abs距離行列
-# args_SBD <- c("output/WTS3/normalize_1/stimAfter/SBD_abs/SampleNumber_2/SBD_abs.RData")
+# args_SBD <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/SampleNumber_2/SBD_abs.RData")
 
 #### load NeuronActivity####
 load(args_neuron)

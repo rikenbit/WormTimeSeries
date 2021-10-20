@@ -17,7 +17,8 @@ N_SAMPLES.remove('26')
 N_SAMPLES.remove('28')
 
 # Distance Data
-dist_data = ["SBD","SBD_abs"]
+# dist_data = ["SBD","SBD_abs"]
+dist_data = ["SBD","SBD_abs_manual"]
 
 # data time range
 # time_range = ["all","stimAfter"]
