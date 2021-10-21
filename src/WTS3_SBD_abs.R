@@ -10,8 +10,13 @@ args_neuron <- args[2]
 args_time <- args[3]
 # stimtiming
 args_stim_xlsx <- args[4]
+# y-shift計算対象の細胞
+args_shift <- args[5]
 # output SBD_abs距離行列
-args_SBD <- args[5]
+args_SBD <- args[6]
+# output SBD_abs yshift
+args_yshift <- args[7]
+
 # #### test args####
 # # sample number サンプル番号の指定
 # args_sample <- c("2")
@@ -22,8 +27,12 @@ args_SBD <- args[5]
 # args_time <- c("stimAfter")
 # # stimtiming
 # args_stim_xlsx <- c("data/stimulation/stimulation_timing.xlsx")
+# # y-shift計算対象の細胞
+# args_shift <- c("ASER")
 # # output SBD_abs距離行列
 # args_SBD <- c("output/WTS3/normalize_1/stimAfter/SBD_abs/SampleNumber_2/SBD_abs.RData")
+# # output SBD_abs yshift
+# args_yshift <- c("output/WTS3/normalize_1/stimAfter/SBD_abs/SampleNumber_2/yshift.RData")
 
 #### load NeuronActivity####
 load(args_neuron)
@@ -65,3 +74,22 @@ d <- stats::as.dist(SBD_zero_mat)
 
 # save SBD_abs dist
 save(d, file=args_SBD)
+
+#### yshift####
+# 行列っぽいデータを細胞ごとにlist化
+ReadData.list <- asplit(ReadData,2)
+# prepare shift_1
+eval(parse(text=paste0("shift_1 <- ReadData.list$",args_shift," %>% as.numeric()")))
+colnames(ReadData) %>% 
+    purrr::map(., .sbd_y) %>%
+        as.data.frame() -> sbd_yshift_df_wide
+colnames(sbd_yshift_df_wide) <- colnames(ReadData)
+# convert long df
+sbd_yshift_df_wide %>% 
+    # rownames_to_column("time_frame") %>% 
+    mutate(time_frame = rownames(ReadData)) %>% 
+        pivot_longer(-time_frame, 
+                     names_to = "cell_type", 
+                     values_to = "yshift") -> sbd_yshift_df
+# save SBD_abs yshift dataframe
+save(sbd_yshift_df, file=args_yshift)
