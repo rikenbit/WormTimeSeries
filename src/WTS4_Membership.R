@@ -2,24 +2,27 @@
 # source("src/functions_WTS4_Membership.R")
 
 ### args setting####
-args <- commandArgs(trailingOnly = T)
-# No. of Clusters 
-args_k <- args[1]
-# input distance matrix
-args_input_dist <- args[2]
-# output Membership matrix
-args_output_membership <- args[3]
+# args <- commandArgs(trailingOnly = T)
+# # No. of Clusters 
+# args_k <- args[1]
+# # input distance matrix
+# args_input_dist <- args[2]
+# # output Membership matrix
+# args_output_membership <- args[3]
 
 #### test args####
-# No. of Clusters 
-# args_k <- c("3")
-# args_input_dist <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/SampleNumber_1/SBD_abs.RData")
-# args_output_membership  <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/SampleNumber_1/3_Clusters/Membership.RData")
+No. of Clusters 
+args_k <- c("3")
+args_input_dist <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/SampleNumber_1/SBD_abs.RData")
+args_output_membership  <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/SampleNumber_1/3_Clusters/Membership.RData")
 
 
 #### No. of Clusters####
 k <- args_k
 ########
+
+# パターンを指定して取得（「txt」が含まれるものを取得）。
+list.files("output/WTS4/normalize_1/stimAfter/SBD_abs", pattern="SampleNumber")
 
 ##################################################
 # Approach 1: Consensus Clustering

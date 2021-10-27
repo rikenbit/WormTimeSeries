@@ -1,0 +1,66 @@
+# WTS4 SBD 
+###################################################
+N_SAMPLES = list(map(str, range(1, 29)))
+# remove artifact
+N_SAMPLES.remove('3')
+N_SAMPLES.remove('8')
+N_SAMPLES.remove('20')
+N_SAMPLES.remove('25')
+
+# No. of Clusters とりあえずk=3？
+N_CLUSTERS = list(map(str, range(3, 21)))
+
+# Distance Data
+dist_data = ["EUCL","SBD_abs"]
+
+# data time range
+time_range = ["stimAfter"]
+
+# ReClustering method
+ReClustering_method = ["CSPA","OINDSCAL","MCMIHOOI"]
+# merged_data
+# merged_distance
+# merged_cls
+
+rule all:
+    input:
+        expand('output/WTS4/normalize_1/{range}/{dist}/SampleNumber_{N}/{N_cls}_Clusters/{ReClustering}/merged_data.RData',
+            range=time_range,
+            dist=dist_data,
+            N=N_SAMPLES,
+            N_cls=N_CLUSTERS,
+            Re_cls=ReClustering
+            ),
+        expand('output/WTS4/normalize_1/{range}/{dist}/SampleNumber_{N}/{N_cls}_Clusters/{ReClustering}/merged_distance.RData',
+            range=time_range,
+            dist=dist_data,
+            N=N_SAMPLES,
+            N_cls=N_CLUSTERS,
+            Re_cls=ReClustering
+            ),
+        expand('output/WTS4/normalize_1/{range}/{dist}/SampleNumber_{N}/{N_cls}_Clusters/{ReClustering}/merged_cls.RData',
+            range=time_range,
+            dist=dist_data,
+            N=N_SAMPLES,
+            N_cls=N_CLUSTERS,
+            method=ReClustering_method
+            )
+        
+rule ReClustering:
+    input:
+        Mem_matrix = 'output/WTS4/normalize_1/{range}/{dist}/SampleNumber_{N}/{N_cls}_Clusters/Membership.RData'
+    output:
+        m_data = 'output/WTS4/normalize_1/{range}/{dist}/SampleNumber_{N}/{N_cls}_Clusters/{ReClustering}/merged_data.RData',
+        m_distance = 'output/WTS4/normalize_1/{range}/{dist}/SampleNumber_{N}/{N_cls}_Clusters/{ReClustering}/merged_distance.RData',
+        m_cls = 'output/WTS4/normalize_1/{range}/{dist}/SampleNumber_{N}/{N_cls}_Clusters/{ReClustering}/merged_cls.RData',
+
+    benchmark:
+        'benchmarks/WTS4/normalize_1/{range}/{dist}/SampleNumber_{N}/{N_cls}_Clusters/{ReClustering}.txt'
+    conda:
+        '../envs/myenv_WTS4_ReClustering.yaml'
+    resources:
+        mem_gb=200
+    log:
+        'logs/WTS4/normalize_1/{range}/{dist}/SampleNumber_{N}/{N_cls}_Clusters/{ReClustering}.log'
+    shell:
+        'src/WTS4_ReClustering.sh {wildcards.N_cls} {wildcards.method} {input.Mem_matrix} {output.m_data} {output.m_distance} {output.m_cls} >& {log}'
