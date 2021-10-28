@@ -21,39 +21,14 @@ args_k <- c("3")
 # Method of ReClustering
 args_method <- c("CSPA")
 # input
-args_input_membership <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/SampleNumber_1/3_Clusters/Membership.RData")
+args_input_membership <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/3_Clusters/Membership.RData")
 # output merged_data
-args_output_data <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/SampleNumber_1/3_Clusters/CSPA/merged_data.RData")
+args_output_data <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/3_Clusters/CSPA/merged_data.RData")
 # output merged_distance
-args_output_distance <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/SampleNumber_1/3_Clusters/CSPA/merged_distance.RData")
+args_output_distance <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/3_Clusters/CSPA/merged_distance.RData")
 # output merged_cls
-args_output_cls <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/SampleNumber_1/3_Clusters/CSPA/merged_cls.RData")
+args_output_cls <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/3_Clusters/CSPA/merged_cls.RData")
 
-# args_k <- c("3")
-# # Method of ReClustering
-# args_method <- c("OINDSCAL")
-# # input
-# args_input_membership <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/SampleNumber_1/3_Clusters/Membership.RData")
-# # output merged_data
-# args_output_data <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/SampleNumber_1/3_Clusters/OINDSCAL/merged_data.RData")
-# # output merged_distance
-# args_output_distance <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/SampleNumber_1/3_Clusters/OINDSCAL/merged_distance.RData")
-# # output merged_cls
-# args_output_cls <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/SampleNumber_1/3_Clusters/OINDSCAL/merged_cls.RData")
-
-# # No. of Clusters 
-# args_k <- c("3")
-# # Method of ReClustering
-# args_method <- c("MCMIHOOI")
-# # input
-# args_input_membership <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/SampleNumber_1/3_Clusters/Membership.RData")
-# # output merged_data
-# args_output_data <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/SampleNumber_1/3_Clusters/MCMIHOOI/merged_data.RData")
-# # output merged_distance
-# args_output_distance <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/SampleNumber_1/3_Clusters/MCMIHOOI/merged_distance.RData")
-# # output merged_cls
-# args_output_cls <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/SampleNumber_1/3_Clusters/MCMIHOOI/merged_cls.RData")
-########
 
 #### No. of Clusters####
 k <- args_k

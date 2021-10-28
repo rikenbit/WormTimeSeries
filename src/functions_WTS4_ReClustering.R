@@ -1,10 +1,10 @@
 #library
 ##################################################
-library()
+# library()
 ##################################################
-.func = function(x) {
-	return(return_object)
-}
+# .func = function(x) {
+# 	return(return_object)
+# }
 
 CSPA <- function(Hs){
 	# Merge
