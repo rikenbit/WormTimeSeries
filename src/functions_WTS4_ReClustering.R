@@ -13,7 +13,7 @@ CSPA <- function(Hs){
 	# Merge
 	mergedHs <- as.matrix(unlist(Hs))
 	dim(mergedHs) <- c(nrow(Hs[[1]]), length(mergedHs) / nrow(Hs[[1]]))
-	mergedHs %*% t(mergedHs) / length(Hs)
+	mergedHs <- mergedHs %*% t(mergedHs) / length(Hs)
 }
 
 ##################################################

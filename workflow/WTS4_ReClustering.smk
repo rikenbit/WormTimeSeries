@@ -1,53 +1,56 @@
 # WTS4_ReClustering 
 ###################################################
 # No. of Clusters
-N_CLUSTERS = list(map(str, range(3, 21)))
+# N_CLUSTERS = list(map(str, range(3, 21)))
+N_CLUSTERS = list(map(str, range(3, 5)))
 
 # Distance Data
-dist_data = ["EUCL","SBD_abs"]
+# dist_data = ["EUCL","SBD_abs"]
+dist_data = ["SBD_abs"]
 
 # data time range
 time_range = ["stimAfter"]
 
 # ReClustering method
-ReClustering_method = ["CSPA","OINDSCAL","MCMIHOOI"]
+# ReClustering_method = ["CSPA","OINDSCAL","MCMIHOOI"]
+ReClustering_method = ["MCMIHOOI"]
 
 rule all:
     input:
-        expand('output/WTS4/normalize_1/{range}/{dist}/{N_cls}_Clusters/{ReClustering}/merged_data.RData',
+        expand('output/WTS4/normalize_1/{range}/{dist}/{N_cls}_Clusters/{Re_cls}/merged_data.RData',
             range=time_range,
             dist=dist_data,
             N_cls=N_CLUSTERS,
-            Re_cls=ReClustering
+            Re_cls=ReClustering_method
             ),
-        expand('output/WTS4/normalize_1/{range}/{dist}/{N_cls}_Clusters/{ReClustering}/merged_distance.RData',
+        expand('output/WTS4/normalize_1/{range}/{dist}/{N_cls}_Clusters/{Re_cls}/merged_distance.RData',
             range=time_range,
             dist=dist_data,
             N_cls=N_CLUSTERS,
-            Re_cls=ReClustering
+            Re_cls=ReClustering_method
             ),
-        expand('output/WTS4/normalize_1/{range}/{dist}/{N_cls}_Clusters/{ReClustering}/merged_cls.RData',
+        expand('output/WTS4/normalize_1/{range}/{dist}/{N_cls}_Clusters/{Re_cls}/merged_cls.RData',
             range=time_range,
             dist=dist_data,
             N_cls=N_CLUSTERS,
-            method=ReClustering_method
+            Re_cls=ReClustering_method
             )
         
 rule ReClustering:
     input:
         Mem_matrix = 'output/WTS4/normalize_1/{range}/{dist}/{N_cls}_Clusters/Membership.RData'
     output:
-        m_data = 'output/WTS4/normalize_1/{range}/{dist}/{N_cls}_Clusters/{ReClustering}/merged_data.RData',
-        m_distance = 'output/WTS4/normalize_1/{range}/{dist}/{N_cls}_Clusters/{ReClustering}/merged_distance.RData',
-        m_cls = 'output/WTS4/normalize_1/{range}/{dist}/{N_cls}_Clusters/{ReClustering}/merged_cls.RData',
+        m_data = 'output/WTS4/normalize_1/{range}/{dist}/{N_cls}_Clusters/{Re_cls}/merged_data.RData',
+        m_distance = 'output/WTS4/normalize_1/{range}/{dist}/{N_cls}_Clusters/{Re_cls}/merged_distance.RData',
+        m_cls = 'output/WTS4/normalize_1/{range}/{dist}/{N_cls}_Clusters/{Re_cls}/merged_cls.RData',
 
     benchmark:
-        'benchmarks/WTS4/normalize_1/{range}/{dist}/{N_cls}_Clusters/{ReClustering}.txt'
+        'benchmarks/WTS4/normalize_1/{range}/{dist}/{N_cls}_Clusters/{Re_cls}.txt'
     conda:
         '../envs/myenv_WTS4_ReClustering.yaml'
     resources:
         mem_gb=200
     log:
-        'logs/WTS4/normalize_1/{range}/{dist}/{N_cls}_Clusters/{ReClustering}.log'
+        'logs/WTS4/normalize_1/{range}/{dist}/{N_cls}_Clusters/{Re_cls}.log'
     shell:
-        'src/WTS4_ReClustering.sh {wildcards.N_cls} {wildcards.method} {input.Mem_matrix} {output.m_data} {output.m_distance} {output.m_cls} >& {log}'
+        'src/WTS4_ReClustering.sh {wildcards.N_cls} {wildcards.Re_cls} {input.Mem_matrix} {output.m_data} {output.m_distance} {output.m_cls} >& {log}'
