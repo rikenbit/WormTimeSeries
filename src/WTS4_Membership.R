@@ -17,7 +17,7 @@ args_output_membership <- args[3]
 # args_output_membership  <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/3_Clusters/Membership.RData")
 
 #### No. of Clusters####
-k <- args_k
+k <- as.numeric(args_k)
 ########
 
 # 空の行列を格納するファイルを作成

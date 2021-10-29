@@ -19,19 +19,19 @@ source("src/functions_WTS4_ReClustering.R")
 # No. of Clusters 
 args_k <- c("3")
 # Method of ReClustering
-args_method <- c("CSPA")
+args_method <- c("OINDSCAL")
 # input
 args_input_membership <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/3_Clusters/Membership.RData")
 # output merged_data
-args_output_data <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/3_Clusters/CSPA/merged_data.RData")
+args_output_data <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/3_Clusters/OINDSCAL/merged_data.RData")
 # output merged_distance
-args_output_distance <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/3_Clusters/CSPA/merged_distance.RData")
+args_output_distance <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/3_Clusters/OINDSCAL/merged_distance.RData")
 # output merged_cls
-args_output_cls <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/3_Clusters/CSPA/merged_cls.RData")
+args_output_cls <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/3_Clusters/OINDSCAL/merged_cls.RData")
 
 
 #### No. of Clusters####
-k <- args_k
+k <- as.numeric(args_k)
 ########
 
 # newHs
@@ -46,6 +46,18 @@ for(i in seq_len(dim(A)[3])){
     A[,,i] <- S[[i]]
 }
 
+#MC-MI-HOOI
+if(args_method == "MCMIHOOI") {
+    options(repos="https://cran.ism.ac.jp/")
+    if (!requireNamespace("BiocManager", quietly = TRUE))
+     install.packages("BiocManager",update = TRUE)
+    BiocManager::install("rTensor",update = FALSE)
+    BiocManager::install("einsum",update = FALSE)
+    library("rTensor")
+    library("einsum")
+}
+
+
 # merged_data 
 merged_data <- switch(args_method,
                     # Perform Consensus Clustering
@@ -54,6 +66,9 @@ merged_data <- switch(args_method,
                     "MCMIHOOI" = MCMIHOOI(A, k),
                     stop("Only can use all, CSPA, OINDSCAL, MCMIHOOI")
                     )
+# add CellType
+rownames(merged_data) <- rownames(newHs[[1]])
+colnames(merged_data) <- rownames(newHs[[1]])
 
 # merged_distance
 merged_distance <- switch(args_method,

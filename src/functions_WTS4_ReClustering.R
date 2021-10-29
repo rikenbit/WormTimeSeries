@@ -1,8 +1,9 @@
 #library
 ##################################################
-# MC-MI-HOOI
-library("rTensor")
-library("einsum")
+# # MC-MI-HOOI
+# library("rTensor")
+# # condaにないのでBioCManagerで入れる？
+# library("einsum")
 ##################################################
 
 ##################################################
@@ -70,6 +71,7 @@ OINDSCAL <- function(S, k, num.iter=30, thr=1E-10, verbose=FALSE){
 .calcD <- function(S, X){
 	lapply(S, function(Ss){
 		out <- matrix(0, nrow=ncol(X), ncol=ncol(X))
+		# out <- matrix(0, nrow=length(X), ncol=length(X))
 		diag(out) <- diag(t(X) %*% Ss %*% X)
 		out[which(out < 0)] <- 0
 		out
