@@ -13,8 +13,7 @@ N_CLUSTERS = list(map(str, range(3, 21)))
 # Distance Data
 dist_data = ["EUCL","SBD_abs"]
 # data time range
-# time_range = ["all","stimAfter"]
-time_range = ["stimAfter"]
+time_range = ["all","stimAfter"]
 
 rule all:
     input:

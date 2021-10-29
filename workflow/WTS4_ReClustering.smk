@@ -11,9 +11,6 @@ time_range = ["stimAfter"]
 
 # ReClustering method
 ReClustering_method = ["CSPA","OINDSCAL","MCMIHOOI"]
-# merged_data
-# merged_distance
-# merged_cls
 
 rule all:
     input:

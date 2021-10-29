@@ -46,5 +46,23 @@ Hs <- lapply(C, function(x) {
       out
     })
 
+# fix Membership
+cellnames <- unique(unlist(lapply(Hs, rownames)))
+cellnames <- cellnames[grep("^[0-9]", cellnames, invert=TRUE)]
+
+newHs <- list()
+for(i in seq_along(Hs)){
+    H <- Hs[[i]]
+    out <- matrix(0, nrow=length(cellnames), ncol=ncol(H))
+    rownames(out) <- cellnames
+    for(j in seq_along(cellnames)){
+        target <- which(cellnames[j] == rownames(H))
+        if(length(target) != 0){
+            out[j, ] <- H[target, ]
+        }
+    }
+    newHs[[i]] <- out
+}
+
 #### ggsave####
-save(Hs, file=args_output_membership)
+save(newHs, file=args_output_membership)

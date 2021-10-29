@@ -34,18 +34,24 @@ args_output_cls <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/3_Clusters/CSPA/
 k <- args_k
 ########
 
-# Hs
+# newHs
 load(args_input_membership)
 
 # S
-S <- lapply(Hs, function(h){h %*% t(h)})
+S <- lapply(newHs, function(h){h %*% t(h)})
+
+# Perform MC-MI-HOOI
+A <- array(0, dim=c(nrow(S[[1]]), ncol(S[[1]]), length(S)))
+for(i in seq_len(dim(A)[3])){
+    A[,,i] <- S[[i]]
+}
 
 # merged_data 
 merged_data <- switch(args_method,
                     # Perform Consensus Clustering
-                    "CSPA" = CSPA(Hs),
-                    "OINDSCAL" = OINDSCAL(input_n),
-                    "MCMIHOOI" = MCMIHOOI(input_n, args_stim_xlsx),
+                    "CSPA" = CSPA(newHs),
+                    "OINDSCAL" = OINDSCAL(S, k),
+                    "MCMIHOOI" = MCMIHOOI(A, k),
                     stop("Only can use all, CSPA, OINDSCAL, MCMIHOOI")
                     )
 
@@ -53,16 +59,16 @@ merged_data <- switch(args_method,
 merged_distance <- switch(args_method,
                         # for t-SNE/UMAP/Clustering
                         "CSPA" = as.dist(1 - merged_data),
-                        "OINDSCAL" = OINDSCAL(input_n),
-                        "MCMIHOOI" = MCMIHOOI(input_n, args_stim_xlsx),
+                        "OINDSCAL" = dist(merged_data$X),
+                        "MCMIHOOI" = dist(merged_data$U),
                         stop("Only can use all, CSPA, OINDSCAL, MCMIHOOI")
                         )
 # merged_cls
 merged_cls <- switch(args_method,
                     # Perform Consensus Clustering
                     "CSPA" = cutree(hclust(merged_distance, method="ward.D2"), k),
-                    "OINDSCAL" = OINDSCAL(input_n),
-                    "MCMIHOOI" = MCMIHOOI(input_n, args_stim_xlsx),
+                    "OINDSCAL" = cutree(hclust(merged_distance, method="ward.D2"), k),
+                    "MCMIHOOI" = cutree(hclust(dist_MCMIHOOI_2, method="ward.D2"), k),
                     stop("Only can use all, CSPA, OINDSCAL, MCMIHOOI")
                     )
 
