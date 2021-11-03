@@ -48,16 +48,10 @@ for(i in seq_len(dim(A)[3])){
 
 #MC-MI-HOOI
 if(args_method == "MCMIHOOI") {
-    # options(repos="https://cran.ism.ac.jp/")
-    # if (!requireNamespace("BiocManager", quietly = TRUE))
-    #  install.packages("BiocManager",update = TRUE)
-    # BiocManager::install("rTensor",update = FALSE)
-    # BiocManager::install("einsum",update = FALSE)
     library("rTensor")
     install.packages("data/einsum_0.1.0.tar", repos = NULL, type = "source")
     library("einsum")
 }
-
 
 # merged_data 
 merged_data <- switch(args_method,

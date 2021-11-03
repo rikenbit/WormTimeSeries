@@ -8,7 +8,7 @@ N_SAMPLES.remove('20')
 N_SAMPLES.remove('25')
 
 # No. of Clusters とりあえずk=3？
-N_CLUSTERS = list(map(str, range(3, 21)))
+N_CLUSTERS = list(map(str, range(2, 21)))
 
 # Distance Data
 dist_data = ["EUCL","SBD_abs"]
