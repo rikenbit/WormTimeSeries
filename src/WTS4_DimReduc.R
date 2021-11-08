@@ -1,20 +1,22 @@
 source("src/functions_WTS4_DimReduc.R")
 
-#### args setting####
-args <- commandArgs(trailingOnly = T)
-# input merged_distance
-args_input_distance <- args[1]
-# input merged_cls
-args_input_cls <- args[2]
-# dimentionaly reduction
-args_DimReduc <- args[3]
-# output plot
-args_output <- args[4]
-# #### test args####
-# args_input_distance <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/3_Clusters/CSPA/merged_distance.RData")
-# args_input_cls <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/3_Clusters/CSPA/merged_cls.RData")
-# args_DimReduc <- c("tsne")
-# args_output <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/3_Clusters/CSPA/tsne_plot.png")
+# #### args setting####
+# args <- commandArgs(trailingOnly = T)
+# # input merged_distance
+# args_input_distance <- args[1]
+# # input merged_cls
+# args_input_cls <- args[2]
+# # dimentionaly reduction
+# args_DimReduc <- args[3]
+# # output plot
+# args_output <- args[4]
+
+#### test args####
+args_input_distance <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/10_Clusters/CSPA/merged_distance.RData")
+args_input_cls <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/10_Clusters/CSPA/merged_cls.RData")
+args_DimReduc <- c("tsne")
+args_output <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/10_Clusters/CSPA/tsne_plot.png")
+########
 
 args_igraph <- c("data/igraph/Fig1_HNS.RData")
 
@@ -45,7 +47,7 @@ df_cord_cls <- merge(df_cord,
                      by.y = "cell_type", 
                      all.x = TRUE)
 # 連続値→離散値
-df_cord_cls$cls <- as.character(df_cord_cls$cls)
+# df_cord_cls$cls <- as.character(df_cord_cls$cls)
 
 # #### load Neuron Label####
 # load(args_igraph)
@@ -75,7 +77,7 @@ gg <- ggplot(df_cord_cls,
        aes(x = cord_1,
            y = cord_2, 
            label = cell_type,
-           color = cls
+           color = factor(cls)
            )
        ) + 
       geom_point(size = 6.0, 
