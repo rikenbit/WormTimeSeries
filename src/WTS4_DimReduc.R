@@ -1,25 +1,25 @@
 source("src/functions_WTS4_DimReduc.R")
 
-# #### args setting####
-# args <- commandArgs(trailingOnly = T)
-# # input merged_distance
-# args_input_distance <- args[1]
-# # input merged_cls
-# args_input_cls <- args[2]
-# # dimentionaly reduction
-# args_DimReduc <- args[3]
-# # output plot
-# args_output <- args[4]
-# Neuron Label Path
-# args_NL <- args[5]
+#### args setting####
+args <- commandArgs(trailingOnly = T)
+# input merged_distance
+args_input_distance <- args[1]
+# input merged_cls
+args_input_cls <- args[2]
+# dimentionaly reduction
+args_DimReduc <- args[3]
+# output plot
+args_output <- args[4]
+Neuron Label Path
+args_NL <- args[5]
 
-#### test args####
-args_input_distance <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/4_Clusters/OINDSCAL/merged_distance.RData")
-args_input_cls <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/4_Clusters/OINDSCAL/merged_cls.RData")
-args_DimReduc <- c("tsne")
-args_output <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/4_Clusters/OINDSCAL/tsne_plot.png")
-# Neuron Label Path
-args_NL <- c("data/igraph/Fig1_HNS.RData")
+# #### test args####
+# args_input_distance <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/4_Clusters/OINDSCAL/merged_distance.RData")
+# args_input_cls <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/4_Clusters/OINDSCAL/merged_cls.RData")
+# args_DimReduc <- c("tsne")
+# args_output <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/4_Clusters/OINDSCAL/tsne_plot.png")
+# # Neuron Label Path
+# args_NL <- c("data/igraph/Fig1_HNS.RData")
 
 ### load dist object####
 load(args_input_distance)
@@ -79,6 +79,8 @@ gg_cls <- ggplot(df_cord_cls_NL,
                      color = factor(cls)
                     )
                 ) + 
+   labs(color = "Cluster") +
+    theme(text = element_text(size = 24)) +
     geom_point(size = 6.0, 
                alpha = 0.6) +
     # geom_text_repel(max.overlaps = Inf,
@@ -94,6 +96,8 @@ gg_NL <- ggplot(df_cord_cls_NL,
                      color = factor(NeuronType)
                      )
                 ) + 
+    labs(color = "NeuronType") +
+    theme(text = element_text(size = 24)) +
     geom_point(size = 6.0, 
                alpha = 0.6) +
   # geom_text_repel(max.overlaps = Inf,
