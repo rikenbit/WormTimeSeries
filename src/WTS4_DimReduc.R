@@ -10,15 +10,16 @@ source("src/functions_WTS4_DimReduc.R")
 # args_DimReduc <- args[3]
 # # output plot
 # args_output <- args[4]
+# Neuron Label Path
+# args_NL <- args[5]
 
 #### test args####
-args_input_distance <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/10_Clusters/CSPA/merged_distance.RData")
-args_input_cls <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/10_Clusters/CSPA/merged_cls.RData")
+args_input_distance <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/4_Clusters/OINDSCAL/merged_distance.RData")
+args_input_cls <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/4_Clusters/OINDSCAL/merged_cls.RData")
 args_DimReduc <- c("tsne")
-args_output <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/10_Clusters/CSPA/tsne_plot.png")
-########
-
-args_igraph <- c("data/igraph/Fig1_HNS.RData")
+args_output <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/4_Clusters/OINDSCAL/tsne_plot.png")
+# Neuron Label Path
+args_NL <- c("data/igraph/Fig1_HNS.RData")
 
 ### load dist object####
 load(args_input_distance)
@@ -46,55 +47,79 @@ df_cord_cls <- merge(df_cord,
                      by.x = "cell_type", 
                      by.y = "cell_type", 
                      all.x = TRUE)
-# 連続値→離散値
-# df_cord_cls$cls <- as.character(df_cord_cls$cls)
 
-# #### load Neuron Label####
-# load(args_igraph)
-# # node information convert dataframe
-# ig_Fig1_HNS %>% 
-#     igraph::as_data_frame(., what="vertices") -> df_node
-# # remove space from colnames
-# df_node %>% 
-#     names() %>% 
-#         str_replace_all(., c(" " = "")) -> names(df_node)
-# df_NeuronType <- data.frame(cell_type = df_node$name,
-#                             NeuronType = df_node$NeuronType,
-#                             NeuronGroup = df_node$NeuronGroup,
-#                             stringsAsFactors = FALSE
-#                             )
+#### load Neuron Label####
+load(args_NL)
+# node information convert dataframe
+ig_Fig1_HNS %>% 
+    igraph::as_data_frame(., what="vertices") -> df_node
+# remove space from colnames
+df_node %>% 
+    names() %>% 
+        str_replace_all(., c(" " = "")) -> names(df_node)
+df_NL <- data.frame(cell_type = df_node$name,
+                            NeuronType = df_node$NeuronType,
+                            NeuronGroup = df_node$NeuronGroup,
+                            stringsAsFactors = FALSE
+                            )
 
-# ### merge Neuron Label####
-# df_cord_cls_label <- merge(df_cord_cls, 
-#                            df_NeuronType, 
-#                            by.x = "cell_type", 
-#                            by.y = "cell_type", 
-#                            all.x = TRUE)
-# # unknown label is NA
+### merge Neuron Label####
+df_cord_cls_NL <- merge(df_cord_cls, 
+                           df_NL, 
+                           by.x = "cell_type", 
+                           by.y = "cell_type", 
+                           all.x = TRUE)
+# unknown label is NA
 
 #### ggplot cls####
-gg <- ggplot(df_cord_cls, 
-       aes(x = cord_1,
-           y = cord_2, 
-           label = cell_type,
-           color = factor(cls)
-           )
-       ) + 
-      geom_point(size = 6.0, 
-                 alpha = 0.6) +
-      geom_text_repel(max.overlaps = Inf,
-                      min.segment.length = 0) 
+gg_cls <- ggplot(df_cord_cls_NL, 
+                 aes(x = cord_1,
+                     y = cord_2, 
+                     label = cell_type,
+                     color = factor(cls)
+                    )
+                ) + 
+    geom_point(size = 6.0, 
+               alpha = 0.6) +
+    # geom_text_repel(max.overlaps = Inf,
+    geom_label_repel(max.overlaps = Inf,
+                     min.segment.length = 0,
+                     force = 6.0) # ラベル間の反発力
 
 #### ggplot NeuronType####
-# coming soon
+gg_NL <- ggplot(df_cord_cls_NL, 
+                 aes(x = cord_1,
+                     y = cord_2, 
+                     label = cell_type,
+                     color = factor(NeuronType)
+                     )
+                ) + 
+    geom_point(size = 6.0, 
+               alpha = 0.6) +
+  # geom_text_repel(max.overlaps = Inf,
+    geom_label_repel(max.overlaps = Inf,
+                     min.segment.length = 0,
+                     force = 6.0) # ラベル間の反発力
 
 #### patchwork 2plot####
-# coming soon
+# annotation
+str_remove(args_output, 
+           "output/WTS4/normalize_1/stimAfter/") %>% 
+    str_remove(., 
+               "_plot.png") -> plot_title
+# patchwork
+gg <- gg_cls + 
+    gg_NL +
+    plot_annotation(
+        title = plot_title,
+        caption = 'made with patchwork',
+        theme = theme(plot.title = element_text(size = 60, hjust = 0.5))
+    )
 
 #### ggsave####
 ggsave(filename = args_output, 
        plot = gg,
        dpi = 100, 
-       width = 25.0, 
+       width = 50.0, 
        height = 20.0,
        limitsize = FALSE)
