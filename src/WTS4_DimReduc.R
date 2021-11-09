@@ -18,7 +18,6 @@ args_NL <- args[5]
 # args_input_cls <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/4_Clusters/OINDSCAL/merged_cls.RData")
 # args_DimReduc <- c("tsne")
 # args_output <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/4_Clusters/OINDSCAL/tsne_plot.png")
-# # Neuron Label Path
 # args_NL <- c("data/igraph/Fig1_HNS.RData")
 
 ### load dist object####
@@ -83,7 +82,6 @@ gg_cls <- ggplot(df_cord_cls_NL,
     theme(text = element_text(size = 24)) +
     geom_point(size = 6.0, 
                alpha = 0.6) +
-    # geom_text_repel(max.overlaps = Inf,
     geom_label_repel(max.overlaps = Inf,
                      min.segment.length = 0,
                      force = 6.0) # ラベル間の反発力
@@ -100,7 +98,6 @@ gg_NL <- ggplot(df_cord_cls_NL,
     theme(text = element_text(size = 24)) +
     geom_point(size = 6.0, 
                alpha = 0.6) +
-  # geom_text_repel(max.overlaps = Inf,
     geom_label_repel(max.overlaps = Inf,
                      min.segment.length = 0,
                      force = 6.0) # ラベル間の反発力

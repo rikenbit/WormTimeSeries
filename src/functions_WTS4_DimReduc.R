@@ -4,7 +4,6 @@ library(Rtsne)
 library(uwot)
 library(tidyverse)
 library(ggrepel)
-# library(ggpubr)
 library(igraph)
 library(patchwork)
 ##################################################
@@ -28,18 +27,18 @@ set.seed(1234)
 }
 #### UMAP####
 .wts_umap = function(x) {
-    d <- x
-    attr(d, "Labels") %>% length() -> lab_length
+    dist_data <- x
+    attr(dist_data, "Labels") %>% length() -> lab_length
     set.seed(1234)
-    umap_d <- uwot::umap(d,
+    umap_d <- uwot::umap(dist_data,
                          metric = "precomputed", 
-                         nn_method = uwot:::dist_nn(d, k = lab_length),
+                         nn_method = uwot:::dist_nn(dist_data, k = lab_length),
                          n_neighbors = 15,
                          n_components = 2
                          )
     return_object <- data.frame(cord_1 = umap_d[,1],
                           cord_2 = umap_d[,2],
-                          cell_type = attr(d, "Labels")
+                          cell_type = attr(dist_data, "Labels")
                           )
     return(return_object)
 }
