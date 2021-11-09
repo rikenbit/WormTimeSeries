@@ -41,7 +41,7 @@ rule DimReduc:
     benchmark:
         'benchmarks/WTS4/normalize_1/{range}/{dist}/{N_cls}_Clusters/{Re_cls}/{DR}_plot.txt'
     conda:
-        '../envs/myenv_WTS3_DimReduc.yaml'
+        '../envs/myenv_WTS4_DimReduc_2.yaml'
     resources:
         mem_gb=200
     log:

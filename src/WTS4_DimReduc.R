@@ -10,7 +10,7 @@ args_input_cls <- args[2]
 args_DimReduc <- args[3]
 # output plot
 args_output <- args[4]
-Neuron Label Path
+# Neuron Label Path
 args_NL <- args[5]
 
 # #### test args####
@@ -79,7 +79,7 @@ gg_cls <- ggplot(df_cord_cls_NL,
                      color = factor(cls)
                     )
                 ) + 
-   labs(color = "Cluster") +
+    labs(color = "Cluster") +
     theme(text = element_text(size = 24)) +
     geom_point(size = 6.0, 
                alpha = 0.6) +
