@@ -1,4 +1,4 @@
-# WTS4_Evaluation
+# WTS4_EvalPlot
 ###################################################
 # data time range
 time_range = ["stimAfter"]
@@ -25,12 +25,12 @@ rule EvalPlot:
     params:
         input_path = 'output/WTS4/normalize_1/{range}/{dist}'
     benchmark:
-        'benchmarks/WTS4/normalize_1/{range}/{dist}/{Re_cls}/{Eval}.txt'
+        'benchmarks/WTS4/normalize_1/{range}/{dist}/{Re_cls}/{Eval}/EvalPlot.txt'
     conda:
         '../envs/myenv_WTS4_EvalPlot.yaml'
     resources:
         mem_gb=200
     log:
-        'logs/WTS4/normalize_1/{range}/{dist}/{Re_cls}/{Eval}.log'
+        'logs/WTS4/normalize_1/{range}/{dist}/{Re_cls}/{Eval}/EvalPlot.log'
     shell:
         'src/WTS4_EvalPlot.sh {params.input_path} {output.EvalPlot} {wildcards.Re_cls} {wildcards.Eval} >& {log}'

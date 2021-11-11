@@ -1,6 +1,7 @@
 source("src/functions_WTS4_EvalPlot.R")
 
 #### args setting####
+args <- commandArgs(trailingOnly = T)
 # input directory path
 args_input_path <- args[1]
 # output
