@@ -84,6 +84,7 @@ gg_cls <- ggplot(df_cord_cls_NL,
                alpha = 0.6) +
     geom_label_repel(max.overlaps = Inf,
                      min.segment.length = 0,
+                     size = 7.0,
                      force = 6.0) # ラベル間の反発力
 
 #### ggplot NeuronType####
@@ -100,6 +101,7 @@ gg_NL <- ggplot(df_cord_cls_NL,
                alpha = 0.6) +
     geom_label_repel(max.overlaps = Inf,
                      min.segment.length = 0,
+                     size = 7.0,
                      force = 6.0) # ラベル間の反発力
 
 #### patchwork 2plot####
