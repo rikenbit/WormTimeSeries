@@ -47,11 +47,11 @@ for(i in seq_len(dim(A)[3])){
 }
 
 #MC-MI-HOOI
-if(args_method == "MCMIHOOI") {
-    library("rTensor")
-    install.packages("data/einsum_0.1.0.tar", repos = NULL, type = "source")
-    library("einsum")
-}
+# if(args_method == "MCMIHOOI") {
+#     library("rTensor")
+#     install.packages("data/einsum_0.1.0.tar", repos = NULL, type = "source")
+#     library("einsum")
+# }
 
 # merged_data 
 merged_data <- switch(args_method,

@@ -2,7 +2,7 @@
 ###################################################
 # No. of Clusters
 N_CLUSTERS = list(map(str, range(2, 21)))
-# N_CLUSTERS = ["20"]
+# N_CLUSTERS = ["3"]
 
 # Distance Data
 dist_data = ["EUCL","SBD_abs"]
@@ -13,7 +13,7 @@ time_range = ["stimAfter"]
 
 # ReClustering method
 ReClustering_method = ["CSPA","OINDSCAL","MCMIHOOI"]
-# ReClustering_method = ["CSPA","OINDSCAL"]
+# ReClustering_method = ["MCMIHOOI"]
 
 rule all:
     input:
@@ -46,8 +46,10 @@ rule ReClustering:
 
     benchmark:
         'benchmarks/WTS4/normalize_1/{range}/{dist}/{N_cls}_Clusters/{Re_cls}.txt'
-    conda:
-        '../envs/myenv_WTS4_ReClustering.yaml'
+    container:
+        "docker://yamaken37/reclustering:20211118"
+    # conda:
+    #     '../envs/myenv_WTS4_ReClustering.yaml'
     resources:
         mem_gb=200
     log:

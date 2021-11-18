@@ -1,9 +1,9 @@
-#library
+# library
 ##################################################
-# # MC-MI-HOOI
-# library("rTensor")
-# # condaにないのでBioCManagerで入れる？
-# library("einsum")
+# MC-MI-HOOI
+library("rTensor")
+# condaにないのでBioCManagerで入れる？
+library("einsum")
 ##################################################
 
 ##################################################
