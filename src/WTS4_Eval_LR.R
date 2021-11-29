@@ -1,26 +1,26 @@
 source("src/functions_WTS4_Eval_LR.R")
 
-# #### args setting####
-# args <- commandArgs(trailingOnly = T)
-# # input merged_cls
-# args_input_cls <- args[1]
-# # output merged_data
-# args_output_data <- args[2]
-
-# # ReClustering Method
-# args_method <- args[3]
-# # Evaluation Method
-# args_eval_method <- args[4]
-
-#### test args####
+#### args setting####
+args <- commandArgs(trailingOnly = T)
 # input merged_cls
-args_input_cls <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/5_Clusters/MCMIHOOI/merged_cls.RData")
+args_input_cls <- args[1]
 # output merged_data
-args_output_data <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/5_Clusters/MCMIHOOI/ARI/eval_result.RData")
+args_output_data <- args[2]
+
 # ReClustering Method
-args_method <- c("MCMIHOOI")
+args_method <- args[3]
 # Evaluation Method
-args_eval_method <- c("ARI")
+args_eval_method <- args[4]
+
+# #### test args####
+# # input merged_cls
+# args_input_cls <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/5_Clusters/OINDSCAL/merged_cls.RData")
+# # output merged_data
+# args_output_data <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/5_Clusters/OINDSCAL/ARI/eval_result.RData")
+# # ReClustering Method
+# args_method <- c("OINDSCAL")
+# # Evaluation Method
+# args_eval_method <- c("ARI")
 
 ##### load####
 load(args_input_cls)
@@ -54,9 +54,10 @@ eval_result <- switch(args_eval_method,
                       "ARI" = adjustedRandIndex(clusters, classes),
                       "purity" = ClusterPurity(clusters, classes),
                       "Fmeasure" = Fmeasure(clusters, classes),
-                      stop("Only can use all, ARI, purity, Fmeasure")
+                      "Entropy" = Entropy(clusters, classes),
+                      stop("Only can use all, ARI, purity, Fmeasure, Entropy")
                       )
-# Entropyは小さいほど、クラスタリングがうまくいく。他の評価は値が高いほどお良い。他の評価と混ざるとわかりにくいので後回し。
+# Entropyは小さいほど、良い。他の評価は値が高いほどお良い。
 
 #### ggsave####
 save(eval_result, file=args_output_data)
