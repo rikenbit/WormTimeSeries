@@ -12,7 +12,7 @@ source("src/functions_WTS4_Eval_LR.R")
 # # Evaluation Method
 # args_eval_method <- args[4]
 
-# #### test args####
+#### test args####
 # input merged_cls
 args_input_cls <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/5_Clusters/MCMIHOOI/merged_cls.RData")
 # output merged_data
@@ -22,7 +22,7 @@ args_method <- c("MCMIHOOI")
 # Evaluation Method
 args_eval_method <- c("ARI")
 
-# ##### load####
+##### load####
 load(args_input_cls)
 
 #### create dataframe####
@@ -41,24 +41,6 @@ df_cls %>%
             group_by(rm_LR) %>% 
                 filter(n()>1) %>% 
                     ungroup() -> df_cls_LR
-
-
-# #### check same cls or not####
-# .check_cls_same = function(x) {
-#     df_cls_LR %>% 
-#         dplyr::filter(rm_LR == .$rm_LR[x]) %>% 
-#             .$Clusters %>% 
-#                 unique() %>% 
-#                     length() -> return_object
-#     return(return_object)
-#   }
-# # purrr適用
-# seq(1,nrow(df_cls_LR)) %>% 
-#     purrr::map_int(., .check_cls_same) %>% 
-#         mutate(df_cls_LR, cls_same = .) %>% 
-#             mutate(., cls_same = if_else(condition = cls_same > 1,
-#                                          true =FALSE,
-#                                          false = TRUE)) -> df_checked
 
 #### Eval Dataframe####
 df_cls_LR %>%
