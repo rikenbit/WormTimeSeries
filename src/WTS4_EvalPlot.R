@@ -1,21 +1,21 @@
 source("src/functions_WTS4_EvalPlot.R")
 
-# #### args setting####
-# args <- commandArgs(trailingOnly = T)
-# # input directory path
-# args_input_path <- args[1]
-# # output
-# args_output <- args[2]
-# # ReClustering Method
-# args_method <- args[3]
-
-
-#### test args####
-args_input_path <- c("output/WTS4/normalize_1/stimAfter/SBD_abs")
+#### args setting####
+args <- commandArgs(trailingOnly = T)
+# input directory path
+args_input_path <- args[1]
 # output
-args_output <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/CSPA/EvalPlot.png")
+args_output <- args[2]
 # ReClustering Method
-args_method <- c("CSPA")
+args_method <- args[3]
+
+
+# #### test args####
+# args_input_path <- c("output/WTS4/normalize_1/stimAfter/SBD_abs")
+# # output
+# args_output <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/CSPA/EvalPlot.png")
+# # ReClustering Method
+# args_method <- c("CSPA")
 
 #### prepare input filepath####
 list.files(args_input_path, 
@@ -127,7 +127,7 @@ df_eval_long %>%
         ) +
         geom_line(size = 3) +
         theme(text = element_text(size = 30)) +
-        scale_x_continuous(breaks=seq(0,20,2)) -> gg_no_label
+        scale_x_continuous(breaks=seq(2,20,2)) -> gg_no_label
 #### ggplot label####
 df_eval_long %>% 
     dplyr::filter(., Eval=="ARI" | Eval=="purity" | Eval=="Fmeasure") %>%
@@ -138,7 +138,7 @@ df_eval_long %>%
                ) +
         geom_line(size = 3) +
         theme(text = element_text(size = 30)) +
-        scale_x_continuous(breaks=seq(0,20,2)) -> gg_label
+        scale_x_continuous(breaks=seq(2,20,2)) -> gg_label
 #### ggplot Entropy####
 df_eval_long %>% 
     dplyr::filter(., Eval=="Entropy") %>%
@@ -149,7 +149,7 @@ df_eval_long %>%
         ) +
         geom_line(size = 3) +
         theme(text = element_text(size = 30)) +
-        scale_x_continuous(breaks=seq(0,20,2)) -> gg_label_Entropy
+        scale_x_continuous(breaks=seq(2,20,2)) -> gg_label_Entropy
 
 #### patchwork####
 gg <- gg_no_label +
