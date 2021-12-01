@@ -127,7 +127,7 @@ df_eval_long %>%
         ) +
         geom_line(size = 3) +
         theme(text = element_text(size = 30)) +
-        scale_x_continuous(breaks=seq(2,20,2)) -> gg_no_label
+        scale_x_continuous(breaks=seq(2,20,1)) -> gg_no_label
 #### ggplot label####
 df_eval_long %>% 
     dplyr::filter(., Eval=="ARI" | Eval=="purity" | Eval=="Fmeasure") %>%
@@ -138,7 +138,7 @@ df_eval_long %>%
                ) +
         geom_line(size = 3) +
         theme(text = element_text(size = 30)) +
-        scale_x_continuous(breaks=seq(2,20,2)) -> gg_label
+        scale_x_continuous(breaks=seq(2,20,1)) -> gg_label
 #### ggplot Entropy####
 df_eval_long %>% 
     dplyr::filter(., Eval=="Entropy") %>%
@@ -149,12 +149,28 @@ df_eval_long %>%
         ) +
         geom_line(size = 3) +
         theme(text = element_text(size = 30)) +
-        scale_x_continuous(breaks=seq(2,20,2)) -> gg_label_Entropy
+        scale_x_continuous(breaks=seq(2,20,1)) -> gg_label_Entropy
+#### ggtexttable####
+# 各Evalのmaxかminの行番号
+df_eval_long %>% 
+    mutate(num = row_number()) -> df_eval_long_ID
+c("Connectivity","Entropy") %>% 
+    purrr::map_int(., eval_min) -> eval_id_min
+c("PseudoF","ARI","purity","Fmeasure") %>% 
+    purrr::map_int(., eval_max) -> eval_id_max
+sort(c(eval_id_min, eval_id_max)) %>% 
+    sort() -> eval_id
+# BESTなクラスタ数の情報を表示
+df_eval_long_ID[eval_id,] %>% 
+    dplyr::select(Eval,Cluster,Eval_Value) %>% 
+        mutate_if(is.numeric, round, digits = 3) %>% 
+            ggtexttable(rows = NULL, theme = ttheme(base_size = 60)) -> gg_eval_table
 
 #### patchwork####
 gg <- gg_no_label +
     gg_label +
     gg_label_Entropy +
+  gg_eval_table +
     plot_layout(ncol = 1) +
     plot_annotation(title = plot_title,
                     caption = 'made with patchwork',
