@@ -26,6 +26,11 @@ list.files(args_input_path,
 
 grep(args_method, list_eval_data) %>% 
     list_eval_data[.] -> list_cls_method
+########################################
+# docker 再クラスラスタリングで再実行対応
+grep("_docker", list_cls_method) %>% 
+    list_cls_method[.] -> list_cls_method
+########################################
 
 #### load  value PseudoF####
 grep("PseudoF", list_cls_method) %>% 
