@@ -17,7 +17,7 @@ DimReduc = ["tsne","umap"]
 
 rule all:
     input:
-        expand('output/WTS4/normalize_1/{range}/{dist}/{N_cls}_Clusters/{Re_cls}/{DR}_plot.png',
+        expand('output/WTS4/normalize_1/{range}/{dist}/{N_cls}_Clusters/{Re_cls}/{DR}_plot_docker.png',
             range=time_range,
             dist=dist_data,
             N_cls=N_CLUSTERS,
@@ -30,7 +30,7 @@ rule DimReduc_docker:
         m_distance = 'output/WTS4/normalize_1/{range}/{dist}/{N_cls}_Clusters/{Re_cls}/merged_distance_docker.RData',
         m_cls = 'output/WTS4/normalize_1/{range}/{dist}/{N_cls}_Clusters/{Re_cls}/merged_cls_docker.RData'
     output:
-        'output/WTS4/normalize_1/{range}/{dist}/{N_cls}_Clusters/{Re_cls}/{DR}_plot.png'
+        'output/WTS4/normalize_1/{range}/{dist}/{N_cls}_Clusters/{Re_cls}/{DR}_plot_docker.png'
     params:
         NL = 'data/igraph/Fig1_HNS.RData',
     benchmark:
