@@ -4,20 +4,20 @@
 time_range = ["stimAfter"]
 
 # Distance Data
-# dist_data = ["EUCL","SBD_abs"]
-dist_data = ["SBD_abs"]
+dist_data = ["EUCL","SBD_abs"]
+# dist_data = ["SBD_abs"]
 
 # No. of Clusters
-# N_CLUSTERS = list(map(str, range(2, 21)))
-N_CLUSTERS = ["3"]
+N_CLUSTERS = list(map(str, range(2, 21)))
+# N_CLUSTERS = ["3"]
 
 # ReClustering Method
-# ReClustering_method = ["CSPA","OINDSCAL","MCMIHOOI"]
-ReClustering_method = ["OINDSCAL"]
+ReClustering_method = ["CSPA","OINDSCAL","MCMIHOOI"]
+# ReClustering_method = ["OINDSCAL"]
 
 # Evaluation Method
-# Evaluation_method = ["ARI_behavior","purity_behavior","Fmeasure_behavior","Entropy_behavior"]
-Evaluation_method = ["ARI_behavior"]
+Evaluation_method = ["ARI_behavior","purity_behavior","Fmeasure_behavior","Entropy_behavior"]
+# Evaluation_method = ["ARI_behavior"]
 
 
 rule all:
