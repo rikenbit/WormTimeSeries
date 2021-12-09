@@ -4,21 +4,20 @@
 time_range = ["stimAfter"]
 
 # Distance Data
-dist_data = ["EUCL","SBD_abs"]
-# dist_data = ["SBD_abs"]
+# dist_data = ["EUCL","SBD_abs"]
+dist_data = ["SBD_abs"]
 
 # No. of Clusters
-N_CLUSTERS = list(map(str, range(2, 21)))
-# N_CLUSTERS = ["3"]
+# N_CLUSTERS = list(map(str, range(2, 21)))
+N_CLUSTERS = ["3"]
 
 # ReClustering Method
-ReClustering_method = ["CSPA","OINDSCAL","MCMIHOOI"]
-# ReClustering_method = ["MCMIHOOI"]
+# ReClustering_method = ["CSPA","OINDSCAL","MCMIHOOI"]
+ReClustering_method = ["OINDSCAL"]
 
 # Evaluation Method
-Evaluation_method = ["ARI_behavior","purity_behavior","Fmeasure_behavior","Entropy_behavior"]
-# Evaluation_method = ["ARI","purity","Fmeasure","Entropy"]
-# Evaluation_method = ["ARI_behavior"]
+# Evaluation_method = ["ARI_behavior","purity_behavior","Fmeasure_behavior","Entropy_behavior"]
+Evaluation_method = ["ARI_behavior"]
 
 
 rule all:
@@ -41,7 +40,7 @@ rule WTS4_Eval_behavior:
     benchmark:
         'benchmarks/WTS4/normalize_1/{range}/{dist}/{N_cls}_Clusters/{Re_cls}/{Eval}.txt'
     container:
-        # "docker://yamaken37/eval_lr:20211129"
+        "docker://yamaken37/eval_behavior:20211209"
     resources:
         mem_gb=200
     log:

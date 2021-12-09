@@ -1,29 +1,29 @@
 source("src/functions_WTS4_Eval_behavior.R")
 
-# #### args setting####
-# args <- commandArgs(trailingOnly = T)
-# # input merged_cls
-# args_input_cls <- args[1]
-# # output merged_data
-# args_output_data <- args[2]
-# # ReClustering Method
-# args_method <- args[3]
-# # Evaluation Method
-# args_eval_method <- args[4]
-# # Evaluation label list
-# args_eval_label <- args[5]
-
-#### test args####
+#### args setting####
+args <- commandArgs(trailingOnly = T)
 # input merged_cls
-args_input_cls <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/5_Clusters/OINDSCAL/merged_cls.RData")
+args_input_cls <- args[1]
 # output merged_data
-args_output_data <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/5_Clusters/OINDSCAL/ARI_behavior/eval_result_docker.RData")
+args_output_data <- args[2]
 # ReClustering Method
-args_method <- c("OINDSCAL")
+args_method <- args[3]
 # Evaluation Method
-args_eval_method <- c("ARI_behavior")
+args_eval_method <- args[4]
 # Evaluation label list
-args_eval_label <- c("data/WTS4_Eval_behavior.xlsx")
+args_eval_label <- args[5]
+
+# #### test args####
+# # input merged_cls
+# args_input_cls <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/5_Clusters/OINDSCAL/merged_cls_docker.RData")
+# # output merged_data
+# args_output_data <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/5_Clusters/OINDSCAL/ARI_behavior/eval_result_docker.RData")
+# # ReClustering Method
+# args_method <- c("OINDSCAL")
+# # Evaluation Method
+# args_eval_method <- c("ARI_behavior")
+# # Evaluation label list
+# args_eval_label <- c("data/WTS4_Eval_behavior.xlsx")
 ##### load merged_cls####
 load(args_input_cls)
 data.frame(CellType = names(merged_cls),
@@ -51,6 +51,10 @@ df_merged %>%
                        is.na(.), 
                        "others")
               ) -> df_cls_label
+# チルダでpurrrの処理。各行読み込んではreplace関数を実行
+# https://www.delftstack.com/ja/howto/r/replace-na-with-0-in-r/#r-データフレームのサブセット内の-na-を-0-に置き換える
+# https://qiita.com/five-dots/items/361a42baf1e94edf5846
+
 #### Eval Dataframe####
 clusters <- df_cls_label$Clusters
 classes <- df_cls_label$Classes
