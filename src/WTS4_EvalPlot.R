@@ -204,11 +204,11 @@ c("PseudoF","ARI","purity","Fmeasure") %>%
     purrr::map_int(., eval_max) -> eval_id_max
 sort(c(eval_id_min, eval_id_max)) %>% 
     sort() -> eval_id
-BESTなクラスタ数の情報を表示
-df_eval_long_ID[eval_id,] %>% 
-    dplyr::select(Eval,Cluster,Eval_Value) %>% 
-        mutate_if(is.numeric, round, digits = 3) %>% 
-            ggtexttable(rows = NULL, theme = ttheme(base_size = 60)) -> gg_eval_table
+# BESTなクラスタ数の情報を表示
+# df_eval_long_ID[eval_id,] %>% 
+#     dplyr::select(Eval,Cluster,Eval_Value) %>% 
+#         mutate_if(is.numeric, round, digits = 3) %>% 
+#             ggtexttable(rows = NULL, theme = ttheme(base_size = 60)) -> gg_eval_table
 eval_arrange <- c("Connectivity", "PseudoF", "ARI", "purity", "Fmeasure", "Entropy")
 df_eval_long_ID[eval_id,] %>% 
     dplyr::select(Eval,Cluster,Eval_Value) %>%

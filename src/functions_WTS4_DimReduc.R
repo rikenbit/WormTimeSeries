@@ -6,6 +6,7 @@ library(tidyverse)
 library(ggrepel)
 library(igraph)
 library(patchwork)
+library(openxlsx) # read.xlsxを追加
 ##################################################
 set.seed(1234)
 
