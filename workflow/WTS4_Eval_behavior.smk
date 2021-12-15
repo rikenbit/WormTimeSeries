@@ -36,7 +36,7 @@ rule WTS4_Eval_behavior:
     output:
         eval_result = 'output/WTS4/normalize_1/{range}/{dist}/{N_cls}_Clusters/{Re_cls}/{Eval}/eval_result_docker.RData'
     params:
-        behavior_label_path = 'data/WTS4_Eval_behavior.xlsx'
+        behavior_label_path = 'data/WTS4_Eval_behavior_fix.xlsx'
     benchmark:
         'benchmarks/WTS4/normalize_1/{range}/{dist}/{N_cls}_Clusters/{Re_cls}/{Eval}.txt'
     container:
