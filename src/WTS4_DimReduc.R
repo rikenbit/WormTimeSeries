@@ -12,6 +12,8 @@ args_DimReduc <- args[3]
 args_output <- args[4]
 # Neuron Label Path
 args_NL <- args[5]
+# Evaluation label list
+args_eval_label <- args[6]
 
 # #### test args####
 # args_input_distance <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/4_Clusters/OINDSCAL/merged_distance.RData")
@@ -19,6 +21,7 @@ args_NL <- args[5]
 # args_DimReduc <- c("tsne")
 # args_output <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/4_Clusters/OINDSCAL/tsne_plot.png")
 # args_NL <- c("data/igraph/Fig1_HNS.RData")
+# args_eval_label <- c("data/WTS4_Eval_behavior_fix.xlsx")
 
 ### load dist object####
 load(args_input_distance)
@@ -62,7 +65,7 @@ df_NL <- data.frame(cell_type = df_node$name,
                             stringsAsFactors = FALSE
                             )
 
-### merge Neuron Label####
+#### merge Neuron Label####
 df_cord_cls_NL <- merge(df_cord_cls, 
                            df_NL, 
                            by.x = "cell_type", 
@@ -70,8 +73,23 @@ df_cord_cls_NL <- merge(df_cord_cls,
                            all.x = TRUE)
 # unknown label is NA
 
+#### load eval_label####
+read.xlsx(args_eval_label,
+          sheet = "Sheet1",
+          rowNames = FALSE,
+          colNames =TRUE) %>% 
+  dplyr::rename(CellType = celltype, 
+                Classes = class) -> df_eval_label
+
+#### merge eval_label####
+merge(df_cord_cls_NL, 
+      df_eval_label, 
+      by.x = "cell_type", 
+      by.y = "CellType", 
+      all.x = TRUE) -> df_merged
+
 #### ggplot cls####
-gg_cls <- ggplot(df_cord_cls_NL, 
+gg_cls <- ggplot(df_merged, 
                  aes(x = cord_1,
                      y = cord_2, 
                      label = cell_type,
@@ -88,7 +106,7 @@ gg_cls <- ggplot(df_cord_cls_NL,
                      force = 6.0) # ラベル間の反発力
 
 #### ggplot NeuronType####
-gg_NL <- ggplot(df_cord_cls_NL, 
+gg_NT <- ggplot(df_merged, 
                  aes(x = cord_1,
                      y = cord_2, 
                      label = cell_type,
@@ -104,7 +122,23 @@ gg_NL <- ggplot(df_cord_cls_NL,
                      size = 7.0,
                      force = 6.0) # ラベル間の反発力
 
-#### patchwork 2plot####
+#### ggplot eval_label####
+gg_eval_label <- ggplot(df_merged, 
+                 aes(x = cord_1,
+                     y = cord_2, 
+                     label = cell_type,
+                     color = factor(Classes)
+                     )
+                ) + 
+    labs(color = "Classes") +
+    theme(text = element_text(size = 24)) +
+    geom_point(size = 6.0, 
+               alpha = 0.6) +
+    geom_label_repel(max.overlaps = Inf,
+                     min.segment.length = 0,
+                     size = 7.0,
+                     force = 6.0) # ラベル間の反発力
+#### patchwork 3plot####
 # annotation
 str_remove(args_output, 
            "output/WTS4/normalize_1/stimAfter/") %>% 
@@ -112,7 +146,8 @@ str_remove(args_output,
                "_plot.png") -> plot_title
 # patchwork
 gg <- gg_cls + 
-    gg_NL +
+    gg_NT +
+    gg_eval_label +
     plot_annotation(
         title = plot_title,
         caption = 'made with patchwork',
@@ -123,6 +158,6 @@ gg <- gg_cls +
 ggsave(filename = args_output, 
        plot = gg,
        dpi = 100, 
-       width = 50.0, 
+       width = 60.0, 
        height = 20.0,
        limitsize = FALSE)

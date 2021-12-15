@@ -1,7 +1,8 @@
 # WTS4_DimReduc
 ###################################################
 # No. of Clusters
-N_CLUSTERS = list(map(str, range(2, 21)))
+# N_CLUSTERS = list(map(str, range(2, 21)))
+N_CLUSTERS = ["4"]
 
 # Distance Data
 dist_data = ["EUCL","SBD_abs"]
@@ -24,7 +25,6 @@ rule all:
             Re_cls=ReClustering_method,
             DR=DimReduc
             )
-        
 rule DimReduc_docker:
     input:
         m_distance = 'output/WTS4/normalize_1/{range}/{dist}/{N_cls}_Clusters/{Re_cls}/merged_distance_docker.RData',
@@ -33,16 +33,38 @@ rule DimReduc_docker:
         'output/WTS4/normalize_1/{range}/{dist}/{N_cls}_Clusters/{Re_cls}/{DR}_plot_docker.png'
     params:
         NL = 'data/igraph/Fig1_HNS.RData',
+        EL = 'data/WTS4_Eval_behavior_fix.xlsx'
     benchmark:
         'benchmarks/WTS4/normalize_1/{range}/{dist}/{N_cls}_Clusters/{Re_cls}/{DR}_plot_docker.txt'
-    conda:
-        '../envs/myenv_WTS4_DimReduc_2.yaml'
+    # conda:
+    #     '../envs/myenv_WTS4_DimReduc_2.yaml'
+    container:
+        "docker://yamaken37/dimreduc:20211213"
     resources:
         mem_gb=200
     log:
         'logs/WTS4/normalize_1/{range}/{dist}/{N_cls}_Clusters/{Re_cls}/{DR}_plot_docker.log'
     shell:
-        'src/WTS4_DimReduc.sh {input.m_distance} {input.m_cls} {wildcards.DR} {output} {params.NL} >& {log}'
+        'src/WTS4_DimReduc.sh {input.m_distance} {input.m_cls} {wildcards.DR} {output} {params.NL} {params.EL} >& {log}'
+
+# rule DimReduc_docker:
+#     input:
+#         m_distance = 'output/WTS4/normalize_1/{range}/{dist}/{N_cls}_Clusters/{Re_cls}/merged_distance_docker.RData',
+#         m_cls = 'output/WTS4/normalize_1/{range}/{dist}/{N_cls}_Clusters/{Re_cls}/merged_cls_docker.RData'
+#     output:
+#         'output/WTS4/normalize_1/{range}/{dist}/{N_cls}_Clusters/{Re_cls}/{DR}_plot_docker.png'
+#     params:
+#         NL = 'data/igraph/Fig1_HNS.RData',
+#     benchmark:
+#         'benchmarks/WTS4/normalize_1/{range}/{dist}/{N_cls}_Clusters/{Re_cls}/{DR}_plot_docker.txt'
+#     conda:
+#         '../envs/myenv_WTS4_DimReduc_2.yaml'
+#     resources:
+#         mem_gb=200
+#     log:
+#         'logs/WTS4/normalize_1/{range}/{dist}/{N_cls}_Clusters/{Re_cls}/{DR}_plot_docker.log'
+#     shell:
+#         'src/WTS4_DimReduc.sh {input.m_distance} {input.m_cls} {wildcards.DR} {output} {params.NL} >& {log}'
 # rule DimReduc:
 #     input:
 #         m_distance = 'output/WTS4/normalize_1/{range}/{dist}/{N_cls}_Clusters/{Re_cls}/merged_distance.RData',
