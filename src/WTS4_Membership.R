@@ -47,7 +47,9 @@ Hs <- lapply(C, function(x) {
     })
 
 # fix Membership
+# 全個体で取りうる細胞名を取得。数字名も細胞名も両方
 cellnames <- unique(unlist(lapply(Hs, rownames)))
+# 上記細胞名のうち数字でない細胞名のみを残す
 cellnames <- cellnames[grep("^[0-9]", cellnames, invert=TRUE)]
 
 newHs <- list()

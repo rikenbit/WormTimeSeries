@@ -15,3 +15,5 @@ logs/*
 *.Rproj
 slurm-*.out
 slurm*
+.config/*
+.local/*
