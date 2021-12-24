@@ -6,7 +6,7 @@ args <- commandArgs(trailingOnly = T)
 args_input_MCMIHOOI <- args[1]
 # DimReduc
 args_output <- args[2]
-args_input_path <- args[3]
+args_dist <- args[3]
 args_DimReduc <- args[4]
 # No. of Clusters
 args_k <- args[5]
@@ -19,7 +19,7 @@ args_eval_label <- args[7]
 # args_input_MCMIHOOI <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/5_Clusters/MCMIHOOI/merged_data.RData")
 # # DimReduc
 # args_output <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/5_Clusters/DimReduc_MCMI/tsne/table.png")
-# args_input_path <- c("output/WTS4/normalize_1/stimAfter/SBD_abs")
+# args_dist <- c("SBD_abs")
 # args_DimReduc <- c("tsne")
 # # No. of Clusters
 # args_k <- c("5")
@@ -42,6 +42,7 @@ data.frame(weight = merged_data$W,
 #### load dist data####
 # 空の行列を格納するファイルを作成
 D <- list()
+eval(parse(text=paste0("args_input_path <- c('output/WTS4/normalize_1/stimAfter/",args_dist,"')")))
 # inputファイル名のリスト
 input_path_list <- list.files(args_input_path, pattern="SampleNumber_", full.names=TRUE)
 # ファイルを読み込んで，リストに加える．各リストのattr(*, "Labels")に細胞型名が残っている

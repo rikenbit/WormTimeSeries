@@ -35,8 +35,7 @@ rule DimReduc_MCMI:
         'output/WTS4/normalize_1/{range}/{dist}/{N_cls}_Clusters/DimReduc_{Re_cls}/{DR}/table.png'
     params:
         NL = 'data/igraph/Fig1_HNS.RData',
-        EL = 'data/WTS4_Eval_behavior_fix.xlsx',
-        input_path = 'output/WTS4/normalize_1/{range}/{dist}'
+        EL = 'data/WTS4_Eval_behavior_fix.xlsx'
     benchmark:
         'benchmarks/WTS4/normalize_1/{range}/{dist}/{N_cls}_Clusters/DimReduc_{Re_cls}/{DR}/table.txt'
     container:
@@ -46,4 +45,4 @@ rule DimReduc_MCMI:
     log:
         'logs/WTS4/normalize_1/{range}/{dist}/{N_cls}_Clusters/DimReduc_{Re_cls}/{DR}/table.log'
     shell:
-        'src/WTS4_DimReduc_MCMI.sh {input.m_data} {output} {params.input_path} {wildcards.DR} {wildcards.Re_cls} {params.NL} {params.EL} >& {log}'
+        'src/WTS4_DimReduc_MCMI.sh {input.m_data} {output} {wildcards.dist} {wildcards.DR} {wildcards.N_cls} {params.NL} {params.EL} >& {log}'
