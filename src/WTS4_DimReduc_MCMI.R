@@ -1,19 +1,31 @@
 source("src/functions_WTS4_DimReduc_MCMI.R")
 
 #### args setting####
-
-#### test args####
-# MCMI
-args_input_MCMIHOOI <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/5_Clusters/MCMIHOOI/merged_data.RData")
+args <- commandArgs(trailingOnly = T)
+# input merged_distance
+args_input_MCMIHOOI <- args[1]
 # DimReduc
-args_input_path <- c("output/WTS4/normalize_1/stimAfter/SBD_abs")
-args_output <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/5_Clusters/DimReduc_MCMI/tsne_plot.png")
-args_DimReduc <- c("tsne")
+args_output <- args[2]
+args_input_path <- args[3]
+args_DimReduc <- args[4]
 # No. of Clusters
-args_k <- c("5")
+args_k <- args[5]
 # add anotation data
-args_NL <- c("data/igraph/Fig1_HNS.RData")
-args_eval_label <- c("data/WTS4_Eval_behavior_fix.xlsx")
+args_NL <- args[6]
+args_eval_label <- args[7]
+
+# #### test args####
+# # MCMI
+# args_input_MCMIHOOI <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/5_Clusters/MCMIHOOI/merged_data.RData")
+# # DimReduc
+# args_output <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/5_Clusters/DimReduc_MCMI/tsne/table.png")
+# args_input_path <- c("output/WTS4/normalize_1/stimAfter/SBD_abs")
+# args_DimReduc <- c("tsne")
+# # No. of Clusters
+# args_k <- c("5")
+# # add anotation data
+# args_NL <- c("data/igraph/Fig1_HNS.RData")
+# args_eval_label <- c("data/WTS4_Eval_behavior_fix.xlsx")
 
 #### No. of Clusters####
 k <- as.numeric(args_k)
@@ -99,8 +111,8 @@ seq(1:length(DF_cord_cls_nl_be)) %>%
     purrr::map(., .plot_dimreduc) -> gg_list
 
 #### ggplot for####
-for(x in 1:length(gg_list)){
-# for(x in 1:2 ){
+# for(x in 1:length(gg_list)){
+for(x in 1:2 ){
     # weight table
     gg_weight_bg <- table_cell_bg(gg_weight, 
                                row = x + 1,
@@ -116,7 +128,7 @@ for(x in 1:length(gg_list)){
 
     # filename
     args_output %>% 
-        str_remove(., ".png") -> args_output_name
+        str_remove(., "/table.png") -> args_output_name
     sample_n <- as.numeric(df_weight[x,1])
     eval(parse(text=paste0("plot_title <- c('",x,"_SampleNumber_",sample_n,".png')")))
     eval(parse(text=paste0("args_output_sample <- c('",args_output_name,"/",plot_title,"')")))
@@ -129,3 +141,9 @@ for(x in 1:length(gg_list)){
            height = 20.0,
            limitsize = FALSE)
 }
+ggsave(filename = args_output, 
+       plot = gg_weight,
+       dpi = 100, 
+       width = 80.0, 
+       height = 20.0,
+       limitsize = FALSE)
