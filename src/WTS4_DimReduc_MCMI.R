@@ -112,8 +112,8 @@ seq(1:length(DF_cord_cls_nl_be)) %>%
     purrr::map(., .plot_dimreduc) -> gg_list
 
 #### ggplot for####
-# for(x in 1:length(gg_list)){
-for(x in 1:2 ){
+for(x in 1:length(gg_list)){
+# for(x in 1:2 ){
     # weight table
     gg_weight_bg <- table_cell_bg(gg_weight, 
                                row = x + 1,
@@ -142,6 +142,7 @@ for(x in 1:2 ){
            height = 20.0,
            limitsize = FALSE)
 }
+#### ggplot output file####
 ggsave(filename = args_output, 
        plot = gg_weight,
        dpi = 100, 
