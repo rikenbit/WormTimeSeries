@@ -13,8 +13,8 @@ args_output_membership <- args[3]
 #### test args####
 # # No. of Clusters 
 # args_k <- c("3")
-# args_input_path <- c("output/WTS4/normalize_1/stimAfter/SBD_abs")
-# args_output_membership  <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/3_Clusters/Membership.RData")
+# args_input_path <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Distance")
+# args_output_membership  <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Membership/k_Number_3.RDat")
 
 #### No. of Clusters####
 k <- as.numeric(args_k)

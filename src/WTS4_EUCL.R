@@ -25,8 +25,7 @@ args_EUCL <- args[5]
 # args_stim_xlsx <- c("data/stimulation/stimulation_timing.xlsx")
 
 # # output EUCL距離行列
-# # args_EUCL <- c("output/WTS4/normalize_1/all/EUCL/SampleNumber_1/EUCL.RData")
-# args_EUCL <- c("output/WTS4/normalize_1/stimAfter/EUCL/SampleNumber_1/EUCL.RData")
+# args_EUCL <- c("output/WTS4/normalize_1/stimAfter/EUCL/Distance/SampleNumber_1.RData")
 
 #### load NeuronActivity####
 load(args_neuron)

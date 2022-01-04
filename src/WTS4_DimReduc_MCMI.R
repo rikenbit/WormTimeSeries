@@ -149,3 +149,38 @@ ggsave(filename = args_output,
        width = 80.0, 
        height = 20.0,
        limitsize = FALSE)
+
+# #### name count####
+# #文字の細胞名
+# cn_list <- list()
+# #数字の列名
+# digit_list <- list()
+# for(i in 1:length(D)){
+#     D[[i]] %>% attr(., "Labels") -> tmp
+#     cn_list[[i]] <- tmp[grep("^[0-9]", tmp, invert=TRUE)]
+#     digit_list[[i]] <- tmp[grep("^[0-9]", tmp, invert=FALSE)]
+# }
+# #文字列の列数のカウント
+# cn_num <- unlist(lapply(cn_list, function(x){length(x)}))
+# #数字の列数のカウント
+# digit_num <- unlist(lapply(digit_list, function(x){length(x)}))
+# df_count <- data.frame(
+#     SampleNumber = as.character(1:length(D)),
+#     annotated = cn_num,
+#     digit = digit_num
+# )
+# df_count %>% 
+#     pivot_longer(cols = c(annotated, digit),
+#                  names_to = "CellType",
+#                  values_to = "count") -> data
+# #### bar plot####
+# # sort MCMI$Weight
+# p <- ggplot(data, aes(x=SampleNumber, y=count)) +
+#     geom_bar(stat="identity", aes(fill=CellType)) +
+#     scale_x_discrete(limits=df_weight$SampleNumber)
+# 
+# p_ano <-data %>% 
+#     filter(CellType =="annotated") %>% 
+#     ggplot(., aes(x=SampleNumber, y=count)) +
+#     geom_bar(stat="identity", aes(fill=CellType)) +
+#     scale_x_discrete(limits=df_weight$SampleNumber)

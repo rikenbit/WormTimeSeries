@@ -1,12 +1,12 @@
 # WTS4_DimReduc
 ###################################################
 # No. of Clusters
-# N_CLUSTERS = list(map(str, range(2, 21)))
-N_CLUSTERS = ["5"]
+N_CLUSTERS = list(map(str, range(2, 21)))
+# N_CLUSTERS = ["5"]
 
 # Distance Data
-# dist_data = ["EUCL","SBD_abs"]
-dist_data = ["SBD_abs"]
+dist_data = ["EUCL","SBD_abs"]
+# dist_data = ["SBD_abs"]
 
 # Dimensionality Reduction Method
 DimReduc = ["tsne","umap"]
