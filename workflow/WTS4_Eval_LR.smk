@@ -29,7 +29,7 @@ rule all:
             Eval=Evaluation_method
             )
         
-rule WTS4_Eval_LR_docker:
+rule WTS4_Eval_LR:
     input:
         m_cls = 'output/WTS4/normalize_1/{range}/{dist}/{Re_cls}/Merged_cls/k_Number_{N_cls}.RData'
     output:
