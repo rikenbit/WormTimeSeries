@@ -15,12 +15,12 @@ args_NL <- args[6]
 args_eval_label <- args[7]
 
 # #### test args####
-# # MCMI
+# input merged_distance
 # args_input_MCMIHOOI <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/MCMIHOOI/Merged_data/k_Number_5.RData")
 
 # # DimReduc
 # args_output <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/DimReduc_MCMI/k_Number_5/tsne/table.png")
-# args_eval_label <- c("data/WTS4_Eval_behavior_fix.xlsx")
+# args_input_path <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Distance")
 # args_DimReduc <- c("tsne")
 
 # # No. of Clusters
@@ -28,9 +28,8 @@ args_eval_label <- args[7]
 
 # # add anotation data
 # args_NL <- c("data/igraph/Fig1_HNS.RData")
+# args_eval_label <- c("data/WTS4_Eval_behavior_fix.xlsx")
 
-
-args_input_path <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Distance")
 
 #### No. of Clusters####
 k <- as.numeric(args_k)

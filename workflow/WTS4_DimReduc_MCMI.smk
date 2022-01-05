@@ -1,8 +1,8 @@
 # WTS4_DimReduc
 ###################################################
 # No. of Clusters
-# N_CLUSTERS = list(map(str, range(2, 21)))
-N_CLUSTERS = ["5"]
+N_CLUSTERS = list(map(str, range(2, 21)))
+# N_CLUSTERS = ["5"]
 
 # Distance Data
 dist_data = ["EUCL","SBD_abs"]
