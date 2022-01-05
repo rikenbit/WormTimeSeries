@@ -16,10 +16,11 @@ args_NL <- args[5]
 args_eval_label <- args[6]
 
 # #### test args####
-# args_input_distance <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/4_Clusters/OINDSCAL/merged_distance.RData")
-# args_input_cls <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/4_Clusters/OINDSCAL/merged_cls.RData")
+# args_input_distance <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/OINDSCAL/Merged_distance/k_Number_4.RData")
+# args_input_cls <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/OINDSCAL/Merged_cls/k_Number_4.RData")
 # args_DimReduc <- c("tsne")
-# args_output <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/4_Clusters/OINDSCAL/tsne_plot.png")
+# args_output <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/OINDSCAL/Merged_tsne/k_Number_4.png")
+
 # args_NL <- c("data/igraph/Fig1_HNS.RData")
 # args_eval_label <- c("data/WTS4_Eval_behavior_fix.xlsx")
 
