@@ -21,7 +21,7 @@ Evaluation_method = ["ARI","purity","Fmeasure","Entropy"]
 
 rule all:
     input:
-        expand('output/WTS4/normalize_1/{range}/{dist}/{Re_cls}/Eval/{Eval}/k_Number_{N_cls}.RData',
+        expand('output/WTS4/normalize_1/{range}/{dist}/{Re_cls}/Eval/{Eval}_LR/k_Number_{N_cls}.RData',
             range=time_range,
             dist=dist_data,
             N_cls=N_CLUSTERS,
@@ -33,14 +33,14 @@ rule WTS4_Eval_LR:
     input:
         m_cls = 'output/WTS4/normalize_1/{range}/{dist}/{Re_cls}/Merged_cls/k_Number_{N_cls}.RData'
     output:
-        eval_result = 'output/WTS4/normalize_1/{range}/{dist}/{Re_cls}/Eval/{Eval}/k_Number_{N_cls}.RData'
+        eval_result = 'output/WTS4/normalize_1/{range}/{dist}/{Re_cls}/Eval/{Eval}_LR/k_Number_{N_cls}.RData'
     benchmark:
-        'benchmarks/WTS4/normalize_1/{range}/{dist}/{Re_cls}/Eval/{Eval}/k_Number_{N_cls}.txt'
+        'benchmarks/WTS4/normalize_1/{range}/{dist}/{Re_cls}/Eval/{Eval}_LR/k_Number_{N_cls}.txt'
     container:
         "docker://yamaken37/eval_lr:20211129"
     resources:
         mem_gb=200
     log:
-        'logs/WTS4/normalize_1/{range}/{dist}/{Re_cls}/Eval/{Eval}/k_Number_{N_cls}.log'
+        'logs/WTS4/normalize_1/{range}/{dist}/{Re_cls}/Eval/{Eval}_LR/k_Number_{N_cls}.log'
     shell:
         'src/WTS4_Eval_LR.sh {input.m_cls} {output.eval_result} {wildcards.Re_cls} {wildcards.Eval} >& {log}'
