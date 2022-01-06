@@ -15,17 +15,17 @@ args_NL <- args[6]
 args_eval_label <- args[7]
 
 # #### test args####
-# input merged_distance
+# # input merged_distance
 # args_input_MCMIHOOI <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/MCMIHOOI/Merged_data/k_Number_5.RData")
-
+# 
 # # DimReduc
 # args_output <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/DimReduc_MCMI/k_Number_5/tsne/table.png")
 # args_input_path <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Distance")
 # args_DimReduc <- c("tsne")
-
+# 
 # # No. of Clusters
 # args_k <- c("5")
-
+# 
 # # add anotation data
 # args_NL <- c("data/igraph/Fig1_HNS.RData")
 # args_eval_label <- c("data/WTS4_Eval_behavior_fix.xlsx")
@@ -73,7 +73,13 @@ seq(1:length(D_f)) %>%
 # purrr
 seq(1:length(DF_cord)) %>%
     purrr::map(., .df_cord_cls) -> DF_cord_cls
-
+# save sample_cls
+sample_cls <- lapply(DF_cord_cls, function(x){dplyr::select(x, cell_type, Cluster)})
+args_output %>% 
+    str_remove(., "/table.png") %>% 
+        str_remove(., args_DimReduc) -> args_output_sample_cls
+eval(parse(text=paste0("args_output_sample_cls <- c('",args_output_sample_cls,"sample_cls.RData')")))
+save(sample_cls, file=args_output_sample_cls)
 #### merge igraph NeuronType####
 load(args_NL)
 # node information convert dataframe
@@ -167,23 +173,38 @@ ggsave(filename = args_output,
 # cn_num <- unlist(lapply(cn_list, function(x){length(x)}))
 # #数字の列数のカウント
 # digit_num <- unlist(lapply(digit_list, function(x){length(x)}))
+# 
+# #### not Annotated####
+# # 和集合ベクトル
+# load("output/WTS4/normalize_1/stimAfter/SBD_abs/Membership/k_Number_2.RData")
+# newHs[[1]] %>% 
+#     rownames() -> all_annotated_name
+# # not_annotated数
+# not_annotated_count <- unlist(lapply(cn_list, function(x){length(setdiff(all_annotated_name, x))}))
+# 
+# #### name count dataframe####
 # df_count <- data.frame(
 #     SampleNumber = as.character(1:length(D)),
 #     annotated = cn_num,
+#     not_annotated = not_annotated_count,
 #     digit = digit_num
-# )
-# df_count %>% 
-#     pivot_longer(cols = c(annotated, digit),
+#     )
+# df_count %>%
+#     pivot_longer(cols = c(annotated, not_annotated, digit),
 #                  names_to = "CellType",
 #                  values_to = "count") -> data
+# data$CellType <- factor(data$CellType, 
+#                         levels =c("digit", 
+#                                   "not_annotated", 
+#                                   "annotated"))
 # #### bar plot####
 # # sort MCMI$Weight
 # p <- ggplot(data, aes(x=SampleNumber, y=count)) +
 #     geom_bar(stat="identity", aes(fill=CellType)) +
 #     scale_x_discrete(limits=df_weight$SampleNumber)
 # 
-# p_ano <-data %>% 
-#     filter(CellType =="annotated") %>% 
+# p_ano <- data %>%
+#     filter(CellType =="annotated" | CellType == "not_annotated") %>%
 #     ggplot(., aes(x=SampleNumber, y=count)) +
 #     geom_bar(stat="identity", aes(fill=CellType)) +
 #     scale_x_discrete(limits=df_weight$SampleNumber)
