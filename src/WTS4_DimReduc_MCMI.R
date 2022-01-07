@@ -14,6 +14,7 @@ args_k <- args[5]
 args_NL <- args[6]
 args_eval_label <- args[7]
 
+
 # #### test args####
 # # input merged_distance
 # args_input_MCMIHOOI <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/MCMIHOOI/Merged_data/k_Number_5.RData")
@@ -60,9 +61,10 @@ C <- lapply(D, function(d, k) {
     }, k=k)
 
 #### Filter dist matrix####
-# purrr
-seq(1:length(D)) %>%
-    purrr::map(., .dist_f) -> D_f
+# # purrr
+# seq(1:length(D)) %>%
+#     purrr::map(., .dist_f) -> D_f
+D -> D_f
 
 #### Dimensionality Reduction####
 # purrr
@@ -173,7 +175,7 @@ ggsave(filename = args_output,
 # cn_num <- unlist(lapply(cn_list, function(x){length(x)}))
 # #数字の列数のカウント
 # digit_num <- unlist(lapply(digit_list, function(x){length(x)}))
-# 
+
 # #### not Annotated####
 # # 和集合ベクトル
 # load("output/WTS4/normalize_1/stimAfter/SBD_abs/Membership/k_Number_2.RData")
@@ -181,7 +183,7 @@ ggsave(filename = args_output,
 #     rownames() -> all_annotated_name
 # # not_annotated数
 # not_annotated_count <- unlist(lapply(cn_list, function(x){length(setdiff(all_annotated_name, x))}))
-# 
+
 # #### name count dataframe####
 # df_count <- data.frame(
 #     SampleNumber = as.character(1:length(D)),
@@ -202,9 +204,13 @@ ggsave(filename = args_output,
 # p <- ggplot(data, aes(x=SampleNumber, y=count)) +
 #     geom_bar(stat="identity", aes(fill=CellType)) +
 #     scale_x_discrete(limits=df_weight$SampleNumber)
-# 
+# ggsave(filename = "output/WTS4/normalize_1/stimAfter/SBD_abs/DimReduc_MCMI/k_Number_5/tsne/test_p.png", 
+#        plot = p)
+
 # p_ano <- data %>%
 #     filter(CellType =="annotated" | CellType == "not_annotated") %>%
 #     ggplot(., aes(x=SampleNumber, y=count)) +
 #     geom_bar(stat="identity", aes(fill=CellType)) +
 #     scale_x_discrete(limits=df_weight$SampleNumber)
+# ggsave(filename = "output/WTS4/normalize_1/stimAfter/SBD_abs/DimReduc_MCMI/k_Number_5/tsne/test_p_ano.png", 
+#        plot = p_ano)

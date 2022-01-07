@@ -23,7 +23,7 @@ rule WTS4_Eval_sample:
     input:
         sample_cls = 'output/WTS4/normalize_1/{range}/{dist}/DimReduc_MCMI/k_Number_{N_cls}/sample_cls.RData',
         merged_cls = 'output/WTS4/normalize_1/{range}/{dist}/MCMIHOOI/Merged_cls/k_Number_{N_cls}.RData',
-        MCMI = 'output/WTS4/normalize_1/stimAfter/{range}/{dist}/Merged_data/k_Number_{N_cls}.RData'
+        merged_data = 'output/WTS4/normalize_1/{range}/{dist}/MCMIHOOI/Merged_data/k_Number_{N_cls}.RData'
     output:
         'output/WTS4/normalize_1/{range}/{dist}/DimReduc_MCMI/k_Number_{N_cls}/Eval_sample.png'
     params:
@@ -37,4 +37,4 @@ rule WTS4_Eval_sample:
     log:
         'logs/WTS4/normalize_1/{range}/{dist}/DimReduc_MCMI/k_Number_{N_cls}/Eval_sample.log'
     shell:
-        'src/WTS4_Eval_sample.sh {input.sample_cls} {output} {input.merged_cls} {input.MCMI} >& {log}'
+        'src/WTS4_Eval_sample.sh {input.sample_cls} {output} {input.merged_cls} {input.merged_data} >& {log}'
