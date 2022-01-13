@@ -21,6 +21,15 @@ args_input_MCMIHOOI <- args[4]
 # # input merged_distance
 # args_input_MCMIHOOI <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/MCMIHOOI/Merged_data/k_Number_3.RData")
 
+# input sample_cls
+args_input_cls <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/DimReduc_MCMI/k_Number_5/sample_cls.RData")
+# output ggplot
+args_output <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/DimReduc_MCMI/k_Number_5/Eval_sample.png")
+# params merged_cls
+args_input_merged_cls <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/MCMIHOOI/Merged_cls/k_Number_5.RData")
+# input merged_distance
+args_input_MCMIHOOI <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/MCMIHOOI/Merged_data/k_Number_5.RData")
+
 ##### load sample_cls list####
 load(args_input_cls)
 lapply(sample_cls, function(x) {
@@ -44,8 +53,9 @@ lapply(df_cls_list, function(x) {
 		  df_merged_cls, 
 		  by.x = "CellType", 
 		  by.y = "CellType", 
-		  all.x = TRUE
-	)
+		  all.y = TRUE
+	) -> df_cls_label_NA
+    na.omit(df_cls_label_NA)
 	}
 ) -> df_cls_label
 
@@ -92,7 +102,13 @@ df_eval <- data.frame(ARI = ARI_value,
                       )
 df_eval %>% 
     rownames_to_column("SampleNumber") -> df_eval
-# transform long format
+#### add annotated count####
+#数字を除く
+annotated_count <- unlist(lapply(df_cls_label, function(x){nrow(na.omit(x))}))
+df_eval$annotated_count <- annotated_count
+
+df_eval_wide <- df_eval
+#### transform long format####
 df_eval %>% 
     pivot_longer(col= -SampleNumber, 
                  names_to = "Eval", 
@@ -108,53 +124,88 @@ data.frame(weight = merged_data$W,
             dplyr::arrange(desc(weight_abs)) -> df_weight
 
 #### ggplot ARI####
-df_eval_long %>% 
-    dplyr::filter(., Eval=="ARI") %>%
-        ggplot(., 
-               aes(x = SampleNumber, 
-                   y = Eval_Value, 
-                   colour = Eval,
-                   group = 1)
-        ) +
-        geom_line(size = 3) +
-        theme(text = element_text(size = 30)) +
-        scale_x_discrete(limits=df_weight$SampleNumber) -> gg_label_ARI
+g1 <- ggplot(df_eval_wide, aes(x = SampleNumber, y= ARI , group=1))
+g1 <- g1 + geom_line(color = "red", size= 2)
+g1 <- g1 + scale_x_discrete(limits=df_weight$SampleNumber)
+g1 <- g1 + theme_half_open()
+g1 <- g1 + theme(text = element_text(size = 24))
+g1 <- g1 + theme(legend.position = 'none')
+
+g2 <- ggplot(df_eval_wide, aes(x = SampleNumber, y= annotated_count, group=1))
+g2 <- g2 + geom_bar(stat="identity", alpha = 0.5)
+g2 <- g2 + scale_x_discrete(limits=df_weight$SampleNumber)
+g2 <- g2 + scale_y_continuous(position = "right")
+g2 <- g2 + theme(text = element_text(size = 24))
+g2 <- g2 + theme_half_open()
+g2 <- g2 + theme(axis.title.x=element_blank(),
+                 axis.text.x=element_blank(),
+                 axis.ticks.x=element_blank())
+
+aligned_plots_result <- cowplot::align_plots(g1, g2, align="hv", axis="tblr")
+gg_label_ARI <- cowplot::ggdraw(aligned_plots_result[[1]]) + cowplot::draw_plot(aligned_plots_result[[2]])
+
 #### ggplot purity####
-df_eval_long %>% 
-    dplyr::filter(., Eval=="purity") %>%
-        ggplot(., 
-               aes(x = SampleNumber, 
-                   y = Eval_Value, 
-                   colour = Eval,
-                   group = 1)
-        ) +
-        geom_line(size = 3) +
-        theme(text = element_text(size = 30)) +
-        scale_x_discrete(limits=df_weight$SampleNumber) -> gg_label_purity
+g1 <- ggplot(df_eval_wide, aes(x = SampleNumber, y= purity , group=1))
+g1 <- g1 + geom_line(color = "red", size= 2)
+g1 <- g1 + scale_x_discrete(limits=df_weight$SampleNumber)
+g1 <- g1 + theme_half_open()
+g1 <- g1 + theme(text = element_text(size = 24))
+g1 <- g1 + theme(legend.position = 'none')
+
+g2 <- ggplot(df_eval_wide, aes(x = SampleNumber, y= annotated_count, group=1))
+g2 <- g2 + geom_bar(stat="identity", alpha = 0.5)
+g2 <- g2 + scale_x_discrete(limits=df_weight$SampleNumber)
+g2 <- g2 + scale_y_continuous(position = "right")
+g2 <- g2 + theme(text = element_text(size = 24))
+g2 <- g2 + theme_half_open()
+g2 <- g2 + theme(axis.title.x=element_blank(),
+                 axis.text.x=element_blank(),
+                 axis.ticks.x=element_blank())
+
+aligned_plots_result <- cowplot::align_plots(g1, g2, align="hv", axis="tblr")
+gg_label_purity <- cowplot::ggdraw(aligned_plots_result[[1]]) + cowplot::draw_plot(aligned_plots_result[[2]])
+
 #### ggplot Fmeasure####
-df_eval_long %>% 
-    dplyr::filter(., Eval=="Fmeasure") %>%
-        ggplot(., 
-               aes(x = SampleNumber, 
-                   y = Eval_Value, 
-                   colour = Eval,
-                   group = 1)
-        ) +
-        geom_line(size = 3) +
-        theme(text = element_text(size = 30)) +
-        scale_x_discrete(limits=df_weight$SampleNumber) -> gg_label_Fmeasure
+g1 <- ggplot(df_eval_wide, aes(x = SampleNumber, y= Fmeasure , group=1))
+g1 <- g1 + geom_line(color = "red", size= 2)
+g1 <- g1 + scale_x_discrete(limits=df_weight$SampleNumber)
+g1 <- g1 + theme_half_open()
+g1 <- g1 + theme(text = element_text(size = 24))
+g1 <- g1 + theme(legend.position = 'none')
+
+g2 <- ggplot(df_eval_wide, aes(x = SampleNumber, y= annotated_count, group=1))
+g2 <- g2 + geom_bar(stat="identity", alpha = 0.5)
+g2 <- g2 + scale_x_discrete(limits=df_weight$SampleNumber)
+g2 <- g2 + scale_y_continuous(position = "right")
+g2 <- g2 + theme(text = element_text(size = 24))
+g2 <- g2 + theme_half_open()
+g2 <- g2 + theme(axis.title.x=element_blank(),
+                 axis.text.x=element_blank(),
+                 axis.ticks.x=element_blank())
+
+aligned_plots_result <- cowplot::align_plots(g1, g2, align="hv", axis="tblr")
+gg_label_Fmeasure <- cowplot::ggdraw(aligned_plots_result[[1]]) + cowplot::draw_plot(aligned_plots_result[[2]])
+
 #### ggplot Entropy####
-df_eval_long %>% 
-    dplyr::filter(., Eval=="Entropy") %>%
-        ggplot(., 
-               aes(x = SampleNumber, 
-                   y = Eval_Value, 
-                   colour = Eval,
-                   group = 1)
-        ) +
-        geom_line(size = 3) +
-        theme(text = element_text(size = 30)) +
-        scale_x_discrete(limits=df_weight$SampleNumber) -> gg_label_Entropy
+g1 <- ggplot(df_eval_wide, aes(x = SampleNumber, y= Entropy , group=1))
+g1 <- g1 + geom_line(color = "red", size= 2)
+g1 <- g1 + scale_x_discrete(limits=df_weight$SampleNumber)
+g1 <- g1 + theme_half_open()
+g1 <- g1 + theme(text = element_text(size = 24))
+g1 <- g1 + theme(legend.position = 'none')
+
+g2 <- ggplot(df_eval_wide, aes(x = SampleNumber, y= annotated_count, group=1))
+g2 <- g2 + geom_bar(stat="identity", alpha = 0.5)
+g2 <- g2 + scale_x_discrete(limits=df_weight$SampleNumber)
+g2 <- g2 + scale_y_continuous(position = "right")
+g2 <- g2 + theme(text = element_text(size = 24))
+g2 <- g2 + theme_half_open()
+g2 <- g2 + theme(axis.title.x=element_blank(),
+                 axis.text.x=element_blank(),
+                 axis.ticks.x=element_blank())
+
+aligned_plots_result <- cowplot::align_plots(g1, g2, align="hv", axis="tblr")
+gg_label_Entropy <- cowplot::ggdraw(aligned_plots_result[[1]]) + cowplot::draw_plot(aligned_plots_result[[2]])
 
 #### ggtexttable####
 # 各Evalのmaxかminの行番号

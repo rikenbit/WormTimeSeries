@@ -9,11 +9,12 @@ logs/*
 .git/*
 *.sh.*
 *tiff*.log
-.Rproj.user
-.RData
-.Rhistory
+*.Rproj.user
+*.RData
+*.Rhistory
 *.Rproj
 slurm-*.out
 slurm*
 .config/*
 .local/*
+.Rproj.user
