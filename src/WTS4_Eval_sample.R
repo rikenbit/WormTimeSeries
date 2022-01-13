@@ -13,22 +13,13 @@ args_input_MCMIHOOI <- args[4]
 
 # #### test args####
 # # input sample_cls
-# args_input_cls <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/DimReduc_MCMI/k_Number_3/sample_cls.RData")
+# args_input_cls <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/DimReduc_MCMI/k_Number_5/sample_cls.RData")
 # # output ggplot
-# args_output <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/DimReduc_MCMI/k_Number_3/Eval_sample.png")
+# args_output <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/DimReduc_MCMI/k_Number_5/Eval_sample.png")
 # # params merged_cls
-# args_input_merged_cls <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/MCMIHOOI/Merged_cls/k_Number_3.RData")
+# args_input_merged_cls <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/MCMIHOOI/Merged_cls/k_Number_5.RData")
 # # input merged_distance
-# args_input_MCMIHOOI <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/MCMIHOOI/Merged_data/k_Number_3.RData")
-
-# input sample_cls
-args_input_cls <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/DimReduc_MCMI/k_Number_5/sample_cls.RData")
-# output ggplot
-args_output <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/DimReduc_MCMI/k_Number_5/Eval_sample.png")
-# params merged_cls
-args_input_merged_cls <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/MCMIHOOI/Merged_cls/k_Number_5.RData")
-# input merged_distance
-args_input_MCMIHOOI <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/MCMIHOOI/Merged_data/k_Number_5.RData")
+# args_input_MCMIHOOI <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/MCMIHOOI/Merged_data/k_Number_5.RData")
 
 ##### load sample_cls list####
 load(args_input_cls)
@@ -129,14 +120,19 @@ g1 <- g1 + geom_line(color = "red", size= 2)
 g1 <- g1 + scale_x_discrete(limits=df_weight$SampleNumber)
 g1 <- g1 + theme_half_open()
 g1 <- g1 + theme(text = element_text(size = 24))
+g1 <- g1 + theme(axis.title.y=element_text(colour = "red",size = 24))
+g1 <- g1 + geom_smooth(method="lm", size =0.5, se = TRUE, alpha = 0.4, color = "red")
 g1 <- g1 + theme(legend.position = 'none')
 
+
 g2 <- ggplot(df_eval_wide, aes(x = SampleNumber, y= annotated_count, group=1))
-g2 <- g2 + geom_bar(stat="identity", alpha = 0.5)
+g2 <- g2 + geom_line(color = "black", size= 2)
 g2 <- g2 + scale_x_discrete(limits=df_weight$SampleNumber)
 g2 <- g2 + scale_y_continuous(position = "right")
-g2 <- g2 + theme(text = element_text(size = 24))
+g2 <- g2 + geom_smooth(method="lm", size =0.5, se = TRUE, alpha = 0.4, color = "black")
 g2 <- g2 + theme_half_open()
+# theme_half_openで軸の書式(色・文字サイズ)がリセットされる
+g2 <- g2 + theme(text = element_text(size = 24))
 g2 <- g2 + theme(axis.title.x=element_blank(),
                  axis.text.x=element_blank(),
                  axis.ticks.x=element_blank())
@@ -150,14 +146,19 @@ g1 <- g1 + geom_line(color = "red", size= 2)
 g1 <- g1 + scale_x_discrete(limits=df_weight$SampleNumber)
 g1 <- g1 + theme_half_open()
 g1 <- g1 + theme(text = element_text(size = 24))
+g1 <- g1 + theme(axis.title.y=element_text(colour = "red",size = 24))
+g1 <- g1 + geom_smooth(method="lm", size =0.5, se = TRUE, alpha = 0.4, color = "red")
 g1 <- g1 + theme(legend.position = 'none')
 
+
 g2 <- ggplot(df_eval_wide, aes(x = SampleNumber, y= annotated_count, group=1))
-g2 <- g2 + geom_bar(stat="identity", alpha = 0.5)
+g2 <- g2 + geom_line(color = "black", size= 2)
 g2 <- g2 + scale_x_discrete(limits=df_weight$SampleNumber)
 g2 <- g2 + scale_y_continuous(position = "right")
-g2 <- g2 + theme(text = element_text(size = 24))
+g2 <- g2 + geom_smooth(method="lm", size =0.5, se = TRUE, alpha = 0.4, color = "black")
 g2 <- g2 + theme_half_open()
+# theme_half_openで軸の書式(色・文字サイズ)がリセットされる
+g2 <- g2 + theme(text = element_text(size = 24))
 g2 <- g2 + theme(axis.title.x=element_blank(),
                  axis.text.x=element_blank(),
                  axis.ticks.x=element_blank())
@@ -171,14 +172,19 @@ g1 <- g1 + geom_line(color = "red", size= 2)
 g1 <- g1 + scale_x_discrete(limits=df_weight$SampleNumber)
 g1 <- g1 + theme_half_open()
 g1 <- g1 + theme(text = element_text(size = 24))
+g1 <- g1 + theme(axis.title.y=element_text(colour = "red",size = 24))
+g1 <- g1 + geom_smooth(method="lm", size =0.5, se = TRUE, alpha = 0.4, color = "red")
 g1 <- g1 + theme(legend.position = 'none')
 
+
 g2 <- ggplot(df_eval_wide, aes(x = SampleNumber, y= annotated_count, group=1))
-g2 <- g2 + geom_bar(stat="identity", alpha = 0.5)
+g2 <- g2 + geom_line(color = "black", size= 2)
 g2 <- g2 + scale_x_discrete(limits=df_weight$SampleNumber)
 g2 <- g2 + scale_y_continuous(position = "right")
-g2 <- g2 + theme(text = element_text(size = 24))
+g2 <- g2 + geom_smooth(method="lm", size =0.5, se = TRUE, alpha = 0.4, color = "black")
 g2 <- g2 + theme_half_open()
+# theme_half_openで軸の書式(色・文字サイズ)がリセットされる
+g2 <- g2 + theme(text = element_text(size = 24))
 g2 <- g2 + theme(axis.title.x=element_blank(),
                  axis.text.x=element_blank(),
                  axis.ticks.x=element_blank())
@@ -192,14 +198,19 @@ g1 <- g1 + geom_line(color = "red", size= 2)
 g1 <- g1 + scale_x_discrete(limits=df_weight$SampleNumber)
 g1 <- g1 + theme_half_open()
 g1 <- g1 + theme(text = element_text(size = 24))
+g1 <- g1 + theme(axis.title.y=element_text(colour = "red",size = 24))
+g1 <- g1 + geom_smooth(method="lm", size =0.5, se = TRUE, alpha = 0.4, color = "red")
 g1 <- g1 + theme(legend.position = 'none')
 
+
 g2 <- ggplot(df_eval_wide, aes(x = SampleNumber, y= annotated_count, group=1))
-g2 <- g2 + geom_bar(stat="identity", alpha = 0.5)
+g2 <- g2 + geom_line(color = "black", size= 2)
 g2 <- g2 + scale_x_discrete(limits=df_weight$SampleNumber)
 g2 <- g2 + scale_y_continuous(position = "right")
-g2 <- g2 + theme(text = element_text(size = 24))
+g2 <- g2 + geom_smooth(method="lm", size =0.5, se = TRUE, alpha = 0.4, color = "black")
 g2 <- g2 + theme_half_open()
+# theme_half_openで軸の書式(色・文字サイズ)がリセットされる
+g2 <- g2 + theme(text = element_text(size = 24))
 g2 <- g2 + theme(axis.title.x=element_blank(),
                  axis.text.x=element_blank(),
                  axis.ticks.x=element_blank())

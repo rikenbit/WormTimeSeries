@@ -18,3 +18,4 @@ slurm*
 .config/*
 .local/*
 .Rproj.user
+*.fuse*
