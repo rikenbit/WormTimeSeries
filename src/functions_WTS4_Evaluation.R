@@ -4,6 +4,7 @@ library(tidyverse)
 library(clValid) # connectivityの計算
 options(rgl.useNULL=TRUE) #https://scrapbox.io/Open-BioInfo-yamaken/TSclust（R）のインストールエラー
 library(clusterSim) # Pseudo-Fの計算
+library(FastKNN) # kNNの計算
 ##################################################
 
 ####################################################################
@@ -22,4 +23,25 @@ library(clusterSim) # Pseudo-Fの計算
     Dist <- dist(data, method="euclidean")
     # 結合度
     connectivity(Dist, cluster)
+}
+
+# kNN（0〜1の値、大きいほどクラスタリングがうまくいっている）
+# https://datachemeng.com/post-4657/
+.kNN <- function(data, cluster, k=1){
+  stopifnot(k <= nrow(data)-1)
+  # kNNによる隣接行列
+  dist_mat <- as.matrix(dist(data, method = "euclidean",
+                             upper = TRUE, diag=TRUE))
+  nrst <- lapply(1:nrow(dist_mat), function(i)
+    k.nearest.neighbors(i, dist_mat, k = k))
+  A <- matrix(0, nrow=nrow(data), ncol=nrow(data))
+  for(i in seq_len(nrow(data))){
+    A[i, nrst[[i]]] <- 1
+  }
+  # Cluster Label → Indicator Matrix
+  H <- matrix(0, nrow=nrow(data), ncol=length(unique(cluster)))
+  for(i in seq_len(nrow(data))){
+    H[i, cluster[i]] <- 1
+  }
+  sum(H %*% t(H) * A) / (nrow(data) * k)
 }
