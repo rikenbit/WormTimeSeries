@@ -11,6 +11,8 @@
 #SBATCH -p node03-06
 SLURM_RESTART_COUNT=2
 
+# echo $@
+# echo $CONDA_PREFIX
+# $CONDA_PREFIX/bin/Rscript src/WTS4_Evaluation.R $@
 echo $@
-echo $CONDA_PREFIX
-$CONDA_PREFIX/bin/Rscript src/WTS4_Evaluation.R $@
+Rscript src/WTS4_Evaluation.R $@

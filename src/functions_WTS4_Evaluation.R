@@ -27,7 +27,8 @@ library(FastKNN) # kNNの計算
 
 # kNN（0〜1の値、大きいほどクラスタリングがうまくいっている）
 # https://datachemeng.com/post-4657/
-.kNN <- function(data, cluster, k=1){
+# .kNN <- function(data, cluster, k=1){
+.kNN <- function(data, cluster, k){
   stopifnot(k <= nrow(data)-1)
   # kNNによる隣接行列
   dist_mat <- as.matrix(dist(data, method = "euclidean",

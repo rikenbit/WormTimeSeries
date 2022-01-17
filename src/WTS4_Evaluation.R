@@ -22,27 +22,13 @@ args_k <- args[6]
 # # input merged_cls
 # args_input_cls <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/MCMIHOOI/Merged_cls/k_Number_3.RData")
 # # output merged_data 
-# args_output_data <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/MCMIHOOI/Eval/PseudoF/k_Number_3.RData")
+# args_output_data <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/MCMIHOOI/Eval/kNN/k_Number_3.RData")
 # # ReClustering Method
 # args_method <- c("MCMIHOOI")
 # # Evaluation Method
-# args_eval_method <- c("PseudoF")
+# args_eval_method <- c("kNN")
 # # Cluster
 # args_k <- c("3")
-
-#### test args####
-# input merged_data 
-args_input_data <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/MCMIHOOI/Merged_data/k_Number_3.RData")
-# input merged_cls
-args_input_cls <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/MCMIHOOI/Merged_cls/k_Number_3.RData")
-# output merged_data 
-args_output_data <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/MCMIHOOI/Eval/kNN/k_Number_3.RData")
-# ReClustering Method
-args_method <- c("MCMIHOOI")
-# Evaluation Method
-args_eval_method <- c("kNN")
-# Cluster
-args_k <- c("3")
 
 #### No. of Clusters####
 k <- as.numeric(args_k)

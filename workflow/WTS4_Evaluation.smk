@@ -2,16 +2,22 @@
 ###################################################
 # data time range
 time_range = ["stimAfter"]
+
 # Distance Data
 dist_data = ["EUCL","SBD_abs"]
+# dist_data = ["SBD_abs"]
+
 # No. of Clusters
 N_CLUSTERS = list(map(str, range(2, 21)))
 # N_CLUSTERS = ["3"]
 
 # ReClustering Method
 ReClustering_method = ["CSPA","OINDSCAL","MCMIHOOI"]
+# ReClustering_method = ["CSPA"]
+
 # Evaluation Method
-Evaluation_method = ["PseudoF","Connectivity"]
+Evaluation_method = ["PseudoF","Connectivity","kNN"]
+# Evaluation_method = ["KNN"]
 
 rule all:
     input:
@@ -31,11 +37,13 @@ rule Evaluation:
         eval_result = 'output/WTS4/normalize_1/{range}/{dist}/{Re_cls}/Eval/{Eval}/k_Number_{N_cls}.RData'
     benchmark:
         'benchmarks/WTS4/normalize_1/{range}/{dist}/{Re_cls}/Eval/{Eval}/k_Number_{N_cls}.txt'
-    conda:
-        '../envs/myenv_WTS4_Evaluation.yaml'
+    # conda:
+    #     '../envs/myenv_WTS4_Evaluation.yaml'
+    container:
+        "docker://yamaken37/evaluation:20220117"
     resources:
         mem_gb=200
     log:
         'logs/WTS4/normalize_1/{range}/{dist}/{Re_cls}/Eval/{Eval}/k_Number_{N_cls}.log'
     shell:
-        'src/WTS4_Evaluation.sh {input.m_data} {input.m_cls} {output.eval_result} {wildcards.Re_cls} {wildcards.Eval} >& {log}'
+        'src/WTS4_Evaluation.sh {input.m_data} {input.m_cls} {output.eval_result} {wildcards.Re_cls} {wildcards.Eval} {wildcards.N_cls} >& {log}'
