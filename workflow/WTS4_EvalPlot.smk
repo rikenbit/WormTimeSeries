@@ -14,6 +14,7 @@ ReClustering_method = ["CSPA","OINDSCAL","MCMIHOOI"]
 # label
 label = ["LR","behavior"]
 # label = ["LR"]
+
 rule all:
     input:
         expand('output/WTS4/normalize_1/{range}/{dist}/{Re_cls}/EvalPlot_{lab}.png',

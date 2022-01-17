@@ -27,6 +27,15 @@ list.files(args_input_path,
 grep(args_label, list_eval_data) %>% 
     list_eval_data[.] -> list_cls_method
 
+#### load  value kNN####
+grep("kNN", list_eval_data) %>% 
+    list_eval_data[.] -> input_path_kNN
+kNN_value <- numeric()
+for(i in 1:length(input_path_kNN)){
+    load(input_path_kNN[i])
+    kNN_value <- c(kNN_value, eval_result)
+}
+
 #### load  value PseudoF####
 grep("PseudoF", list_eval_data) %>% 
     list_eval_data[.] -> input_path_PseudoF
@@ -84,7 +93,8 @@ for(i in 1:length(input_path_Entropy)){
 }
 
 #### create dataframe####
-df_eval <- data.frame(PseudoF = PseudoF_value,
+df_eval <- data.frame(kNN = kNN_value,
+                      PseudoF = PseudoF_value,
                       Connectivity = Connectivity_value,
                       ARI = ARI_value,
                       purity = purity_value,
@@ -108,6 +118,18 @@ str_remove(args_output,
     str_remove(., 
                ".png") -> plot_title
 # 参考 https://stats.biopapyrus.jp/r/ggplot/geom_bar.html
+
+#### ggplot PseudoF Connectivity####
+df_eval_long %>% 
+    dplyr::filter(., Eval=="kNN") %>%
+        ggplot(., 
+               aes(x = Cluster, 
+                   y = Eval_Value, 
+                   colour = Eval)
+        ) +
+        geom_line(size = 3) +
+        theme(text = element_text(size = 30)) +
+        scale_x_continuous(breaks=seq(2,20,1)) -> gg_kNN
 
 #### ggplot PseudoF Connectivity####
 df_eval_long %>% 
@@ -175,11 +197,11 @@ df_eval_long %>%
     mutate(num = row_number()) -> df_eval_long_ID
 c("Connectivity","Entropy") %>% 
     purrr::map_int(., eval_min) -> eval_id_min
-c("PseudoF","ARI","purity","Fmeasure") %>% 
+c("kNN","PseudoF","ARI","purity","Fmeasure") %>% 
     purrr::map_int(., eval_max) -> eval_id_max
 sort(c(eval_id_min, eval_id_max)) %>% 
     sort() -> eval_id
-eval_arrange <- c("Connectivity", "PseudoF", "ARI", "purity", "Fmeasure", "Entropy")
+eval_arrange <- c("kNN", "Connectivity", "PseudoF", "ARI", "purity", "Fmeasure", "Entropy")
 df_eval_long_ID[eval_id,] %>% 
     dplyr::select(Eval,Cluster,Eval_Value) %>%
         mutate(Eval = factor(Eval, levels = eval_arrange)) %>% 
@@ -189,8 +211,8 @@ df_eval_long_ID[eval_id,] %>%
                         ggtexttable(rows = NULL, theme = ttheme(base_size = 60)) -> gg_eval_table
 
 #### patchwork####
-gg <- gg_no_label +
-    # gg_label +
+gg <- gg_kNN +
+    gg_no_label +
     gg_label_ARI +
     gg_label_purity +
     gg_label_Fmeasure +
@@ -208,6 +230,6 @@ ggsave(filename = args_output,
        dpi = 100, 
        width = 30.0, 
        # height = 30.0,
-       height = 60.0,
+       height = 70.0,
        limitsize = FALSE
        )
