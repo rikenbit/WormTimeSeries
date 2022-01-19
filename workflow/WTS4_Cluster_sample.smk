@@ -33,14 +33,16 @@ rule WTS4_Cluster_sample:
             range=time_range,
             N=N_SAMPLES
             )
-    params:
-        dist_matrix_path = 'output/WTS4/normalize_1/{range}/{dist}/Distance'
     output:
         'output/WTS4/normalize_1/{range}/{dist}/Cluster_sample/k_Number_{N_cls}/sample_cls.RData'
+    params:
+        dist_matrix_path = 'output/WTS4/normalize_1/{range}/{dist}/Distance'
     benchmark:
         'benchmarks/WTS4/normalize_1/{range}/{dist}/Cluster_sample/k_Number_{N_cls}/sample_cls.txt'
     container:
-        "docker:docker_images"
+        "docker://yamaken37/cluster_sample:20220119"
+        # "docker://yamaken37/eval_behavior:20211209"
+        # tidyverseが入っているコンテナとして選んだ
     resources:
         mem_gb=200
     log:

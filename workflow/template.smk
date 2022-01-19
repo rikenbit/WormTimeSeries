@@ -32,7 +32,7 @@ rule template:
     benchmark:
         'benchmarks/WTS4/normalize_1/{range}/{dist}/{Re_cls}/Merged_data/k_Number_{N_cls}.txt'
     container:
-        "docker:docker_images"
+        "docker://docker_images"
     resources:
         mem_gb=200
     log:
