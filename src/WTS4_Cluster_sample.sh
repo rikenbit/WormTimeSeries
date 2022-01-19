@@ -14,8 +14,8 @@ SLURM_RESTART_COUNT=2
 # conda
 # echo $@
 # echo $CONDA_PREFIX
-# $CONDA_PREFIX/bin/Rscript src/temp_r_name.R $@
+# $CONDA_PREFIX/bin/Rscript src/WTS4_Cluster_sample.R $@
 
 # docker
 echo $@
-Rscript src/temp_r_name.R $@
+Rscript src/WTS4_Cluster_sample.R $@

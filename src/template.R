@@ -1,4 +1,4 @@
-source("src/template_functions.R")
+source("src/functions_template.R")
 
 #### args setting####
 #### test args####
