@@ -7,7 +7,7 @@ N_SAMPLES.remove('8')
 N_SAMPLES.remove('20')
 N_SAMPLES.remove('25')
 
-# No. of Clusters とりあえずk=3？
+# No. of Clusters
 N_CLUSTERS = list(map(str, range(2, 21)))
 
 # Distance Data
@@ -36,8 +36,11 @@ rule Membership:
         dist_matrix_path = 'output/WTS4/normalize_1/{range}/{dist}/Distance'
     benchmark:
         'benchmarks/WTS4/normalize_1/{range}/{dist}/Membership/k_Number_{N_cls}.txt'
-    conda:
-        '../envs/myenv_WTS4_Membership.yaml'
+    # conda:
+    #     '../envs/myenv_WTS4_Membership.yaml'
+    container:
+        "docker://yamaken37/cluster_sample:20220119"
+        # tidyverseが入っているコンテナ
     resources:
         mem_gb=200
     log:
