@@ -21,13 +21,13 @@ args_output_cls <- args[6]
 # # Method of ReClustering
 # args_method <- c("MCMIHOOI")
 # # input
-# args_input_membership <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/3_Clusters/Membership.RData")
+# args_input_membership <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Membership/k_Number_3.RData")
 # # output merged_data
-# args_output_data <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/3_Clusters/MCMIHOOI/merged_data.RData")
+# args_output_data <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/MCMIHOOI/Merged_data/k_Number_3.RData")
 # # output merged_distance
-# args_output_distance <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/3_Clusters/MCMIHOOI/merged_distance.RData")
+# args_output_distance <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/MCMIHOOI/Merged_distance/k_Number_3.RData'")
 # # output merged_cls
-# args_output_cls <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/3_Clusters/MCMIHOOI/merged_cls.RData")
+# args_output_cls <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/MCMIHOOI/Merged_cls/k_Number_3.RData'")
 
 
 #### No. of Clusters####
@@ -45,13 +45,6 @@ A <- array(0, dim=c(nrow(S[[1]]), ncol(S[[1]]), length(S)))
 for(i in seq_len(dim(A)[3])){
     A[,,i] <- S[[i]]
 }
-
-#MC-MI-HOOI
-# if(args_method == "MCMIHOOI") {
-#     library("rTensor")
-#     install.packages("data/einsum_0.1.0.tar", repos = NULL, type = "source")
-#     library("einsum")
-# }
 
 # merged_data 
 merged_data <- switch(args_method,
