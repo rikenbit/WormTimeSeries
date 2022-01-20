@@ -10,22 +10,26 @@ args_output <- args[2]
 args_input_merged_cls <- args[3]
 # input merged_distance
 args_input_MCMIHOOI <- args[4]
+# params dist path
+args_input_path<- args[5]
 
 # #### test args####
 # # input sample_cls
-# args_input_cls <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/DimReduc_MCMI/k_Number_5/sample_cls.RData")
+# args_input_cls <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Cluster_sample/k_Number_5/sample_cls.RData")
 # # output ggplot
-# args_output <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/DimReduc_MCMI/k_Number_5/Eval_sample.png")
+# args_output <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/DimReduc_sample/k_Number_5/Eval_sample.png")
 # # params merged_cls
 # args_input_merged_cls <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/MCMIHOOI/Merged_cls/k_Number_5.RData")
 # # input merged_distance
 # args_input_MCMIHOOI <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/MCMIHOOI/Merged_data/k_Number_5.RData")
+# # params dist path
+# args_input_path<- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Distance")
 
 ##### load sample_cls list####
 load(args_input_cls)
-lapply(sample_cls, function(x) {
-    data.frame(CellType = x$cell_type,
-               Clusters = x$Cluster,
+lapply(C, function(x) {
+    data.frame(CellType = attr(x, "names"),
+               Clusters = as.numeric(x),
                stringsAsFactors = FALSE,
                row.names = NULL
     )
@@ -83,22 +87,35 @@ unlist(lapply(df_cls_label, function(x) {
     )
 ) -> Entropy_value
 
+
+#### fix sample number sort####
+input_path_list <- list.files(args_input_path, pattern="SampleNumber_", full.names=TRUE)
+input_path_list %>% 
+    str_remove(., args_input_path) %>% 
+    str_remove(., "/SampleNumber_") %>% 
+    str_remove(., ".RData") %>% 
+    as.numeric() %>% 
+    sort() -> sample_sort_num
+########
+
 #### create dataframe####
-df_eval <- data.frame(ARI = ARI_value,
+df_eval <- data.frame(SampleNumber = sample_sort_num,
+                      ARI = ARI_value,
                       purity = purity_value,
                       Fmeasure = Fmeasure_value,
                       Entropy = Entropy_value,
                       # Entropyは小さいほど、良い。他の評価は値が高いほどお良い。
                       stringsAsFactors = FALSE
                       )
-df_eval %>% 
-    rownames_to_column("SampleNumber") -> df_eval
+
 #### add annotated count####
 #数字を除く
 annotated_count <- unlist(lapply(df_cls_label, function(x){nrow(na.omit(x))}))
 df_eval$annotated_count <- annotated_count
 
 df_eval_wide <- df_eval
+df_eval_wide$SampleNumber <- as.character(df_eval_wide$SampleNumber)
+
 #### transform long format####
 df_eval %>% 
     pivot_longer(col= -SampleNumber, 
@@ -108,9 +125,10 @@ df_eval %>%
 #### MCMI weight table####
 # merged_data
 load(args_input_MCMIHOOI)
-data.frame(weight = merged_data$W,
+data.frame(SampleNumber = as.character(sample_sort_num),
+           weight = merged_data$W,
            stringsAsFactors = FALSE) %>% 
-    rownames_to_column("SampleNumber") %>%
+    # rownames_to_column("SampleNumber") %>%
         mutate(weight_abs =abs(weight)) %>% 
             dplyr::arrange(desc(weight_abs)) -> df_weight
 
@@ -226,16 +244,13 @@ c("Entropy") %>%
     purrr::map_int(., eval_min) -> eval_id_min
 c("ARI","purity","Fmeasure") %>% 
     purrr::map_int(., eval_max) -> eval_id_max
-sort(c(eval_id_min, eval_id_max)) %>% 
-    sort() -> eval_id
-eval_arrange <- c("ARI", "purity", "Fmeasure", "Entropy")
+c(eval_id_max, eval_id_min) -> eval_id
+
 df_eval_long_ID[eval_id,] %>% 
     dplyr::select(Eval,SampleNumber,Eval_Value) %>%
-        mutate(Eval = factor(Eval, levels = eval_arrange)) %>% 
-            arrange(Eval) %>% 
-                mutate(Eval = as.character(Eval)) %>% 
-                    mutate_if(is.numeric, round, digits = 3) %>% 
-                        ggtexttable(rows = NULL, theme = ttheme(base_size = 60)) -> gg_eval_table
+        mutate_if(is.numeric, round, digits = 3) %>% 
+            ggtexttable(rows = NULL, theme = ttheme(base_size = 60)) -> gg_eval_table
+
 #### graph title####
 str_remove(args_output, 
            "output/WTS4/normalize_1/stimAfter/") %>% 
