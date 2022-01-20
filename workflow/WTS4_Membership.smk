@@ -23,7 +23,7 @@ rule all:
             N_cls=N_CLUSTERS
             )
         
-rule Membership:
+rule WTS4_Membership:
     input:
         expand('output/WTS4/normalize_1/{range}/{dist}/Distance/SampleNumber_{N}.RData',
             dist=dist_data,
