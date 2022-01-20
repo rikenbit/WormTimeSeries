@@ -1,4 +1,4 @@
-source("src/functions_WTS4_DimReduc_MCMI.R")
+source("src/functions_WTS4_DimReduc_sample.R")
 
 #### args setting####
 args <- commandArgs(trailingOnly = T)
@@ -14,41 +14,47 @@ args_k <- args[5]
 args_NL <- args[6]
 args_eval_label <- args[7]
 
+args_input_cls  <- args[8]
 
 # #### test args####
 # # input merged_distance
 # args_input_MCMIHOOI <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/MCMIHOOI/Merged_data/k_Number_5.RData")
-# 
 # # DimReduc
-# args_output <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/DimReduc_MCMI/k_Number_5/tsne/table.png")
+# args_output <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/DimReduc_sample/k_Number_5/tsne/table.png")
 # args_input_path <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Distance")
 # args_DimReduc <- c("tsne")
-# 
-# # No. of Clusters
 # args_k <- c("5")
-# 
 # # add anotation data
 # args_NL <- c("data/igraph/Fig1_HNS.RData")
 # args_eval_label <- c("data/WTS4_Eval_behavior_fix.xlsx")
 
+# args_input_cls <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Cluster_sample/k_Number_5/sample_cls.RData")
 
 #### No. of Clusters####
 k <- as.numeric(args_k)
 
-### MCMI weight table####
-# merged_data
-load(args_input_MCMIHOOI)
-data.frame(weight = merged_data$W,
-           stringsAsFactors = FALSE) %>% 
-    rownames_to_column("SampleNumber") %>%
-        mutate(weight_abs =abs(weight)) %>% 
-            dplyr::arrange(desc(weight_abs)) -> df_weight
-
 #### load dist data####
-# 空の行列を格納するファイルを作成
-D <- list()
 # inputファイル名のリスト
 input_path_list <- list.files(args_input_path, pattern="SampleNumber_", full.names=TRUE)
+
+#### fix sample number sort####
+input_path_list %>% 
+    str_remove(., args_input_path) %>% 
+    str_remove(., "/SampleNumber_") %>% 
+    str_remove(., ".RData") %>% 
+    as.numeric() %>% 
+    sort() -> sample_sort_num
+input_path <- c()
+for(i in sample_sort_num){
+    eval(parse(text=paste0("path <- c('",args_input_path,"/SampleNumber_",i,".RData')")))
+    input_path <- c(input_path, path)
+}
+
+input_path_list <- input_path 
+########
+
+# 空の行列を格納するファイルを作成
+D <- list()
 # ファイルを読み込んで，リストに加える．各リストのattr(*, "Labels")に細胞型名が残っている
 for(i in 1:length(input_path_list)){
     load(input_path_list[i])
@@ -56,32 +62,16 @@ for(i in 1:length(input_path_list)){
 }
 
 #### Clustering against each distance matrix####
-C <- lapply(D, function(d, k) {
-    cutree(hclust(d, method="ward.D2"), k)
-    }, k=k)
-
-#### Filter dist matrix####
-# # purrr
-# seq(1:length(D)) %>%
-#     purrr::map(., .dist_f) -> D_f
-D -> D_f
+load(args_input_cls)
 
 #### Dimensionality Reduction####
-# purrr
-seq(1:length(D_f)) %>%
+seq(1:length(D)) %>%
     purrr::map(., .df_cords) -> DF_cord
 
 #### merge cord and cls####
-# purrr
 seq(1:length(DF_cord)) %>%
     purrr::map(., .df_cord_cls) -> DF_cord_cls
-# save sample_cls
-sample_cls <- lapply(DF_cord_cls, function(x){dplyr::select(x, cell_type, Cluster)})
-args_output %>% 
-    str_remove(., "/table.png") %>% 
-        str_remove(., args_DimReduc) -> args_output_sample_cls
-eval(parse(text=paste0("args_output_sample_cls <- c('",args_output_sample_cls,"sample_cls.RData')")))
-save(sample_cls, file=args_output_sample_cls)
+
 #### merge igraph NeuronType####
 load(args_NL)
 # node information convert dataframe
@@ -111,20 +101,31 @@ read.xlsx(args_eval_label,
 seq(1:length(DF_cord_cls_nl)) %>%
     purrr::map(., .df_cord_cls_nl_be) -> DF_cord_cls_nl_be
 
+### MCMI weight table####
+# merged_data
+load(args_input_MCMIHOOI)
+data.frame(weight = merged_data$W,
+		   SampleNumber = sample_sort_num,
+           stringsAsFactors = FALSE) %>% 
+    rownames_to_column("ID") %>%
+        mutate(weight_abs =abs(weight)) %>% 
+            dplyr::arrange(desc(weight_abs)) %>% 
+            	dplyr::select(1,3,2,4) -> df_weight
+
 #### gg_weight####
 # ggtexttable
 df_weight %>% 
+dplyr::select(2,3,4) %>% 
     rownames_to_column("Ranking") %>% 
         mutate_if(is.numeric, round, digits = 3) %>% 
             ggtexttable(rows = NULL, theme = ttheme(base_size = 48)) -> gg_weight
 
-#### gg_list purrr#### 
+#### gg_list purrr####
 seq(1:length(DF_cord_cls_nl_be)) %>%
     purrr::map(., .plot_dimreduc) -> gg_list
 
 #### ggplot for####
 for(x in 1:length(gg_list)){
-# for(x in 1:2 ){
     # weight table
     gg_weight_bg <- table_cell_bg(gg_weight, 
                                row = x + 1,
@@ -141,7 +142,7 @@ for(x in 1:length(gg_list)){
     # filename
     args_output %>% 
         str_remove(., "/table.png") -> args_output_name
-    sample_n <- df_weight[x,1]
+    sample_n <- df_weight[x, 2]
     eval(parse(text=paste0("plot_title <- c('",x,"_SampleNumber_",sample_n,".png')")))
     eval(parse(text=paste0("args_output_sample <- c('",args_output_name,"/",plot_title,"')")))
     
@@ -160,57 +161,3 @@ ggsave(filename = args_output,
        width = 80.0, 
        height = 20.0,
        limitsize = FALSE)
-
-# #### name count####
-# #文字の細胞名
-# cn_list <- list()
-# #数字の列名
-# digit_list <- list()
-# for(i in 1:length(D)){
-#     D[[i]] %>% attr(., "Labels") -> tmp
-#     cn_list[[i]] <- tmp[grep("^[0-9]", tmp, invert=TRUE)]
-#     digit_list[[i]] <- tmp[grep("^[0-9]", tmp, invert=FALSE)]
-# }
-# #文字列の列数のカウント
-# cn_num <- unlist(lapply(cn_list, function(x){length(x)}))
-# #数字の列数のカウント
-# digit_num <- unlist(lapply(digit_list, function(x){length(x)}))
-
-# #### not Annotated####
-# # 和集合ベクトル
-# load("output/WTS4/normalize_1/stimAfter/SBD_abs/Membership/k_Number_2.RData")
-# newHs[[1]] %>% 
-#     rownames() -> all_annotated_name
-# # not_annotated数
-# not_annotated_count <- unlist(lapply(cn_list, function(x){length(setdiff(all_annotated_name, x))}))
-
-# #### name count dataframe####
-# df_count <- data.frame(
-#     SampleNumber = as.character(1:length(D)),
-#     annotated = cn_num,
-#     not_annotated = not_annotated_count,
-#     digit = digit_num
-#     )
-# df_count %>%
-#     pivot_longer(cols = c(annotated, not_annotated, digit),
-#                  names_to = "CellType",
-#                  values_to = "count") -> data
-# data$CellType <- factor(data$CellType, 
-#                         levels =c("digit", 
-#                                   "not_annotated", 
-#                                   "annotated"))
-# #### bar plot####
-# # sort MCMI$Weight
-# p <- ggplot(data, aes(x=SampleNumber, y=count)) +
-#     geom_bar(stat="identity", aes(fill=CellType)) +
-#     scale_x_discrete(limits=df_weight$SampleNumber)
-# ggsave(filename = "output/WTS4/normalize_1/stimAfter/SBD_abs/DimReduc_MCMI/k_Number_5/tsne/test_p.png", 
-#        plot = p)
-
-# p_ano <- data %>%
-#     filter(CellType =="annotated" | CellType == "not_annotated") %>%
-#     ggplot(., aes(x=SampleNumber, y=count)) +
-#     geom_bar(stat="identity", aes(fill=CellType)) +
-#     scale_x_discrete(limits=df_weight$SampleNumber)
-# ggsave(filename = "output/WTS4/normalize_1/stimAfter/SBD_abs/DimReduc_MCMI/k_Number_5/tsne/test_p_ano.png", 
-#        plot = p_ano)
