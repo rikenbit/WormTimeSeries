@@ -1,7 +1,7 @@
 source("src/functions_WTS4_Eval_sample_nolabel.R")
 
 #### args setting####
-# args <- commandArgs(trailingOnly = T)
+args <- commandArgs(trailingOnly = T)
 args_input_sample <- args[1]
 args_input_cls <- args[2]
 args_time <- args[3]
