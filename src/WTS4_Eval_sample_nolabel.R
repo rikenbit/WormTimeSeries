@@ -11,26 +11,26 @@ args_input_path <- args[6]
 args_stim_xlsx <- args[7]
 args_output <- args[8]
 
-#### test args####
-# sample matrix data
-args_input_sample <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Distance")
-# sample cluster
-args_input_cls <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Cluster_sample/k_Number_5/sample_cls.RData")
+# #### test args####
+# # sample matrix data
+# args_input_sample <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Distance")
+# # sample cluster
+# args_input_cls <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Cluster_sample/k_Number_5/sample_cls.RData")
 
-# args_time
-args_time <- c("stimAfter")
-# k
-args_k <- c("5")
-# eval method
-args_eval_method <- c("kNN")
+# # args_time
+# args_time <- c("stimAfter")
+# # k
+# args_k <- c("5")
+# # eval method
+# args_eval_method <- c("kNN")
 
-# param path
-args_input_path <- c("data/normalize_1")
-# param stimtiming
-args_stim_xlsx <- c("data/stimulation/stimulation_timing.xlsx")
+# # param path
+# args_input_path <- c("data/normalize_1")
+# # param stimtiming
+# args_stim_xlsx <- c("data/stimulation/stimulation_timing.xlsx")
 
-# args_output
-args_output <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Eval_sample/kNN_nolabel/k_number_5.RData")
+# # args_output
+# args_output <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Eval_sample/kNN_nolabel/k_number_5.RData")
 
 #### No. of Clusters####
 k <- as.numeric(args_k)
