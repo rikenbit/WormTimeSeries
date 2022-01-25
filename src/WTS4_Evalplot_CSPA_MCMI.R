@@ -4,15 +4,12 @@ source("src/functions_WTS4_Evalplot_CSPA_MCMI.R")
 args <- commandArgs(trailingOnly = T)
 args_input <-  args[1]
 args_eval_method <- args[2]
-args_time <- args[3]
-args_output <- args[4]
+args_output <- args[3]
 #### test args####
 # # args input
 # args_input <-c("output/WTS4/normalize_1/stimAfter/SBD_abs")
 # # eval method
 # args_eval_method <- c("ARI_behavior")
-# # args_time
-# args_time <- c("stimAfter")
 # # output
 # args_output <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Evalplot_CSPA_MCMI/ARI_behavior.png")
 
@@ -20,7 +17,7 @@ args_output <- args[4]
 args_k_number <- as.numeric(2:20)
 
 #### load CSPA####
-eval(parse(text=paste0("input_path_CSPA <- c('",args_input,"/CSPA/Eval/ARI_behavior')")))
+eval(parse(text=paste0("input_path_CSPA <- c('",args_input,"/CSPA/Eval/",args_eval_method,"')")))
 input_path <- c()
 for(i in args_k_number){
     eval(parse(text=paste0("path <- c('",input_path_CSPA,"/k_Number_",i,".RData')")))
@@ -32,8 +29,8 @@ for(i in 1:length(input_path)){
     value_CSPA <- c(value_CSPA, eval_result)
 }
 
-#### load sample####
-eval(parse(text=paste0("input_path_MCMIHOOI <- c('",args_input,"/MCMIHOOI/Eval/ARI_behavior')")))
+#### load MCMI####
+eval(parse(text=paste0("input_path_MCMIHOOI <- c('",args_input,"/MCMIHOOI/Eval/",args_eval_method,"')")))
 input_path <- c()
 for(i in args_k_number){
     eval(parse(text=paste0("path <- c('",input_path_MCMIHOOI,"/k_Number_",i,".RData')")))
@@ -63,7 +60,7 @@ input_dist_list %>%
     sort() -> sample_sort_num
 
 #### load sample####
-eval(parse(text=paste0("input_path_sample <- c('",args_input,"/Eval_sample/ARI_behavior')")))
+eval(parse(text=paste0("input_path_sample <- c('",args_input,"/Eval_sample/",args_eval_method,"')")))
 input_path <- c()
 for(i in args_k_number){
     eval(parse(text=paste0("path <- c('",input_path_sample,"/k_Number_",i,".RData')")))
