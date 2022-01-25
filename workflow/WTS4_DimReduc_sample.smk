@@ -32,7 +32,8 @@ rule WTS4_DimReduc_sample:
     params:
         NL = 'data/igraph/Fig1_HNS.RData',
         EL = 'data/WTS4_Eval_behavior_fix.xlsx',
-        input_path = 'output/WTS4/normalize_1/{range}/{dist}/Distance'
+        input_path = 'output/WTS4/normalize_1/{range}/{dist}/Distance',
+        cell_count = 'output/WTS4/normalize_1/{range}/{dist}/Distance/CellCount.RData'
     benchmark:
         'benchmarks/WTS4/normalize_1/{range}/{dist}/DimReduc_sample/k_Number_{N_cls}/{DR}/table.txt'
     container:
@@ -43,4 +44,4 @@ rule WTS4_DimReduc_sample:
     log:
         'logs/WTS4/normalize_1/{range}/{dist}/DimReduc_sample/k_Number_{N_cls}/{DR}/table.log'
     shell:
-        'src/WTS4_DimReduc_sample.sh {input.m_data} {output} {params.input_path} {wildcards.DR} {wildcards.N_cls} {params.NL} {params.EL} {input.sample_cls} >& {log}'
+        'src/WTS4_DimReduc_sample.sh {input.m_data} {output} {params.input_path} {wildcards.DR} {wildcards.N_cls} {params.NL} {params.EL} {input.sample_cls} {params.cell_count} >& {log}'

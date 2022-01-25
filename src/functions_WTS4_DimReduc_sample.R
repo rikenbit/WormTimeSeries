@@ -97,10 +97,24 @@ set.seed(1234)
     return_object <- df_cord_cls_nl_be
     return(return_object)
 }
+
+.df_cord_cls_nl_be_count = function(x) {
+    df_cord_cls_nl_be <- DF_cord_cls_nl_be[[x]]
+    df_cord_cls_nl_be_count <- merge(df_cord_cls_nl_be, 
+                               df_cell_count, 
+                               by.x = "cell_type", 
+                               by.y = "CellType", 
+                               all.x = TRUE)
+    # cell countのNAは0に置換
+    df_cord_cls_nl_be_count$CellCount[is.na(df_cord_cls_nl_be_count$CellCount)] <- 0
+    return_object <- df_cord_cls_nl_be_count
+    return(return_object)
+}
+
 .plot_dimreduc = function(x) {
     sample_n <- df_weight[x, 2]
     sample_id <- as.numeric(df_weight[x, 1])
-    df_merged <- DF_cord_cls_nl_be[[sample_id]]
+    df_merged <- DF_cord_cls_nl_be_count[[sample_id]]
     #### ggplot Cluster####
     gg_cls <- ggplot(df_merged, 
                      aes(x = cord_1,
@@ -149,11 +163,30 @@ set.seed(1234)
                          min.segment.length = 0,
                          size = 7.0,
                          force = 6.0) # ラベル間の反発力
+    #### ggplot cell_count####
+    gg_cell_count <- ggplot(df_merged, 
+                            aes(x = cord_1,
+                                y = cord_2, 
+                                label = cell_type,
+                                color = CellCount
+                            )
+    ) + 
+      scale_color_viridis_c(option = "D")+
+      labs(color = "CellCount") +
+      theme(text = element_text(size = 24)) +
+      geom_point(size = 6.0, 
+                 alpha = 0.6) +
+      geom_label_repel(max.overlaps = Inf,
+                       min.segment.length = 0,
+                       size = 7.0,
+                       force = 6.0) # ラベル間の反発力
     #### patchwork####
     eval(parse(text=paste0("plot_title <- c('",x,"_SampleNumber_",sample_n,"')")))
     gg <- gg_cls +
         gg_NT +
         gg_eval_label +
+        gg_cell_count +
+        plot_layout(nrow = 1) +
         plot_annotation(
             title = plot_title,
             caption = 'made with patchwork',
