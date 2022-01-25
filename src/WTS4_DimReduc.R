@@ -14,17 +14,20 @@ args_output <- args[4]
 args_NL <- args[5]
 # Evaluation label list
 args_eval_label <- args[6]
+# df cell count
+args_cell_count <- args[7]
 
 # #### test args####
-# args_input_distance <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/OINDSCAL/Merged_distance/k_Number_4.RData")
-# args_input_cls <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/OINDSCAL/Merged_cls/k_Number_4.RData")
+# args_input_distance <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/CSPA/Merged_distance/k_Number_4.RData")
+# args_input_cls <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/CSPA/Merged_cls/k_Number_4.RData")
 # args_DimReduc <- c("tsne")
-# args_output <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/OINDSCAL/Merged_tsne/k_Number_4.png")
+# args_output <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/CSPA/Merged_tsne/k_Number_4.png")
 
 # args_NL <- c("data/igraph/Fig1_HNS.RData")
 # args_eval_label <- c("data/WTS4_Eval_behavior_fix.xlsx")
+# args_cell_count <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Distance/CellCount.RData")
 
-### load dist object####
+#### load dist object####
 load(args_input_distance)
 d <- merged_distance
 
@@ -35,7 +38,7 @@ df_cord <- switch(args_DimReduc,
           stop("Only can use tsne,")
           )
 
-### load cls number object####
+#### load cls number object####
 load(args_input_cls)
 df_cls <- as.data.frame(merged_cls)
 df_cls <- data.frame(
@@ -44,7 +47,7 @@ df_cls <- data.frame(
   stringsAsFactors = FALSE
 )
 
-### merge cord and cls####
+#### merge cord and cls####
 df_cord_cls <- merge(df_cord, 
                      df_cls, 
                      by.x = "cell_type", 
@@ -73,6 +76,15 @@ df_cord_cls_NL <- merge(df_cord_cls,
                            by.y = "cell_type", 
                            all.x = TRUE)
 # unknown label is NA
+######## load&merge cell_count########
+# df_cell_count
+load(args_cell_count)
+
+df_cord_cls_NL_count <- merge(df_cord_cls_NL, 
+                              df_cell_count, 
+                              by.x = "cell_type", 
+                              by.y = "CellType",
+                              all.x = TRUE)
 
 #### load eval_label####
 read.xlsx(args_eval_label,
@@ -83,11 +95,11 @@ read.xlsx(args_eval_label,
                 Classes = class) -> df_eval_label
 
 #### merge eval_label####
-merge(df_cord_cls_NL, 
-      df_eval_label, 
-      by.x = "cell_type", 
-      by.y = "CellType", 
-      all.x = TRUE) -> df_merged
+df_merged <- merge(df_cord_cls_NL_count, 
+                   df_eval_label, 
+                   by.x = "cell_type", 
+                   by.y = "CellType", 
+                   all.x = TRUE)
 
 #### ggplot cls####
 gg_cls <- ggplot(df_merged, 
@@ -139,7 +151,24 @@ gg_eval_label <- ggplot(df_merged,
                      min.segment.length = 0,
                      size = 7.0,
                      force = 6.0) # ラベル間の反発力
-#### patchwork 3plot####
+#### ggplot cell_count####
+gg_cell_count <- ggplot(df_merged, 
+                        aes(x = cord_1,
+                            y = cord_2, 
+                            label = cell_type,
+                            color = CellCount
+                            )
+                        ) + 
+  scale_color_viridis_c(option = "D")+
+  labs(color = "CellCount") +
+  theme(text = element_text(size = 24)) +
+  geom_point(size = 6.0, 
+             alpha = 0.6) +
+  geom_label_repel(max.overlaps = Inf,
+                   min.segment.length = 0,
+                   size = 7.0,
+                   force = 6.0) # ラベル間の反発力
+#### patchwork 4plot####
 # annotation
 str_remove(args_output, 
            "output/WTS4/normalize_1/stimAfter/") %>% 
@@ -149,6 +178,8 @@ str_remove(args_output,
 gg <- gg_cls + 
     gg_NT +
     gg_eval_label +
+    gg_cell_count +
+    plot_layout(nrow = 1) +
     plot_annotation(
         title = plot_title,
         caption = 'made with patchwork',
@@ -159,6 +190,6 @@ gg <- gg_cls +
 ggsave(filename = args_output, 
        plot = gg,
        dpi = 100, 
-       width = 60.0, 
+       width = 80.0, 
        height = 20.0,
        limitsize = FALSE)
