@@ -28,7 +28,7 @@ rule all:
             Re_cls=ReClustering_method,
             DR=DimReduc
             )
-rule DimReduc:
+rule WTS4_DimReduc:
     input:
         m_distance = 'output/WTS4/normalize_1/{range}/{dist}/{Re_cls}/Merged_distance/k_Number_{N_cls}.RData',
         m_cls = 'output/WTS4/normalize_1/{range}/{dist}/{Re_cls}/Merged_cls/k_Number_{N_cls}.RData'
@@ -36,7 +36,8 @@ rule DimReduc:
         'output/WTS4/normalize_1/{range}/{dist}/{Re_cls}/Merged_{DR}/k_Number_{N_cls}.png'
     params:
         NL = 'data/igraph/Fig1_HNS.RData',
-        EL = 'data/WTS4_Eval_behavior_fix.xlsx'
+        EL = 'data/WTS4_Eval_behavior_fix.xlsx',
+        cell_count = 'output/WTS4/normalize_1/{range}/{dist}/Distance/CellCount.RData'
     benchmark:
         'benchmarks/WTS4/normalize_1/{range}/{dist}/{Re_cls}/Merged_{DR}/k_Number_{N_cls}.txt'
     container:
@@ -46,4 +47,4 @@ rule DimReduc:
     log:
         'logs/WTS4/normalize_1/{range}/{dist}/{Re_cls}/Merged_{DR}/k_Number_{N_cls}.log'
     shell:
-        'src/WTS4_DimReduc.sh {input.m_distance} {input.m_cls} {wildcards.DR} {output} {params.NL} {params.EL} >& {log}'
+        'src/WTS4_DimReduc.sh {input.m_distance} {input.m_cls} {wildcards.DR} {output} {params.NL} {params.EL} {params.cell_count} >& {log}'
