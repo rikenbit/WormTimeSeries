@@ -15,6 +15,8 @@ args_NL <- args[6]
 args_eval_label <- args[7]
 
 args_input_cls  <- args[8]
+# df cell count
+args_cell_count <- args[9]
 
 # #### test args####
 # # input merged_distance
@@ -29,6 +31,8 @@ args_input_cls  <- args[8]
 # args_eval_label <- c("data/WTS4_Eval_behavior_fix.xlsx")
 
 # args_input_cls <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Cluster_sample/k_Number_5/sample_cls.RData")
+# df cell count
+# args_cell_count <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Distance/CellCount.RData")
 
 #### No. of Clusters####
 k <- as.numeric(args_k)
@@ -100,6 +104,10 @@ read.xlsx(args_eval_label,
                   Classes = class) -> df_eval_label
 seq(1:length(DF_cord_cls_nl)) %>%
     purrr::map(., .df_cord_cls_nl_be) -> DF_cord_cls_nl_be
+#### merge df_cell_count####
+load(args_cell_count)
+seq(1:length(DF_cord_cls_nl_be)) %>%
+  purrr::map(., .df_cord_cls_nl_be_count) -> DF_cord_cls_nl_be_count
 
 ### MCMI weight table####
 # merged_data
@@ -121,7 +129,7 @@ dplyr::select(2,3,4) %>%
             ggtexttable(rows = NULL, theme = ttheme(base_size = 48)) -> gg_weight
 
 #### gg_list purrr####
-seq(1:length(DF_cord_cls_nl_be)) %>%
+seq(1:length(DF_cord_cls_nl_be_count)) %>%
     purrr::map(., .plot_dimreduc) -> gg_list
 
 #### ggplot for####
@@ -150,7 +158,7 @@ for(x in 1:length(gg_list)){
     ggsave(filename = args_output_sample, 
            plot = gg,
            dpi = 100, 
-           width = 80.0, 
+           width = 100.0, 
            height = 20.0,
            limitsize = FALSE)
 }
