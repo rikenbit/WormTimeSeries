@@ -16,7 +16,7 @@ args_eval_label <- args[4]
 # # Evaluation Method
 # args_eval_method <- c("ARI")
 # # Evaluation label list
-# args_eval_label <- c("data/WTS4_Eval_behavior.xlsx")
+# args_eval_label <- c("data/WTS4_Eval_behavior_fix.xlsx")
 
 # # # input sample_distance
 # # args_input_path <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Distance")
