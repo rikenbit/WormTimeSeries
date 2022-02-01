@@ -60,11 +60,11 @@ gg <- ggplot(df_weight_all, aes(x=factor(SampleNumber, levels = sample_sort_weig
                                 fill = factor(SampleNumber, levels = sample_sort_weight)
                                 )
              )
-gg <- gg + guides(fill="none")
+gg <- gg + guides(colour="none")
 # https://stats.biopapyrus.jp/r/ggplot/geom-boxplot.html
-gg <- gg + geom_boxplot(outlier.shape = NA, alpha =0.4) #外れ値のプロットを省く
+gg <- gg + geom_boxplot(outlier.shape = NA, alpha =0.8) #外れ値のプロットを省く
 gg <- gg + geom_point(position = position_jitter(width=0.05))
-gg <- gg + labs(colour="sample") + xlab("sample") + ylab("weight")
+gg <- gg + labs(fill="sample") + xlab("sample") + ylab("weight")
 gg <- gg + 
     ggtitle("weight beeswarm (sort by weight average)") +
     theme(plot.title = element_text(hjust = 0.5))
