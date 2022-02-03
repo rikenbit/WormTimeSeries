@@ -1,23 +1,23 @@
 # WTS4_DimReduc
 ###################################################
 # No. of Clusters
-N_CLUSTERS = list(map(str, range(2, 21)))
-# N_CLUSTERS = ["3"]
+# N_CLUSTERS = list(map(str, range(2, 21)))
+N_CLUSTERS = ["4"]
 
 # Distance Data
-dist_data = ["EUCL","SBD_abs"]
-# dist_data = ["SBD_abs"]
+# dist_data = ["EUCL","SBD_abs"]
+dist_data = ["SBD_abs"]
 
 # data time range
 time_range = ["stimAfter"]
 
 # ReClustering method
-ReClustering_method = ["CSPA","OINDSCAL","MCMIHOOI"]
-# ReClustering_method = ["CSPA"]
+# ReClustering_method = ["CSPA","OINDSCAL","MCMIHOOI"]
+ReClustering_method = ["CSPA"]
 
 # Dimensionality Reduction Method
-DimReduc = ["tsne","umap"]
-# DimReduc = ["tsne"]
+# DimReduc = ["tsne","umap"]
+DimReduc = ["tsne"]
 
 rule all:
     input:
@@ -37,7 +37,8 @@ rule WTS4_DimReduc:
     params:
         NL = 'data/igraph/Fig1_HNS.RData',
         EL = 'data/WTS4_Eval_behavior_fix.xlsx',
-        cell_count = 'output/WTS4/normalize_1/{range}/{dist}/Distance/CellCount.RData'
+        cell_count = 'output/WTS4/normalize_1/{range}/{dist}/Distance/CellCount.RData',
+        count_sum  = 'output/WTS4/normalize_1/{range}/{dist}/ClsCount/k_Number_{N_cls}/df_count_sum.RData'
     benchmark:
         'benchmarks/WTS4/normalize_1/{range}/{dist}/{Re_cls}/Merged_{DR}/k_Number_{N_cls}.txt'
     container:
@@ -47,4 +48,4 @@ rule WTS4_DimReduc:
     log:
         'logs/WTS4/normalize_1/{range}/{dist}/{Re_cls}/Merged_{DR}/k_Number_{N_cls}.log'
     shell:
-        'src/WTS4_DimReduc.sh {input.m_distance} {input.m_cls} {wildcards.DR} {output} {params.NL} {params.EL} {params.cell_count} >& {log}'
+        'src/WTS4_DimReduc.sh {input.m_distance} {input.m_cls} {wildcards.DR} {output} {params.NL} {params.EL} {params.cell_count} {params.count_sum} >& {log}'
