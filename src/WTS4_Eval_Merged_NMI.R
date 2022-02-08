@@ -23,8 +23,3 @@ iris[,-5] %>%
 # classes: 各細胞のラベル <- 行動ラベル
 # classes: WTS4_Eval_behavior.Rのclasses
 NMI(cl, iris$Species)
-
-#### samplecode factoextra####
-BiocManager::install("factoextra",update = FALSE)
-library(factoextra)
-

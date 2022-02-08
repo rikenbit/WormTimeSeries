@@ -3,6 +3,7 @@
 library(tidyverse)
 library(mclust) # ARI
 library(openxlsx) # read.xlsx
+library(aricode) # NMI
 ##################################################
 
 ####################################################################

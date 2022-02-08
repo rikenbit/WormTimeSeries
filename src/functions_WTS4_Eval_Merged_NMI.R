@@ -1,7 +1,4 @@
 #library
 ##################################################
-library()
+library(aricode)
 ##################################################
-.func = function(x) {
-	return(return_object)
-}
