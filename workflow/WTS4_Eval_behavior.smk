@@ -4,24 +4,23 @@
 time_range = ["stimAfter"]
 
 # Distance Data
-dist_data = ["EUCL","SBD_abs"]
-# dist_data = ["SBD_abs"]
+# dist_data = ["EUCL","SBD_abs"]
+dist_data = ["SBD_abs"]
 
 # No. of Clusters
-N_CLUSTERS = list(map(str, range(2, 21)))
-# N_CLUSTERS = ["3"]
+# N_CLUSTERS = list(map(str, range(2, 21)))
+N_CLUSTERS = ["3"]
 
 # ReClustering Method
-ReClustering_method = ["CSPA","OINDSCAL","MCMIHOOI"]
-# ReClustering_method = ["MCMIHOOI"]
+# ReClustering_method = ["CSPA","OINDSCAL","MCMIHOOI"]
+ReClustering_method = ["MCMIHOOI"]
 
 # Evaluation Method
-Evaluation_method = ["ARI_behavior","purity_behavior","Fmeasure_behavior","Entropy_behavior","NMI_behavior"]
-# Evaluation_method = ["NMI_behavior"]
+# Evaluation_method = ["ARI_behavior","purity_behavior","Fmeasure_behavior","Entropy_behavior","NMI_behavior"]
+Evaluation_method = ["NMI_behavior"]
 
 rule all:
     input:
-        # output/WTS4/normalize_1/{range}/{dist}/{Re_cls}/Eval/{Eval}/k_Number_{N_cls}.RData
         expand('output/WTS4/normalize_1/{range}/{dist}/{Re_cls}/Eval/{Eval}/k_Number_{N_cls}.RData',
             range=time_range,
             dist=dist_data,
@@ -40,7 +39,7 @@ rule WTS4_Eval_behavior:
     benchmark:
         'benchmarks/WTS4/normalize_1/{range}/{dist}/{Re_cls}/Eval/{Eval}/k_Number_{N_cls}.txt'
     container:
-        "docker://yamaken37/eval_behavior:20211209"
+        "docker://yamaken37/eval_behavior:20220208"
     resources:
         mem_gb=200
     log:
