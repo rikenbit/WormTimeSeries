@@ -3,11 +3,24 @@
 library(tidyverse)
 library(mclust) # ARI
 library(openxlsx) # read.xlsx
+library(aricode) # NMI
 ##################################################
 
 ####################################################################
 ############# 外的評価（クラスラベルとどれだけ一致しているか） #############
 ####################################################################
+#### NMI#### 
+.NMI_list = function(x) {
+    df_cls_label <- x
+    unlist(lapply(df_cls_label, function(x) {
+        clusters <- x$Clusters
+        classes <- x$Classes
+        NMI(clusters, classes)
+        }
+    )) -> return_object
+    return(return_object)
+}
+
 ####  ARI#### 
 .ARI_list = function(x) {
 	df_cls_label <- x

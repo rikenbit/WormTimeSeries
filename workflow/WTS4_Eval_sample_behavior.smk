@@ -13,7 +13,7 @@ dist_data = ["EUCL","SBD_abs"]
 time_range = ["stimAfter"]
 
 # Evaluation Method
-Evaluation_method = ["ARI","purity","Fmeasure","Entropy"]
+Evaluation_method = ["ARI","purity","Fmeasure","Entropy","NMI"]
 
 rule all:
     input: 
@@ -34,7 +34,7 @@ rule WTS4_Eval_sample_behavior:
     benchmark:
         'benchmarks/WTS4/normalize_1/{range}/{dist}/Eval_sample/{Eval}_behavior/k_Number_{N_cls}.txt'
     container:
-        "docker://yamaken37/eval_sample:20220106"
+        "docker://yamaken37/eval_behavior:20220208"
     resources:
         mem_gb=200
     log:

@@ -12,19 +12,11 @@ args_eval_label <- args[4]
 # # input sample_cls
 # args_input_cls <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Cluster_sample/k_Number_5/sample_cls.RData")
 # # output eval_result
-# args_output <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Eval_sample/ARI_behavior/k_Number_5.RData")
+# args_output <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Eval_sample/NMI_behavior/k_Number_5.RData")
 # # Evaluation Method
-# args_eval_method <- c("ARI")
+# args_eval_method <- c("NMI")
 # # Evaluation label list
 # args_eval_label <- c("data/WTS4_Eval_behavior_fix.xlsx")
-
-# # # input sample_distance
-# # args_input_path <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Distance")
-# # # No. of Clusters 
-# # args_k <- c("5")
-# # #### No. of Clusters####
-# # k <- as.numeric(args_k)
-# # ########
 
 ##### load WTS4_Eval_behavior.xlsx####
 read.xlsx(args_eval_label,
@@ -70,6 +62,7 @@ eval_result <- switch(args_eval_method,
                     "purity" = .purity_list(df_cls_label),
                     "Fmeasure" = .Fmeasure_list(df_cls_label),
                     "Entropy" = .Entropy_list(df_cls_label),
+                    "NMI" = .NMI_list(df_cls_label),
                     stop("Only can use all, ARI, purity, Fmeasure, Entropy")
                     )
 save(eval_result, file=args_output)
