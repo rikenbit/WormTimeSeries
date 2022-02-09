@@ -8,7 +8,7 @@ dist_data = ["EUCL","SBD_abs"]
 time_range = ["stimAfter"]
 
 # Evaluation Method
-Evaluation_method = ["PseudoF", "Connectivity", "kNN", "ARI_behavior", "purity_behavior", "Fmeasure_behavior", "Entropy_behavior"]
+Evaluation_method = ["PseudoF", "Connectivity", "kNN", "ARI_behavior", "purity_behavior", "Fmeasure_behavior", "Entropy_behavior", "NMI_behavior"]
 
 rule all:
     input:
