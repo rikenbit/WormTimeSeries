@@ -13,11 +13,11 @@ N_CLUSTERS = list(map(str, range(2, 21)))
 
 # ReClustering Method
 ReClustering_method = ["CSPA","OINDSCAL","MCMIHOOI"]
-# ReClustering_method = ["OINDSCAL"]
+# ReClustering_method = ["MCMIHOOI"]
 
 # Evaluation Method
-Evaluation_method = ["ARI_behavior","purity_behavior","Fmeasure_behavior","Entropy_behavior"]
-# Evaluation_method = ["ARI_behavior"]
+Evaluation_method = ["ARI_behavior","purity_behavior","Fmeasure_behavior","Entropy_behavior","NMI_behavior"]
+# Evaluation_method = ["NMI_behavior"]
 
 rule all:
     input:

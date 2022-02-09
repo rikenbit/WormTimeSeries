@@ -13,17 +13,18 @@ args_eval_method <- args[4]
 # Evaluation label list
 args_eval_label <- args[5]
 
-# #### test args####
+# #### test args NMI####
 # # input merged_cls
-# args_input_cls <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/5_Clusters/OINDSCAL/merged_cls_docker.RData")
+# args_input_cls <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/MCMIHOOI/Merged_cls/k_Number_5.RData")
 # # output merged_data
-# args_output_data <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/5_Clusters/OINDSCAL/ARI_behavior/eval_result_docker.RData")
+# args_output_data <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/MCMIHOOI/Eval/NMI_behavior/k_Number_5.RData")
 # # ReClustering Method
-# args_method <- c("OINDSCAL")
+# args_method <- c("MCMIHOOI")
 # # Evaluation Method
-# args_eval_method <- c("ARI_behavior")
+# args_eval_method <- c("NMI_behavior")
 # # Evaluation label list
-# args_eval_label <- c("data/WTS4_Eval_behavior.xlsx")
+# args_eval_label <- c("data/WTS4_Eval_behavior_fix.xlsx")
+
 ##### load merged_cls####
 load(args_input_cls)
 data.frame(CellType = names(merged_cls),
@@ -31,7 +32,7 @@ data.frame(CellType = names(merged_cls),
            stringsAsFactors = FALSE,
            row.names = NULL
            ) -> df_cls
-##### load WTS4_Eval_behavior.xlsx####
+##### load WTS4_Eval_behavior_fix.xlsx####
 read.xlsx(args_eval_label,
           sheet = "Sheet1",
           rowNames = FALSE,
@@ -64,7 +65,8 @@ eval_result <- switch(args_eval_method,
                       "purity_behavior" = ClusterPurity(clusters, classes),
                       "Fmeasure_behavior" = Fmeasure(clusters, classes),
                       "Entropy_behavior" = Entropy(clusters, classes), # Entropyは小さいほど、良い。他の評価は値が高いほどお良い。
-                      stop("Only can use all, ARI, purity, Fmeasure, Entropy")
+                      "NMI_behavior" = NMI(clusters, classes),
+                      stop("Only can use all, ARI, purity, Fmeasure, Entropy, NMI")
                       )
 
 #### ggsave####
