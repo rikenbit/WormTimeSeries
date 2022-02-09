@@ -9,6 +9,18 @@ library(aricode) # NMI
 ####################################################################
 ############# 外的評価（クラスラベルとどれだけ一致しているか） #############
 ####################################################################
+#### AMI#### 
+.AMI_list = function(x) {
+    df_cls_label <- x
+    unlist(lapply(df_cls_label, function(x) {
+        clusters <- x$Clusters
+        classes <- x$Classes
+        AMI(clusters, classes)
+        }
+    )) -> return_object
+    return(return_object)
+}
+
 #### NMI#### 
 .NMI_list = function(x) {
     df_cls_label <- x

@@ -63,6 +63,7 @@ eval_result <- switch(args_eval_method,
                     "Fmeasure" = .Fmeasure_list(df_cls_label),
                     "Entropy" = .Entropy_list(df_cls_label),
                     "NMI" = .NMI_list(df_cls_label),
+                    "AMI" = .AMI_list(df_cls_label),
                     stop("Only can use all, ARI, purity, Fmeasure, Entropy")
                     )
 save(eval_result, file=args_output)

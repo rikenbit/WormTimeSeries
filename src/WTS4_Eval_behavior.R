@@ -66,6 +66,7 @@ eval_result <- switch(args_eval_method,
                       "Fmeasure_behavior" = Fmeasure(clusters, classes),
                       "Entropy_behavior" = Entropy(clusters, classes), # Entropyは小さいほど、良い。他の評価は値が高いほどお良い。
                       "NMI_behavior" = NMI(clusters, classes),
+                      "AMI_behavior" = AMI(clusters, classes),
                       stop("Only can use all, ARI, purity, Fmeasure, Entropy, NMI")
                       )
 

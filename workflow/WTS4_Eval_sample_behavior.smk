@@ -13,7 +13,7 @@ dist_data = ["EUCL","SBD_abs"]
 time_range = ["stimAfter"]
 
 # Evaluation Method
-Evaluation_method = ["ARI","purity","Fmeasure","Entropy","NMI"]
+Evaluation_method = ["ARI","purity","Fmeasure","Entropy","NMI","AMI"]
 
 rule all:
     input: 

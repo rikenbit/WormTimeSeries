@@ -16,7 +16,7 @@ ReClustering_method = ["CSPA","OINDSCAL","MCMIHOOI"]
 # ReClustering_method = ["MCMIHOOI"]
 
 # Evaluation Method
-Evaluation_method = ["ARI_behavior","purity_behavior","Fmeasure_behavior","Entropy_behavior","NMI_behavior"]
+Evaluation_method = ["ARI_behavior","purity_behavior","Fmeasure_behavior","Entropy_behavior","NMI_behavior","AMI_behavior"]
 # Evaluation_method = ["NMI_behavior"]
 
 rule all:
