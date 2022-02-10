@@ -138,18 +138,17 @@ merge(df_weight,
       by.y = "SampleNumber", 
       all.x = TRUE) %>% 
     dplyr::arrange(desc(weight_abs)) -> df_eval_weight
-# アノテーション数の場合
+# アノテーション数の場合 CA検定
 ann <- df_eval_weight$annotated_count
 n_ann <- rep(nrow(df_merged_cls), length=length(ann))
 trendtest_anotation <- prop.trend.test(ann, n_ann)$p.value
-# ARIの場合
+# ARIの場合 JT検定(ヨンキー検定)
 ari <- df_eval_weight$ARI
-max_ari <- rep(1, length=length(ari))
-trendtest_ARI <- prop.trend.test(ari, max_ari)$p.value
-
+#ヨンキー検定はケンドールの順位相関と同じ考え方
+trendtest_ARI <- cor.test(ari, seq(length(ari)), method="kendall")$ p.value
 #### ggtexttable trend####
-data.frame(ann_pvalue = signif(trendtest_anotation, digits = 3),
-           ARI_pvalue = signif(trendtest_ARI, digits = 3),
+data.frame(ann_CA_pvalue = signif(trendtest_anotation, digits = 3),
+           ARI_JT_pvalue = signif(trendtest_ARI, digits = 3),
            stringsAsFactors = FALSE,
            row.names = NULL) -> trendtest_table
 trendtest_table %>% 
