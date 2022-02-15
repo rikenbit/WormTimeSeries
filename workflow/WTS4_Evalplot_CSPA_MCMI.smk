@@ -1,14 +1,14 @@
 # WTS4_Evalplot_CSPA_MCMI
 ###################################################
 # Distance Data
-dist_data = ["EUCL","SBD_abs"]
-# dist_data = ["SBD_abs"]
+# dist_data = ["EUCL","SBD_abs"]
+dist_data = ["SBD_abs"]
 
 # data time range
 time_range = ["stimAfter"]
 
 # Evaluation Method
-Evaluation_method = ["PseudoF", "Connectivity", "kNN", "ARI_behavior", "purity_behavior", "Fmeasure_behavior", "Entropy_behavior", "NMI_behavior", "AMI_behavior"]
+Evaluation_method = ["PseudoF", "Connectivity", "kNN", "ARI_behavior", "purity_behavior", "Fmeasure_behavior", "Entropy_behavior", "NMI_behavior", "AMI_behavior","Silhouette"]
 
 rule all:
     input:

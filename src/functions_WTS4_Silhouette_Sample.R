@@ -24,6 +24,7 @@ library(usedist)
   cls <- df_cls_list[[x]]$Clusters
   #### silhouette####
   sil <- silhouette(cls, d)
+  # clsが１種類敷かない場合 silhoutteの結果はエラーになる
   rownames(sil) <- attr(d, "Labels")
   gg_sil <- fviz_silhouette(sil)
   

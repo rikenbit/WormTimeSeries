@@ -28,11 +28,11 @@ rule WTS4_Silhouette_Sample:
     input:
         sample_cls = 'output/WTS4/normalize_1/{range}/{dist}/Cluster_sample/k_Number_{N_cls}/sample_cls.RData'
     output:
-        value = 'output/WTS4/normalize_1/{range}/{dist}/Eval_sample/Silhouette/k_Number_{N_cls}.RData',
+        eval_value = 'output/WTS4/normalize_1/{range}/{dist}/Eval_sample/Silhouette/k_Number_{N_cls}.RData',
         gg_object ='output/WTS4/normalize_1/{range}/{dist}/DimReduc_sample/k_Number_{N_cls}/Sil_plot/Sil_gg.RData'
     params:
         distance = 'output/WTS4/normalize_1/{range}/{dist}/Distance',
-        plot = 'output/WTS4/normalize_1/{range}/{dist}/DimReduc_sample/k_Number_{N_cls}/Sil_plot',
+        plot = 'output/WTS4/normalize_1/{range}/{dist}/DimReduc_sample/k_Number_{N_cls}/Sil_plot'
     benchmark:
         'benchmarks/WTS4/normalize_1/{range}/{dist}/Eval_sample/Silhouette/k_Number_{N_cls}.txt'
     container:
@@ -42,4 +42,4 @@ rule WTS4_Silhouette_Sample:
     log:
         'logs/WTS4/normalize_1/{range}/{dist}/Eval_sample/Silhouette/k_Number_{N_cls}.log'
     shell:
-        'src/WTS4_Silhouette_Sample.sh {params.distance} {input.sample_cls} {output.value} {params.plot} {output.gg_object} >& {log}'
+        'src/WTS4_Silhouette_Sample.sh {params.distance} {input.sample_cls} {output.eval_value} {params.plot} {output.gg_object} >& {log}'

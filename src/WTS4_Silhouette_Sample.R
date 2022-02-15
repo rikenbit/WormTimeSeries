@@ -59,7 +59,7 @@ save(eval_result, file=args_output_value)
 #### save ggplot####
 seq(1:length(D)) %>% 
   purrr::map(., .list_gg_sil) -> gg_sil
-save(gg_sil, file=args_output_gg)
+
 
 #### save png####
 # SampleNumber_*.pngで保存
@@ -75,3 +75,6 @@ for(i in seq(1:length(D))){
          height = 20.0,
          limitsize = FALSE)
 }
+
+#### save ggplot####
+save(gg_sil, file=args_output_gg)
