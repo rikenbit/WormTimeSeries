@@ -48,6 +48,7 @@ ggsave(filename = args_output_plot,
        width = 30.0, 
        height = 20.0,
        limitsize = FALSE)
+
 #### save gg_sil####
 # patchworkで次元圧縮図に加える
 save(gg_sil, file=args_output_gg)
