@@ -13,12 +13,12 @@ args_params_plot <- args[4]
 # output silhouette gg object
 args_output_gg <- args[5]
 
-#### test args####
-args_params_distance <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Distance")
-args_input_cls <-  c("output/WTS4/normalize_1/stimAfter/SBD_abs/Cluster_sample/k_Number_5/sample_cls.RData")
-args_output_value <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Eval_sample/Silhouette/k_Number_5.RData")
-args_params_plot <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/DimReduc_sample/k_Number_5/Sil_plot")
-args_output_gg <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/DimReduc_sample/k_Number_5/Sil_gg.RData")
+# #### test args####
+# args_params_distance <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Distance")
+# args_input_cls <-  c("output/WTS4/normalize_1/stimAfter/SBD_abs/Cluster_sample/k_Number_5/sample_cls.RData")
+# args_output_value <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Eval_sample/Silhouette/k_Number_5.RData")
+# args_params_plot <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/DimReduc_sample/k_Number_5/Sil_plot")
+# args_output_gg <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/DimReduc_sample/k_Number_5/Sil_gg.RData")
 
 
 #### fix sample number sort####
