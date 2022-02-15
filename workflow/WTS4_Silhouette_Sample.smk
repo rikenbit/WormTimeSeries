@@ -18,7 +18,7 @@ rule all:
             dist=dist_data,
             N_cls=N_CLUSTERS
             ),
-        expand('output/WTS4/normalize_1/{range}/{dist}/DimReduc_sample/k_Number_{N_cls}/Sil_gg.RData',
+        expand('output/WTS4/normalize_1/{range}/{dist}/DimReduc_sample/k_Number_{N_cls}/Sil_plot/Sil_gg.RData',
             range=time_range,
             dist=dist_data,
             N_cls=N_CLUSTERS,
@@ -29,7 +29,7 @@ rule WTS4_Silhouette_Sample:
         sample_cls = 'output/WTS4/normalize_1/{range}/{dist}/Cluster_sample/k_Number_{N_cls}/sample_cls.RData'
     output:
         value = 'output/WTS4/normalize_1/{range}/{dist}/Eval_sample/Silhouette/k_Number_{N_cls}.RData',
-        gg_object ='output/WTS4/normalize_1/{range}/{dist}/DimReduc_sample/k_Number_{N_cls}/Sil_gg.RData'
+        gg_object ='output/WTS4/normalize_1/{range}/{dist}/DimReduc_sample/k_Number_{N_cls}/Sil_plot/Sil_gg.RData'
     params:
         distance = 'output/WTS4/normalize_1/{range}/{dist}/Distance',
         plot = 'output/WTS4/normalize_1/{range}/{dist}/DimReduc_sample/k_Number_{N_cls}/Sil_plot',
