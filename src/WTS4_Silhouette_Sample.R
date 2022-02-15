@@ -32,9 +32,6 @@ input_path_list %>%
   sort() -> sample_sort_num
 
 #### load cls####
-load(args_input_cls)
-cls <- merged_cls
-
 # C
 load(args_input_cls)
 lapply(C, function(x) {
@@ -64,7 +61,6 @@ seq(1:length(D)) %>%
 save(gg_sil, file=args_output_gg)
 
 #### save png####
-# for文でoutput/WTS4/normalize_1/stimAfter/SBD_abs/DimReduc_sample/k_Number_5/Sil_plot配下に保存
 # SampleNumber_*.pngで保存
 for(i in seq(1:length(D))){
   sample_num <- sample_sort_num[i]
