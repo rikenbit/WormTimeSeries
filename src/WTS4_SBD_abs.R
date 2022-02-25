@@ -17,7 +17,6 @@ args_SBD <- args[5]
 # args_sample <- c("2")
 # # path NeuronActivity Data
 # args_neuron <- c("data/normalize_1/ReadData_2.RData")
-
 # # args_time <- c("all")
 # args_time <- c("stimAfter")
 # # stimtiming
@@ -25,10 +24,21 @@ args_SBD <- args[5]
 # # output SBD_abs距離行列
 # args_SBD <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Distance/SampleNumber_2.RData")
 
+# # sample number サンプル番号の指定
+# args_sample <- c("3")
+# # path NeuronActivity Data
+# args_neuron <- c("data/n1_28sample/ReadData_3.RData")
+# # args_time <- c("all")
+# args_time <- c("stimAfter")
+# # stimtiming
+# args_stim_xlsx <- c("data/stimulation/stimulation_timing.xlsx")
+# # output SBD_abs距離行列
+# args_SBD <- c("output/WTS4/n1_28sample/stimAfter/SBD_abs/Distance/SampleNumber_3.RData")
+
 #### load NeuronActivity####
 load(args_neuron)
 # 元データがディレクトリごとではなく，ファイル名で各サンプルがわかれている対応
-eval(parse(text=paste0("ReadData <- ReadData_",args_sample)))
+# eval(parse(text=paste0("ReadData <- ReadData_",args_sample)))
 
 #### switch time range & trim ReadData####
 ReadData <- switch(args_time,

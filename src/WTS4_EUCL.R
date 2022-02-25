@@ -30,7 +30,7 @@ args_EUCL <- args[5]
 #### load NeuronActivity####
 load(args_neuron)
 # 元データがディレクトリごとではなく，ファイル名で各サンプルがわかれている対応
-eval(parse(text=paste0("ReadData <- ReadData_",args_sample)))
+# eval(parse(text=paste0("ReadData <- ReadData_",args_sample)))
 
 #### switch time range & EUCL calc####
 d <- switch(args_time,
