@@ -9,12 +9,12 @@ N_CLUSTERS = list(map(str, range(2, 21)))
 # N_CLUSTERS = ["3"]
 
 # Distance Data
-dist_data = ["EUCL","SBD_abs"]
-# dist_data = ["SBD_abs"]
+# dist_data = ["EUCL","SBD_abs"]
+dist_data = ["SBD_abs"]
 
 # data time range
-time_range = ["stimAfter","all"]
-# time_range = ["stimAfter"]
+# time_range = ["stimAfter","all"]
+time_range = ["stimAfter"]
 
 # ReClustering method
 ReClustering_method = ["MCMIHOOI"]
