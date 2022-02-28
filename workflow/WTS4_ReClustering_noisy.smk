@@ -1,4 +1,4 @@
-# WTS4_ReClustering_noisy.smk
+# WTS4_ReClustering_noisy
 ###################################################
 # NOISE SAMPLE PATERN
 NOISE_TEST = ["n1_28sample","n1_24sample_add3","n1_24sample_add8","n1_24sample_add20","n1_24sample_add25"]
