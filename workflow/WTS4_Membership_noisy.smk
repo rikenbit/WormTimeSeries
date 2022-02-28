@@ -13,16 +13,13 @@ N_SAMPLES = list(map(str, range(1, 29)))
 # N_SAMPLES.remove('25')
 
 # No. of Clusters
-# N_CLUSTERS = list(map(str, range(2, 21)))
-N_CLUSTERS = list(map(str, range(2, 4)))
+N_CLUSTERS = list(map(str, range(2, 21)))
 
 # Distance Data
-# dist_data = ["EUCL","SBD_abs"]
-dist_data = ["SBD_abs"]
-# data time range
-# time_range = ["all","stimAfter"]
-time_range = ["stimAfter"]
+dist_data = ["EUCL","SBD_abs"]
 
+# data time range
+time_range = ["all","stimAfter"]
 
 rule all:
     input:
