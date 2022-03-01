@@ -157,7 +157,7 @@ gg_NT <- ggplot(df_merged,
                      color = factor(NeuronType)
                      )
                 ) + 
-    labs(color = "NeuronType") +
+    labs(color = " Neuron type") +
     geom_point(size = 6.0, 
                alpha = 0.6) +
     geom_label_repel(max.overlaps = Inf,
@@ -176,7 +176,7 @@ gg_eval_label <- ggplot(df_merged,
                      color = factor(Classes)
                      )
                 ) + 
-    labs(color = "Classes") +
+    labs(color = "Class") +
     geom_point(size = 6.0, 
                alpha = 0.6) +
     geom_label_repel(max.overlaps = Inf,
@@ -195,7 +195,7 @@ gg_cell_count <- ggplot(df_merged,
                             )
                         ) + 
   scale_color_viridis_c(option = "D") +
-  labs(color = "CellCount") +
+  labs(color = "No. of cells") +
   geom_point(size = 6.0, 
              alpha = 0.6) +
   geom_label_repel(max.overlaps = Inf,
@@ -251,6 +251,6 @@ gg <- gg_cls +
 ggsave(filename = args_output, 
        plot = gg,
        dpi = 100, 
-       width = 100.0, 
+       width = 116.0, 
        height = 20.0,
        limitsize = FALSE)
