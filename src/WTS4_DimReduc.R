@@ -244,7 +244,7 @@ gg <- gg_cls +
     plot_layout(nrow = 1) +
     plot_annotation(
         title = plot_title,
-        caption = 'made with patchwork',
+        # caption = 'made with patchwork',
         theme = theme(plot.title = element_text(size = 60, hjust = 0.5))
     )
 
