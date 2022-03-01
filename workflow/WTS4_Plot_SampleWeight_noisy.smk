@@ -1,8 +1,9 @@
 # WTS4_Plot_SampleWeight_noisy
 ###################################################
 # NOISE SAMPLE PATERN
-# NOISE_TEST = ["n1_28sample","n1_24sample_add3","n1_24sample_add8","n1_24sample_add20","n1_24sample_add25"]
-NOISE_TEST = ["n1_28sample"]
+NOISE_TEST = ["n1_28sample","n1_24sample_add3","n1_24sample_add8","n1_24sample_add20","n1_24sample_add25"]
+# NOISE_TEST = ["n1_28sample"]
+# NOISE_TEST = ["normalize_1"]
 
 # Distance Data
 # dist_data = ["EUCL","SBD_abs"]
