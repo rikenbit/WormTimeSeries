@@ -21,9 +21,9 @@ set.seed(1234)
                   verbose = TRUE, 
                   max_iter = 1000)
     return_object <- data.frame(cord_1 = tSNE$Y[,1],
-                          cord_2 = tSNE$Y[,2],
-                          cell_type = attr(dist_data, "Labels")
-                          )
+                                cord_2 = tSNE$Y[,2],
+                                cell_type = attr(dist_data, "Labels")
+                                )
     return(return_object)
 }
 #### UMAP####
@@ -38,8 +38,8 @@ set.seed(1234)
                          n_components = 2
                          )
     return_object <- data.frame(cord_1 = umap_d[,1],
-                          cord_2 = umap_d[,2],
-                          cell_type = attr(dist_data, "Labels")
+                                cord_2 = umap_d[,2],
+                                cell_type = attr(dist_data, "Labels")
                           )
     return(return_object)
 }

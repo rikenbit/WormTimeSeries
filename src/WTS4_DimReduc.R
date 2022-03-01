@@ -20,14 +20,14 @@ args_cell_count <- args[7]
 args_count_sum <- args[8]
   
 # #### test args####
-# args_input_distance <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/CSPA/Merged_distance/k_Number_4.RData")
-# args_input_cls <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/CSPA/Merged_cls/k_Number_4.RData")
+# args_input_distance <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/CSPA/Merged_distance/k_Number_5.RData")
+# args_input_cls <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/CSPA/Merged_cls/k_Number_5.RData")
 # args_DimReduc <- c("tsne")
-# args_output <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/CSPA/Merged_tsne/k_Number_4.png")
+# args_output <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/CSPA/Merged_tsne/k_Number_5.png")
 # args_NL <- c("data/igraph/Fig1_HNS.RData")
 # args_eval_label <- c("data/WTS4_Eval_behavior_fix.xlsx")
 # args_cell_count <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Distance/CellCount.RData")
-# args_count_sum <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/ClsCount/k_Number_4/df_count_sum.RData")
+# args_count_sum <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/ClsCount/k_Number_5/df_count_sum.RData")
 
 #### load dist object####
 load(args_input_distance)
@@ -117,6 +117,19 @@ df_merged <- merge(df_cord_cls_NL_count_sum,
                    by.y = "CellType", 
                    all.x = TRUE)
 
+#### ggplot axis label name####
+if (args_DimReduc == "tsne") {
+  cord_x <- c("t-SNE-1")
+  cord_y <- c("t-SNE-2")
+} else if (args_DimReduc == "umap") {
+  cord_x <- c("UMAP-1")
+  cord_y <- c("UMAP-2")
+} else {
+  cord_x <-  c("cord-1")
+  cord_y <- c("cord-2")
+}
+
+
 #### ggplot cls####
 gg_cls <- ggplot(df_merged, 
                  aes(x = cord_1,
@@ -126,13 +139,15 @@ gg_cls <- ggplot(df_merged,
                     )
                 ) + 
     labs(color = "Cluster") +
-    theme(text = element_text(size = 24)) +
     geom_point(size = 6.0, 
                alpha = 0.6) +
     geom_label_repel(max.overlaps = Inf,
                      min.segment.length = 0,
-                     size = 7.0,
-                     force = 6.0) # ラベル間の反発力
+                     size = 9.0,
+                     force = 6.0) +# ラベル間の反発力
+    theme(text = element_text(size = 60)) +
+    labs(x = cord_x,
+         y = cord_y)
 
 #### ggplot NeuronType####
 gg_NT <- ggplot(df_merged, 
@@ -143,13 +158,15 @@ gg_NT <- ggplot(df_merged,
                      )
                 ) + 
     labs(color = "NeuronType") +
-    theme(text = element_text(size = 24)) +
     geom_point(size = 6.0, 
                alpha = 0.6) +
     geom_label_repel(max.overlaps = Inf,
                      min.segment.length = 0,
-                     size = 7.0,
-                     force = 6.0) # ラベル間の反発力
+                     size = 9.0,
+                     force = 6.0) +# ラベル間の反発力
+    theme(text = element_text(size = 60)) +
+    labs(x = cord_x,
+         y = cord_y) 
 
 #### ggplot eval_label####
 gg_eval_label <- ggplot(df_merged, 
@@ -160,13 +177,15 @@ gg_eval_label <- ggplot(df_merged,
                      )
                 ) + 
     labs(color = "Classes") +
-    theme(text = element_text(size = 24)) +
     geom_point(size = 6.0, 
                alpha = 0.6) +
     geom_label_repel(max.overlaps = Inf,
                      min.segment.length = 0,
-                     size = 7.0,
-                     force = 6.0) # ラベル間の反発力
+                     size = 9.0,
+                     force = 6.0) +# ラベル間の反発力
+    theme(text = element_text(size = 60)) +
+    labs(x = cord_x,
+         y = cord_y) 
 #### ggplot cell_count####
 gg_cell_count <- ggplot(df_merged, 
                         aes(x = cord_1,
@@ -175,15 +194,19 @@ gg_cell_count <- ggplot(df_merged,
                             color = CellCount
                             )
                         ) + 
-  scale_color_viridis_c(option = "D")+
+  scale_color_viridis_c(option = "D") +
   labs(color = "CellCount") +
-  theme(text = element_text(size = 24)) +
   geom_point(size = 6.0, 
              alpha = 0.6) +
   geom_label_repel(max.overlaps = Inf,
                    min.segment.length = 0,
-                   size = 7.0,
-                   force = 6.0) # ラベル間の反発力
+                   size = 9.0,
+                   force = 6.0) +# ラベル間の反発力
+    theme(text = element_text(size = 60)) +
+    labs(x = cord_x,
+         y = cord_y) +
+  theme(legend.key.height = unit(1.5, "cm")) +
+  theme(legend.key.width = unit(1.5, "cm"))
 #### ggplot count_sum####
 gg_count_sum <- ggplot(df_merged, 
                         aes(x = cord_1,
@@ -192,15 +215,19 @@ gg_count_sum <- ggplot(df_merged,
                             color = Count_sum
                             )
                         ) + 
-  scale_color_viridis_c(option = "D")+
+  scale_color_viridis_c(option = "D") +
   labs(color = "Count_sum") +
-  theme(text = element_text(size = 24)) +
   geom_point(size = 6.0, 
              alpha = 0.6) +
   geom_label_repel(max.overlaps = Inf,
                    min.segment.length = 0,
-                   size = 7.0,
-                   force = 6.0) # ラベル間の反発力
+                   size = 9.0,
+                   force = 6.0) +# ラベル間の反発力
+    theme(text = element_text(size = 60)) +
+    labs(x = cord_x,
+         y = cord_y) +
+  theme(legend.key.height = unit(1.5, "cm")) +
+  theme(legend.key.width = unit(1.5, "cm"))
 #### patchwork 5plot####
 # annotation
 str_remove(args_output, 

@@ -65,11 +65,11 @@ gg <- gg + guides(colour="none")
 gg <- gg + geom_boxplot(outlier.shape = NA, alpha =0.8) #外れ値のプロットを省く
 gg <- gg + geom_point(position = position_jitter(width=0.05), size = 3.0 ,alpha = 0.7)
 # gg <- gg + labs(fill="sample") + xlab("sample") + ylab("weight")
-gg <- gg + xlab("Sample No.") + ylab("weight")
-# gg <- gg + 
-#     ggtitle("weight beeswarm (sort by weight average)") +
-#     theme(plot.title = element_text(hjust = 0.5)) + 
-#     theme(legend.position = "none")
+gg <- gg + xlab("Sample No.") + ylab("weight") + scale_y_continuous(limits = c(0, 0.6))
+gg <- gg + 
+    # ggtitle("weight beeswarm (sort by weight average)") +
+    # theme(plot.title = element_text(hjust = 0.5)) + 
+    theme(legend.position = "none")
 # all text size
 gg <- gg + theme(text = element_text(size = 60)) 
 
