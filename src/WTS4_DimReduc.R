@@ -34,6 +34,7 @@ load(args_input_distance)
 d <- merged_distance
 
 #### Dimensionality Reduction####
+set.seed(1234)
 df_cord <- switch(args_DimReduc,
           "tsne" = .wts_tsne(d),
           "umap" = .wts_umap(d),
