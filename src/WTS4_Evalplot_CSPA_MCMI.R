@@ -108,7 +108,7 @@ gg <- gg + geom_point(data = df_all_long,
                       aes(x = k_number, y = Eval_Value, colour = DataName),
                       size = 6.0)
 # all text size
-gg <- gg + theme(text = element_text(size = 60)) 
+gg <- gg + theme(text = element_text(size = 70)) 
 
 #### ggplot scale_color_manual####
 #参考 色見本 http://www.okadajp.org/RWiki/?色見本
