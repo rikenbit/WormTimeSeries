@@ -9,9 +9,9 @@ args_output <- args[3]
 # # args input
 # args_input <-c("output/WTS4/normalize_1/stimAfter/SBD_abs")
 # # eval method
-# args_eval_method <- c("ARI_behavior")
+# args_eval_method <- c("Silhouette")
 # # output
-# args_output <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Evalplot_CSPA_MCMI/ARI_behavior.png")
+# args_output <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Evalplot_CSPA_MCMI/Silhouette.png")
 
 #### args_k_number####
 args_k_number <- as.numeric(2:20)

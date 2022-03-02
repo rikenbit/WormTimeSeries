@@ -1,15 +1,16 @@
 # WTS4_Eval_sample
+
 ###################################################
 # data time range
 time_range = ["stimAfter"]
 
 # Distance Data
-dist_data = ["EUCL","SBD_abs"]
-# dist_data = ["SBD_abs"]
+# dist_data = ["EUCL","SBD_abs"]
+dist_data = ["SBD_abs"]
 
 # No. of Clusters
-N_CLUSTERS = list(map(str, range(2, 21)))
-# N_CLUSTERS = ["3"]
+# N_CLUSTERS = list(map(str, range(2, 21)))
+N_CLUSTERS = ["9"]
 
 rule all:
     input:
