@@ -77,7 +77,8 @@ df_cord_cls_NL <- merge(df_cord_cls,
                            df_NL, 
                            by.x = "cell_type", 
                            by.y = "cell_type", 
-                           all.x = TRUE)
+                           all.x = TRUE
+                        )
 # unknown label is NA
 ######## load&merge cell_count########
 # df_cell_count
@@ -87,7 +88,8 @@ df_cord_cls_NL_count <- merge(df_cord_cls_NL,
                               df_cell_count, 
                               by.x = "cell_type", 
                               by.y = "CellType",
-                              all.x = TRUE)
+                              all.x = TRUE
+                              )
 ######## load&merge df_count_sum########
 load(args_count_sum)
 
@@ -95,19 +97,22 @@ df_cord_cls_NL_count_sum <- merge(df_cord_cls_NL_count,
                                   df_count_sum, 
                                   by.x = "cell_type", 
                                   by.y = "CellType",
-                                  all.x = TRUE)
+                                  all.x = TRUE
+                                  )
 merge(df_cord_cls_NL_count, 
       df_count_sum, 
       by.x = "cell_type", 
       by.y = "CellType",
-      all.x = TRUE) %>% 
+      all.x = TRUE
+      ) %>% 
     # NAを0に変換
     replace_na(., replace = list(Count_sum = 0)) -> df_cord_cls_NL_count_sum
 #### load eval_label####
 read.xlsx(args_eval_label,
           sheet = "Sheet1",
           rowNames = FALSE,
-          colNames =TRUE) %>% 
+          colNames =TRUE
+          ) %>% 
     dplyr::rename(CellType = celltype, 
                   Classes = class) -> df_eval_label
 
@@ -116,7 +121,8 @@ df_merged <- merge(df_cord_cls_NL_count_sum,
                    df_eval_label, 
                    by.x = "cell_type", 
                    by.y = "CellType", 
-                   all.x = TRUE)
+                   all.x = TRUE
+                   )
 
 #### ggplot axis label name####
 if (args_DimReduc == "tsne") {
@@ -217,7 +223,7 @@ gg_count_sum <- ggplot(df_merged,
                             )
                         ) + 
   scale_color_viridis_c(option = "D") +
-  labs(color = "Count_sum") +
+  labs(color = "Consistency") +
   geom_point(size = 6.0, 
              alpha = 0.6) +
   geom_label_repel(max.overlaps = Inf,
@@ -244,7 +250,6 @@ gg <- gg_cls +
     plot_layout(nrow = 1) +
     plot_annotation(
         title = plot_title,
-        # caption = 'made with patchwork',
         theme = theme(plot.title = element_text(size = 60, hjust = 0.5))
     )
 
