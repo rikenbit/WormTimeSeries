@@ -8,8 +8,8 @@ dist_data = ["SBD_abs"]
 time_range = ["stimAfter"]
 
 # Evaluation Method
-Evaluation_method = ["PseudoF", "Connectivity", "kNN", "ARI_behavior", "purity_behavior", "Fmeasure_behavior", "Entropy_behavior", "NMI_behavior", "AMI_behavior","Silhouette"]
-
+# Evaluation_method = ["PseudoF", "Connectivity", "kNN", "ARI_behavior", "purity_behavior", "Fmeasure_behavior", "Entropy_behavior", "NMI_behavior", "AMI_behavior","Silhouette"]
+Evaluation_method = ["Silhouette"]
 rule all:
     input:
         expand('output/WTS4/normalize_1/{range}/{dist}/Evalplot_CSPA_MCMI/{Eval}.png',

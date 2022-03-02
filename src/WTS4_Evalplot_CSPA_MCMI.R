@@ -108,7 +108,7 @@ gg <- gg + geom_point(data = df_all_long,
                       aes(x = k_number, y = Eval_Value, colour = DataName),
                       size = 6.0)
 # all text size
-gg <- gg + theme(text = element_text(size = 40)) 
+gg <- gg + theme(text = element_text(size = 60)) 
 
 #### ggplot scale_color_manual####
 #参考 色見本 http://www.okadajp.org/RWiki/?色見本
@@ -139,18 +139,28 @@ gg <- gg + scale_color_manual(values = c("CSPA"="black",
                                          "27"="aquamarine",
                                          "28"="lightgray")
                               )
+if (args_eval_method == "Silhouette") {
+  label_x <- c("Average silhouette coefficient")
+} else {
+  label_x <-  c("Eval_Value")
+}
 
-#### graph title####
-# str_remove(args_output, "output/WTS4/normalize_1/stimAfter/") %>% 
-#   str_remove(., ".png") -> plot_title
-args_eval_method -> plot_title
-# 参考 https://stats.biopapyrus.jp/r/ggplot/geom_bar.html
-#### patchwork####
-gg <- gg +
-    plot_annotation(title = plot_title,
-                    caption = 'made with patchwork',
-                    theme = theme(plot.title = element_text(size = 60, hjust = 0.5))
-                    )
+gg <- gg + labs(x = label_x,
+                y = "Number of clusters",
+                color = "Clustering methods")
+gg <- gg + guides(color=guide_legend(ncol=1))
+
+# #### graph title####
+# # str_remove(args_output, "output/WTS4/normalize_1/stimAfter/") %>% 
+# #   str_remove(., ".png") -> plot_title
+# args_eval_method -> plot_title
+# # 参考 https://stats.biopapyrus.jp/r/ggplot/geom_bar.html
+# #### patchwork####
+# gg <- gg +
+#     plot_annotation(title = plot_title,
+#                     caption = 'made with patchwork',
+#                     theme = theme(plot.title = element_text(size = 60, hjust = 0.5))
+#                     )
 
 #### ggsave####
 ggsave(filename = args_output, 
