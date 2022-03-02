@@ -39,7 +39,8 @@ save(eval_result, file=args_output_value)
 gg_sil <- myfviz_silhouette(sil, gg_sil$data$cluster, label=TRUE) +
   theme(axis.text.x = element_text(angle = 90)) +
   theme(axis.text.x = element_text(size = 8)) +
-  theme(text = element_text(size = 30))
+  theme(text = element_text(size = 90)) +
+  theme(axis.text.x = element_blank())
 
 #### ggsave fviz_silhouette####
 ggsave(filename = args_output_plot, 
