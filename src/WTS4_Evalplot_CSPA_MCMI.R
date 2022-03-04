@@ -140,13 +140,13 @@ gg <- gg + scale_color_manual(values = c("CSPA"="black",
                                          "28"="lightgray")
                               )
 if (args_eval_method == "Silhouette") {
-  label_x <- c("Average silhouette coefficient")
+  label_y <- c("Average silhouette coefficient")
 } else {
-  label_x <-  c("Eval_Value")
+  label_y <-  c("Eval_Value")
 }
 
-gg <- gg + labs(x = label_x,
-                y = "Number of clusters",
+gg <- gg + labs(x = "Number of clusters",
+                y = label_y,
                 color = "Clustering methods")
 gg <- gg + guides(color=guide_legend(ncol=1))
 
