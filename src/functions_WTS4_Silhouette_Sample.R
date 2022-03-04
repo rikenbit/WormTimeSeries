@@ -25,12 +25,23 @@ library(usedist)
   #### silhouette####
   sil <- silhouette(cls, d)
   # clsが１種類敷かない場合 silhoutteの結果はエラーになる
-  rownames(sil) <- attr(d, "Labels")
-  gg_sil <- fviz_silhouette(sil)
-  
-  #### save eval_result####
-  eval_result <- mean(gg_sil$data$sil_width)
-  return(eval_result)
+  # rownames(sil) <- attr(d, "Labels")
+  # gg_sil <- fviz_silhouette(sil)
+  # 
+  # #### save eval_result####
+  # eval_result <- mean(gg_sil$data$sil_width)
+  # return(eval_result)
+  if (is.na(sil)) {
+    eval_result <- NA
+    return(eval_result)
+  } else {
+    rownames(sil) <- attr(d, "Labels")
+    gg_sil <- fviz_silhouette(sil)
+    
+    #### save eval_result####
+    eval_result <- mean(gg_sil$data$sil_width)
+    return(eval_result)
+  }
 }
 
 .list_gg_sil = function(x) {
@@ -38,6 +49,10 @@ library(usedist)
   cls <- df_cls_list[[x]]$Clusters
   #### silhouette####
   sil <- silhouette(cls, d)
+  if (is.na(sil)) {
+    gg_sil <- NA
+    return(gg_sil)
+  } else {
   rownames(sil) <- attr(d, "Labels")
   gg_sil <- fviz_silhouette(sil)
   #### silhouette ggplot####
@@ -46,6 +61,7 @@ library(usedist)
     theme(axis.text.x = element_text(size = 8)) +
     theme(text = element_text(size = 30))
   return(gg_sil)
+  }
 }
 #### myfviz_silhouette####
 # https://stackoverflow.com/questions/61820019/how-can-i-change-the-color-to-a-variable-other-than-cluster-number-in-fviz-silho

@@ -5,8 +5,8 @@ N_CLUSTERS = list(map(str, range(2, 21)))
 # N_CLUSTERS = ["4"]
 
 # Distance Data
-dist_data = ["EUCL","SBD_abs"]
-# dist_data = ["SBD_abs"]
+# dist_data = ["EUCL","SBD_abs"]
+dist_data = ["EUCL"]
 
 # data time range
 time_range = ["stimAfter"]

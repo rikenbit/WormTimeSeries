@@ -14,13 +14,13 @@ args_params_plot <- args[4]
 args_output_gg <- args[5]
 
 # #### test args####
-# args_params_distance <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Distance")
-# args_input_cls <-  c("output/WTS4/normalize_1/stimAfter/SBD_abs/Cluster_sample/k_Number_5/sample_cls.RData")
-# args_output_value <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Eval_sample/Silhouette/k_Number_5.RData")
-# # args_params_plot <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/DimReduc_sample/k_Number_5/Sil_plot")
-# # args_output_gg <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/DimReduc_sample/k_Number_5/Sil_gg.RData")
-# args_params_plot <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/DimReduc_sample/k_Number_5/Sil_plot")
-# args_output_gg <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/DimReduc_sample/k_Number_5/Sil_plot/Sil_gg.RData")
+# args_params_distance <- c("output/WTS4/normalize_1/stimAfter/EUCL/Distance")
+# args_input_cls <-  c("output/WTS4/normalize_1/stimAfter/EUCL/Cluster_sample/k_Number_2/sample_cls.RData")
+# args_output_value <- c("output/WTS4/normalize_1/stimAfter/EUCL/Eval_sample/Silhouette/k_Number_2.RData")
+# # args_params_plot <- c("output/WTS4/normalize_1/stimAfter/EUCL/DimReduc_sample/k_Number_2/Sil_plot")
+# # args_output_gg <- c("output/WTS4/normalize_1/stimAfter/EUCL/DimReduc_sample/k_Number_2/Sil_gg.RData")
+# args_params_plot <- c("output/WTS4/normalize_1/stimAfter/EUCL/DimReduc_sample/k_Number_2/Sil_plot")
+# args_output_gg <- c("output/WTS4/normalize_1/stimAfter/EUCL/DimReduc_sample/k_Number_2/Sil_plot/Sil_gg.RData")
 
 #### fix sample number sort####
 input_path_list <- list.files(args_params_distance, pattern="SampleNumber_", full.names=TRUE)
@@ -64,6 +64,9 @@ seq(1:length(D)) %>%
 #### save png####
 # SampleNumber_*.pngで保存
 for(i in seq(1:length(D))){
+  if (is.na(gg_sil[[i]])) {
+    # シルエット係数がNAなら何もしない
+  } else {
   sample_num <- sample_sort_num[i]
   eval(parse(text=paste0("args_output_png <- c('",args_params_plot,"/SampleNumber_",sample_num,".png')")))
   gg <- gg_sil[[i]]
@@ -74,6 +77,7 @@ for(i in seq(1:length(D))){
          width = 30.0, 
          height = 20.0,
          limitsize = FALSE)
+  }
 }
 
 #### save ggplot####
