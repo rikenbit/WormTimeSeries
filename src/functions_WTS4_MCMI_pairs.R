@@ -1,8 +1,10 @@
 #library
 ##################################################
-library()
-library(viridis)
+library(tidyverse)
+library(GGally)
+library(igraph)
+library(openxlsx)
 ##################################################
-.func = function(x) {
-	return(return_object)
-}
+# .func = function(x) {
+# 	return(return_object)
+# }
