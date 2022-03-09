@@ -1,6 +1,7 @@
 source("src/functions_WTS4_MCMI_pairs.R")
 
 #### args setting####
+args <- commandArgs(trailingOnly = T)
 args_MCMI_matrix <- args[1]
 args_count_sum <- args[2]
 args_cell_count <- args[3]
@@ -15,7 +16,7 @@ args_output_Class <- args[9]
 # # matrix U
 # args_MCMI_matrix <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/MCMIHOOI/Merged_data/k_Number_9.RData")
 # # Consistency
-# args_count_sum <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/ClsCount/k_Number_5/df_count_sum.RData")
+# args_count_sum <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/ClsCount/k_Number_9/df_count_sum.RData")
 # # No_of_cells
 # args_cell_count <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Distance/CellCount.RData")
 # # Cluster
