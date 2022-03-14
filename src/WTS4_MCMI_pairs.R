@@ -40,6 +40,8 @@ merged_data$U %>%
 #### load Consistency####
 # df_count_sum
 load(args_count_sum)
+df_count_sum %>% 
+  dplyr::rename(., Consistency=Count_sum) -> df_Consistency
 #### load No_of_cells####
 # df_cell_count
 load(args_cell_count)
@@ -77,25 +79,51 @@ read.xlsx(args_eval_label,
   dplyr::rename(cell_type = celltype, 
                 Class = class) -> df_Class
 
-#### merge####
-U_df %>% 
-  dplyr::mutate(Consistency = df_count_sum$Count_sum) %>% #連続値
-  dplyr::mutate(No_of_cells = df_cell_count$CellCount) %>% #連続値
-  dplyr::mutate(Cluster = as.character(vec_Cluster)) %>% #離散
-  dplyr::mutate(cell_type = df_cell_count$CellType) -> U_input #細胞名 あとで除去
-merge(U_input, 
+#### merge cluster####
+U_df %>%
+  dplyr::mutate(cell_type = rownames(as.data.frame(merged_cls))) %>% 
+  dplyr::mutate(Cluster = as.data.frame(merged_cls)$merged_cls) -> U_df_CellType #細胞名 あとで除去
+# クラスターを数字から文字列(離散値)
+U_df_CellType$Cluster <- as.character(U_df_CellType$Cluster)
+#### merge Consistency####
+merge(U_df_CellType, 
+      df_Consistency, 
+      by.x = "cell_type", 
+      by.y = "CellType", 
+      all.x = TRUE) -> U_df_Consistency
+#### merge No_of_cells####
+merge(U_df_Consistency, 
+      df_No_of_cells, 
+      by.x = "cell_type", 
+      by.y = "CellType", 
+      all.x = TRUE) -> U_df_CellType
+
+#### merge Neuron_type####
+merge(U_df_CellType, 
       df_Neuron_type, #離散
       by.x = "cell_type", 
       by.y = "cell_type", 
-      all.x = TRUE) -> U_input
-merge(U_input, 
+      all.x = TRUE) -> U_df_NT
+#### merge Class####
+merge(U_df_NT, 
       df_Class, #離散
       by.x = "cell_type", 
       by.y = "cell_type", 
-      all.x = TRUE) -> U_input
-U_input$Class <- as.character(U_input$Class)
+      all.x = TRUE) -> U_df_Class
+U_df_Class$Class <- as.character(U_df_Class$Class)
+
+#### U_imput####
 # 細胞名はggpairsで使わないので削除
-U_input <- dplyr::select(U_input, -cell_type)
+U_input <- dplyr::select(U_df_Class, -cell_type)
+U_col <- ncol(U_input) - 5
+U_input %>% 
+  dplyr::select(1:U_col, 
+                Consistency,
+                No_of_cells, 
+                Cluster, 
+                Class, 
+                Neuron_type) -> U_input
+
 # set data col
 ncol_gg <- ncol(U_input) - 3
 #### ggpairs Cluster####
@@ -110,7 +138,7 @@ ggsave(filename = args_output_Cluster,
        plot = gg_Cluster,
        dpi = 100, 
        width = 35.0, 
-       height = 30.0,
+       height = 35.0,
        limitsize = FALSE)
 #### ggpairs Neuron_type####
 # ggpairs
@@ -123,8 +151,8 @@ U_input %>%
 ggsave(filename = args_output_Neuron_type, 
        plot = gg_Neuron_type,
        dpi = 100, 
-       width = 30.0, 
-       height = 30.0,
+       width = 35.0, 
+       height = 35.0,
        limitsize = FALSE)
 #### ggpairs Class####
 # ggpairs
@@ -137,6 +165,32 @@ U_input %>%
 ggsave(filename = args_output_Class, 
        plot = gg_Class,
        dpi = 100, 
-       width = 30.0, 
-       height = 30.0,
+       width = 35.0, 
+       height = 35.0,
        limitsize = FALSE)
+
+# #### test ggplot####
+# library(ggrepel)
+# gg <- ggplot(U_df_Class, 
+#        aes(x = V1,
+#            y = V2, 
+#            label = cell_type,
+#            color = Class
+#            ) 
+#        ) +
+#   geom_point(alpha = 0.6) +
+#   geom_label_repel(max.overlaps = Inf,
+#                    min.segment.length = 0,
+#                    force = 6.0) 
+# 
+# gg <- ggplot(U_df_Class, 
+#              aes(x = V1,
+#                  y = V2, 
+#                  label = cell_type,
+#                  color = Cluster
+#                  ) 
+#              ) +
+#   geom_point(alpha = 0.6) +
+#   geom_label_repel(max.overlaps = Inf,
+#                    min.segment.length = 0,
+#                    force = 6.0) 
