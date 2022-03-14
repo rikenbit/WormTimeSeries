@@ -1,41 +1,36 @@
-# WTS4_plot
-###################################################
-# No. of Clusters
-N_CLUSTERS = list(map(str, range(2, 21)))
-# N_CLUSTERS = ["3"]
+import pandas as pd
+from snakemake.utils import Paramspace
 
-# Distance Data
-dist_data = ["EUCL","SBD_abs"]
-# dist_data = ["SBD_abs"]
+DATA_DIR = ["n1_28sample"]
+SAMPLE_SHEET = pd.read_csv('data/n1_28sample/WTS4_sample_sheet.csv', dtype='string')
 
-# data time range
-time_range = ["stimAfter"]
-
-# ReClustering method
-ReClustering_method = ["CSPA","OINDSCAL","MCMIHOOI"]
-# ReClustering_method = ["CSPA"]
+paramspace = Paramspace(SAMPLE_SHEET, filename_params=['CellNumber', 'CellType'], param_sep="_")
 
 rule all:
     input:
-        expand('output/WTS4/normalize_1/{range}/{dist}/{Re_cls}/Merged_data/k_Number_{N_cls}.RData',
-            range=time_range,
-            dist=dist_data,
-            N_cls=N_CLUSTERS,
-            Re_cls=ReClustering_method
-            )
-        
-rule WTS4_plot:
+        expand('output/WTS4/{DATA_DIR}/plot/{params}.png', params = paramspace.instance_patterns, DATA_DIR = DATA_DIR)
+
+rule WTS1_plot_normalize_1:
     input:
-        Mem_matrix = 'output/WTS4/normalize_1/{range}/{dist}/Membership/k_Number_{N_cls}.RData'
+        expand('data/{DATA_DIR}/ReadData_{Sample}.RData', Sample = paramspace["SampleNumber"], DATA_DIR = DATA_DIR),
+        expand('data/stimulation/stim_{Sample}.RData', Sample = paramspace["SampleNumber"]),
+        expand('data/mCherry/mCherry_{Sample}.RData', Sample = paramspace["SampleNumber"]),
+        expand('data/mCherry/mCherry_{Sample}.RData', Sample = paramspace["SampleNumber"]),
+        expand('data/Position/Position_{Sample}.RData', Sample = paramspace["SampleNumber"])
     output:
-        m_data = 'output/WTS4/normalize_1/{range}/{dist}/{Re_cls}/Merged_data/k_Number_{N_cls}.RData'
+        f"output/WTS4/{DATA_DIR}/plot/{paramspace.wildcard_pattern}.png"
+    params:
+        args1 = lambda w: w["SampleNumber"],
+        args2 = lambda w: w["CellNumber"],
+        args3 = lambda w: w["CellType"],
+        args4 = {DATA_DIR}
     benchmark:
-        'benchmarks/WTS4/normalize_1/{range}/{dist}/{Re_cls}/Merged_data/k_Number_{N_cls}.txt'
+        f'benchmarks/WTS4/{DATA_DIR}/plot/{paramspace.wildcard_pattern}.txt'
     container:
-        "docker://docker_images"
+        "docker://yamaken37/???:???"
     resources:
         mem_gb=200
     log:
-        'logs/WTS4/normalize_1/{range}/{dist}/{Re_cls}/Merged_data/k_Number_{N_cls}.log'
+        f'logs/WTS4/{DATA_DIR}/plot/{paramspace.wildcard_pattern}.log'
     shell:
-        'src/WTS4_plot.sh {wildcards.Re_cls} {input.Mem_matrix} {output.m_data}>& {log}'
+        'src/WTS4_plot.sh {params.args1} {params.args2} {params.args3} {params.args4} {output} >& {log}'

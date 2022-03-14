@@ -1,7 +1,6 @@
 #library
 ##################################################
-library()
+library(tidyverse)
+library(RcppRoll)
+library(patchwork)
 ##################################################
-.func = function(x) {
-	return(return_object)
-}
