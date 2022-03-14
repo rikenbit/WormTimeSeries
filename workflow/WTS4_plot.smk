@@ -27,7 +27,7 @@ rule WTS1_plot_normalize_1:
     benchmark:
         f'benchmarks/WTS4/{DATA_DIR}/plot/{paramspace.wildcard_pattern}.txt'
     container:
-        "docker://yamaken37/???:???"
+        "docker://yamaken37/plot_tf:20220314"
     resources:
         mem_gb=200
     log:
