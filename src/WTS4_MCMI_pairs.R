@@ -112,7 +112,7 @@ merge(U_df_NT,
       all.x = TRUE) -> U_df_Class
 U_df_Class$Class <- as.character(U_df_Class$Class)
 
-#### U_imput####
+#### U_input####
 # 細胞名はggpairsで使わないので削除
 U_input <- dplyr::select(U_df_Class, -cell_type)
 U_col <- ncol(U_input) - 5
@@ -123,6 +123,8 @@ U_input %>%
                 Cluster, 
                 Class, 
                 Neuron_type) -> U_input
+# PC3 to NA
+U_input <- mutate(U_input, Class = na_if(Class, "PC3"))
 
 # set data col
 ncol_gg <- ncol(U_input) - 3
@@ -159,7 +161,8 @@ ggsave(filename = args_output_Neuron_type,
 U_input %>% 
   ggpairs(columns = 1:ncol_gg,
           aes_string(colour="Class", alpha=0.5),
-          upper = list(continuous = "blank")
+          # upper = list(continuous = "blank")
+          upper=list(continuous=wrap("cor", size=5))
           ) -> gg_Class
 # ggsave
 ggsave(filename = args_output_Class, 
