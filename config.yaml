@@ -23,3 +23,5 @@ normalize_3: data/normalize_3/WTS1_sample_sheet.csv
 # SAMPLE_SHEET_normalize_4: data/normalize_4/WTS1_sample_sheet.csv
 normalize_4: data/normalize_4/WTS1_sample_sheet.csv
 # DATA_DIR_normalize_4: normalize_4
+
+DATA_DIR_n1_28sample: n1_28sample
