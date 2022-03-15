@@ -36,14 +36,14 @@ rule all:
 rule WTS4_DimReduc:
     input:
         m_distance = 'output/WTS4/{normalize_P}/{range}/{dist}/{Re_cls}/Merged_distance/k_Number_{N_cls}.RData',
-        m_cls = 'output/WTS4/{normalize_P}/{range}/{dist}/{Re_cls}/Merged_cls/k_Number_{N_cls}.RData'
+        m_cls = 'output/WTS4/{normalize_P}/{range}/{dist}/{Re_cls}/Merged_cls/k_Number_{N_cls}.RData',
+        cell_count = 'output/WTS4/{normalize_P}/{range}/{dist}/Distance/CellCount.RData',
+        count_sum  = 'output/WTS4/{normalize_P}/{range}/{dist}/ClsCount/k_Number_{N_cls}/df_count_sum.RData'
     output:
         'output/WTS4/{normalize_P}/{range}/{dist}/{Re_cls}/Merged_{DR}/k_Number_{N_cls}.png'
     params:
         NL = 'data/igraph/Fig1_HNS.RData',
-        EL = 'data/WTS4_Eval_behavior_fix.xlsx',
-        cell_count = 'output/WTS4/{normalize_P}/{range}/{dist}/Distance/CellCount.RData',
-        count_sum  = 'output/WTS4/{normalize_P}/{range}/{dist}/ClsCount/k_Number_{N_cls}/df_count_sum.RData'
+        EL = 'data/WTS4_Eval_behavior_fix.xlsx'
     benchmark:
         'benchmarks/WTS4/{normalize_P}/{range}/{dist}/{Re_cls}/Merged_{DR}/k_Number_{N_cls}.txt'
     container:
@@ -53,4 +53,4 @@ rule WTS4_DimReduc:
     log:
         'logs/WTS4/{normalize_P}/{range}/{dist}/{Re_cls}/Merged_{DR}/k_Number_{N_cls}.log'
     shell:
-        'src/WTS4_DimReduc.sh {input.m_distance} {input.m_cls} {wildcards.DR} {output} {params.NL} {params.EL} {params.cell_count} {params.count_sum} >& {log}'
+        'src/WTS4_DimReduc.sh {input.m_distance} {input.m_cls} {wildcards.DR} {output} {params.NL} {params.EL} {input.cell_count} {input.count_sum} >& {log}'
