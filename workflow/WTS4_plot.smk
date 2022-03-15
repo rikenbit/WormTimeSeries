@@ -1,9 +1,12 @@
 import pandas as pd
 from snakemake.utils import Paramspace
 
+# unhashable type: 'list'
 # DATA_DIR = ["n1_28sample"]
-configfile: "config.yaml"
-DATA_DIR = config['DATA_DIR_n1_28sample']
+# configfile: "config.yaml"
+# DATA_DIR = config['DATA_DIR_n1_28sample']
+# paramsはlist型はだめ文字列型（str型）はOK
+DATA_DIR = 'n1_28sample'
 SAMPLE_SHEET = pd.read_csv('data/n1_28sample/WTS4_sample_sheet.csv', dtype='string')
 
 paramspace = Paramspace(SAMPLE_SHEET, filename_params=['CellNumber', 'CellType'], param_sep="_")
