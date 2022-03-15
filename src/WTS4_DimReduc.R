@@ -164,7 +164,7 @@ gg_NT <- ggplot(df_merged,
                      color = factor(NeuronType)
                      )
                 ) + 
-    labs(color = " Neuron type") +
+    labs(color = "Neuron type") +
     geom_point(size = 6.0, 
                alpha = 0.6) +
     geom_label_repel(max.overlaps = Inf,

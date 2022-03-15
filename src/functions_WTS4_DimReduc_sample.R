@@ -116,13 +116,23 @@ set.seed(1234)
     sample_id <- as.numeric(df_weight[x, 1])
     df_merged <- DF_cord_cls_nl_be_count[[sample_id]]
     #### ggplot Cluster####
+    if (args_DimReduc == "tsne") {
+      cord_x <- c("t-SNE-1")
+      cord_y <- c("t-SNE-2")
+    } else if (args_DimReduc == "umap") {
+      cord_x <- c("UMAP-1")
+      cord_y <- c("UMAP-2")
+    } else {
+      cord_x <-  c("cord-1")
+      cord_y <- c("cord-2")
+    }
     gg_cls <- ggplot(df_merged, 
                      aes(x = cord_1,
                          y = cord_2, 
                          label = cell_type,
                          color = factor(Cluster)
-                     )
-    ) + 
+                         )
+                     ) + 
         labs(color = "Cluster") +
         theme(text = element_text(size = 24)) +
         geom_point(size = 6.0, 
@@ -130,7 +140,9 @@ set.seed(1234)
         geom_label_repel(max.overlaps = Inf,
                          min.segment.length = 0,
                          size = 7.0,
-                         force = 6.0) # ラベル間の反発力
+                         force = 6.0) + # ラベル間の反発力
+        theme(text = element_text(size = 60)) +
+        labs(x = cord_x, y = cord_y)
     #### ggplot NeuronType####
     gg_NT <- ggplot(df_merged, 
                     aes(x = cord_1,
@@ -139,14 +151,16 @@ set.seed(1234)
                         color = factor(NeuronType)
                     )
     ) + 
-        labs(color = "NeuronType") +
+        labs(color = "Neuron type") +
         theme(text = element_text(size = 24)) +
         geom_point(size = 6.0, 
                    alpha = 0.6) +
         geom_label_repel(max.overlaps = Inf,
                          min.segment.length = 0,
                          size = 7.0,
-                         force = 6.0) # ラベル間の反発力
+                         force = 6.0) + # ラベル間の反発力
+        theme(text = element_text(size = 60)) +
+        labs(x = cord_x, y = cord_y) 
     #### ggplot eval_label####
     gg_eval_label <- ggplot(df_merged, 
                             aes(x = cord_1,
@@ -155,31 +169,37 @@ set.seed(1234)
                                 color = factor(Classes)
                             )
     ) + 
-        labs(color = "Classes") +
+        labs(color = "Class") +
         theme(text = element_text(size = 24)) +
         geom_point(size = 6.0, 
                    alpha = 0.6) +
         geom_label_repel(max.overlaps = Inf,
                          min.segment.length = 0,
                          size = 7.0,
-                         force = 6.0) # ラベル間の反発力
+                         force = 6.0) + # ラベル間の反発力
+        theme(text = element_text(size = 60)) +
+        labs(x = cord_x, y = cord_y) 
     #### ggplot cell_count####
     gg_cell_count <- ggplot(df_merged, 
                             aes(x = cord_1,
                                 y = cord_2, 
                                 label = cell_type,
                                 color = CellCount
-                            )
-    ) + 
-      scale_color_viridis_c(option = "D")+
-      labs(color = "CellCount") +
-      theme(text = element_text(size = 24)) +
+                                )
+                            ) + 
+      scale_color_viridis_c(option = "D") +
+      labs(color = "No. of cells") +
       geom_point(size = 6.0, 
                  alpha = 0.6) +
       geom_label_repel(max.overlaps = Inf,
                        min.segment.length = 0,
-                       size = 7.0,
-                       force = 6.0) # ラベル間の反発力
+                       size = 9.0,
+                       force = 6.0) +# ラベル間の反発力
+      theme(text = element_text(size = 60)) +
+      labs(x = cord_x,
+           y = cord_y) +
+      theme(legend.key.height = unit(1.5, "cm")) +
+      theme(legend.key.width = unit(1.5, "cm"))
     #### patchwork####
     eval(parse(text=paste0("plot_title <- c('",x,"_SampleNumber_",sample_n,"')")))
     gg <- gg_cls +
