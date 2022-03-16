@@ -1,31 +1,39 @@
 # WTS4_DimReduc
 ###################################################
 # No. of Clusters
-N_CLUSTERS = list(map(str, range(2, 21)))
-# N_CLUSTERS = ["5"]
+# N_CLUSTERS = list(map(str, range(2, 21)))
+N_CLUSTERS = ["5","9"]
 
 # Distance Data
-# dist_data = ["EUCL","SBD_abs"]
-dist_data = ["SBD_abs"]
+dist_data = ["EUCL","SBD_abs"]
+# dist_data = ["SBD_abs"]
 
 # data time range
 time_range = ["stimAfter"]
 
 # ReClustering method
 # ReClustering_method = ["CSPA","OINDSCAL","MCMIHOOI"]
-ReClustering_method = ["MCMIHOOI"]
+ReClustering_method = ["CSPA", "MCMIHOOI"]
 
 # Dimensionality Reduction Method
-DimReduc = ["tsne","umap"]
-# DimReduc = ["tsne"]
+# DimReduc = ["tsne","umap"]
+DimReduc = ["tsne"]
 
 # normalize pattern
-# normalize_pattern = ["normalize_1"]
-normalize_pattern = ["n1_28sample"]
+normalize_pattern = ["normalize_1"]
+# normalize_pattern = ["n1_28sample"]
 
 rule all:
     input:
         expand('output/WTS4/{normalize_P}/{range}/{dist}/{Re_cls}/Merged_{DR}/k_Number_{N_cls}.png',
+            range=time_range,
+            dist=dist_data,
+            N_cls=N_CLUSTERS,
+            Re_cls=ReClustering_method,
+            DR=DimReduc,
+            normalize_P=normalize_pattern
+            ),
+        expand('output/WTS4/{normalize_P}/{range}/{dist}/{Re_cls}/Merged_{DR}/label_table_k{N_cls}.csv',
             range=time_range,
             dist=dist_data,
             N_cls=N_CLUSTERS,
@@ -40,7 +48,8 @@ rule WTS4_DimReduc:
         cell_count = 'output/WTS4/{normalize_P}/{range}/{dist}/Distance/CellCount.RData',
         count_sum  = 'output/WTS4/{normalize_P}/{range}/{dist}/ClsCount/k_Number_{N_cls}/df_count_sum.RData'
     output:
-        'output/WTS4/{normalize_P}/{range}/{dist}/{Re_cls}/Merged_{DR}/k_Number_{N_cls}.png'
+        png = 'output/WTS4/{normalize_P}/{range}/{dist}/{Re_cls}/Merged_{DR}/k_Number_{N_cls}.png',
+        csv = 'output/WTS4/{normalize_P}/{range}/{dist}/{Re_cls}/Merged_{DR}/label_table_k{N_cls}.csv'
     params:
         NL = 'data/igraph/Fig1_HNS.RData',
         EL = 'data/WTS4_Eval_behavior_fix.xlsx'
@@ -53,4 +62,6 @@ rule WTS4_DimReduc:
     log:
         'logs/WTS4/{normalize_P}/{range}/{dist}/{Re_cls}/Merged_{DR}/k_Number_{N_cls}.log'
     shell:
-        'src/WTS4_DimReduc.sh {input.m_distance} {input.m_cls} {wildcards.DR} {output} {params.NL} {params.EL} {input.cell_count} {input.count_sum} >& {log}'
+        'src/WTS4_DimReduc.sh {input.m_distance} {input.m_cls} {wildcards.DR} {output.png} {params.NL} {params.EL} {input.cell_count} {input.count_sum} {output.csv} >& {log}'
+
+

@@ -18,7 +18,9 @@ args_eval_label <- args[6]
 args_cell_count <- args[7]
 # df_count_sum
 args_count_sum <- args[8]
-  
+# Additional File 1: Cellular labels to interpret the clustering results
+args_output_csv <- args[9]
+
 # #### test args####
 # args_input_distance <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/CSPA/Merged_distance/k_Number_5.RData")
 # args_input_cls <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/CSPA/Merged_cls/k_Number_5.RData")
@@ -260,3 +262,18 @@ ggsave(filename = args_output,
        width = 116.0, 
        height = 20.0,
        limitsize = FALSE)
+
+#### write.csv#####
+label_table <- data.frame(
+  Cell_type = df_merged$cell_type,
+  Cluster = df_merged$cls,
+  Neuron_type = df_merged$NeuronType,
+  Class = df_merged$Classes,
+  Consistency = df_merged$Count_sum,
+  No_cells = df_merged$CellCount,
+  stringsAsFactors = FALSE
+  )
+
+write.csv(label_table, 
+          args_output_csv, 
+          row.names=FALSE)
