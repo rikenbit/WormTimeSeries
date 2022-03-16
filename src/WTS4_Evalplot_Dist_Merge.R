@@ -101,15 +101,19 @@ gg <- ggplot(df_long,
              ) +
   geom_line(size = 3) +
   geom_point(size = 6) +
-  theme(text = element_text(size = 60)) +
+  theme(text = element_text(size = 120)) +
   labs(x = "Number of clusters",
        y = label_y,
-       color = "Clustering methods")
+       color = "Clustering methods") +
+  scale_color_hue(labels = c(EUCL_CSPA = "CSPA (Euclid)", 
+                             EUCL_MCMIHOOI = "MC-MI-HOOI (Euclid)", 
+                             mSBD_CSPA = "CSPA (mSBD)", 
+                             mSBD_MCMIHOOI = "WormTensor"))
 
 #### ggsave####
 ggsave(filename = args_output, 
        plot = gg,
        dpi = 100, 
-       width = 40.0, 
+       width = 50.0, 
        height = 30.0,
        limitsize = FALSE)
