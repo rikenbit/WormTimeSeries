@@ -16,10 +16,10 @@ args_k <- args[5]
 # # args_output_k <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/DimReduc_sample/k_Number_9/Eval_Sample_Fig4_k9.png")
 # # args_k <- c("9")
 
-# args_weight_path <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/MCMIHOOI/Merged_data")
-# args_sample_path <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Distance")
-# args_input_cls <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Cluster_sample/k_Number_9/sample_cls.RData")
-# args_output_k <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/DimReduc_sample/k_Number_9/Eval_Sample_Fig4_k.png")
+# args_weight_path <- c("output/WTS4/n1_28sample/stimAfter/SBD_abs/MCMIHOOI/Merged_data")
+# args_sample_path <- c("output/WTS4/n1_28sample/stimAfter/SBD_abs/Distance")
+# args_input_cls <- c("output/WTS4/n1_28sample/stimAfter/SBD_abs/Cluster_sample/k_Number_9/sample_cls.RData")
+# args_output_k <- c("output/WTS4/n1_28sample/stimAfter/SBD_abs/DimReduc_sample/k_Number_9/Eval_Sample_Fig4_k.png")
 # args_k <- c("9")
 
 #### No. of Clusters####
@@ -53,6 +53,7 @@ cluster_sort_num %>%
 df_weight_all %>% 
     group_by(SampleNumber) %>% 
     summarise(weight_ave = mean(weight_abs)) -> df_weight_group
+
 #### weight_sort####
 df_weight_group %>% 
     dplyr::arrange(desc(weight_ave)) %>% 
@@ -102,6 +103,6 @@ gg_k <- gg_k + labs(x = "Sample No.", y = "No. of annotated cells") + theme(text
 ggsave(filename = args_output_k, 
        plot = gg_k,
        dpi = 100, 
-       width = 20.0, 
-       height = 20.0,
+       width = 30.0, 
+       height = 30.0,
        limitsize = FALSE)

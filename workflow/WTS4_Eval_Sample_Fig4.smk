@@ -2,12 +2,11 @@
 
 ###################################################
 # No. of Clusters
-# N_CLUSTERS = list(map(str, range(2, 21)))
-N_CLUSTERS = ["9"]
+N_CLUSTERS = list(map(str, range(2, 21)))
+# N_CLUSTERS = ["9"]
 
 # Distance Data
-dist_data = ["EUCL","SBD_abs"]
-# dist_data = ["SBD_abs"]
+dist_data = ["SBD_abs"]
 
 # data time range
 time_range = ["stimAfter"]
@@ -42,4 +41,4 @@ rule WTS4_Eval_Sample_Fig4:
     log:
         'logs/WTS4/{normalize_P}/{range}/{dist}/DimReduc_sample/k_Number_{N_cls}/Eval_Sample_Fig4_k.log'
     shell:
-        'src/WTS4_Eval_Sample_Fig4.sh {params.weight_path} {params.sample_path} {input.sample_cls} {output.No_of_cells} {wildcards.N_cls}>& {log}'
+        'src/WTS4_Eval_Sample_Fig4.sh {params.weight_path} {params.sample_path} {input.sample_cls} {output.No_of_cells} {wildcards.N_cls} >& {log}'
