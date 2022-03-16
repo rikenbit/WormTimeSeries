@@ -4,15 +4,23 @@ source("src/functions_WTS4_Eval_Sample_Fig4.R")
 args <- commandArgs(trailingOnly = T)
 args_weight_path <- args[1]
 args_sample_path <- args[2]
-args_output <- args[3]
+args_input_cls <- args[3]
+args_output_k <- args[4]
+args_k <- args[5]
 
-# #### test args####
-args_weight_path <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/MCMIHOOI/Merged_data")
-args_sample_path <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Distance")
-args_input_cls <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Cluster_sample/k_Number_9/sample_cls.RData")
-args_output <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/DimReduc_sample/k_Number_9/Eval_Sample_Fig4.png")
-args_output_k <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/DimReduc_sample/k_Number_9/Eval_Sample_Fig4_k9.png")
-args_k <- args_k <- c("9")
+# # #### test args####
+# # args_weight_path <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/MCMIHOOI/Merged_data")
+# # args_sample_path <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Distance")
+# # args_input_cls <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Cluster_sample/k_Number_9/sample_cls.RData")
+# # args_output <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/DimReduc_sample/k_Number_9/Eval_Sample_Fig4.png")
+# # args_output_k <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/DimReduc_sample/k_Number_9/Eval_Sample_Fig4_k9.png")
+# # args_k <- c("9")
+
+# args_weight_path <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/MCMIHOOI/Merged_data")
+# args_sample_path <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Distance")
+# args_input_cls <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Cluster_sample/k_Number_9/sample_cls.RData")
+# args_output_k <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/DimReduc_sample/k_Number_9/Eval_Sample_Fig4_k.png")
+# args_k <- c("9")
 
 #### No. of Clusters####
 k <- as.numeric(args_k)
@@ -63,19 +71,19 @@ df_eval_wide <- data.frame(SampleNumber = as.character(sample_sort_num),
                            row.names = NULL
                            )
 
-gg <- ggplot(df_eval_wide, aes(x = SampleNumber, y= annotated_count, group=1))
-gg <- gg + scale_x_discrete(limits=sample_sort_weight)
-gg <- gg + geom_line(color = "black", size= 2)
-gg <- gg + geom_smooth(method="lm", size =0.5, se = TRUE, alpha = 0.4, color = "black")
-gg <- gg + labs(x = "Sample No.", y = "No. of annotated cells") + theme(text = element_text(size = 60))
+# gg <- ggplot(df_eval_wide, aes(x = SampleNumber, y= annotated_count, group=1))
+# gg <- gg + scale_x_discrete(limits=sample_sort_weight)
+# gg <- gg + geom_line(color = "black", size= 2)
+# gg <- gg + geom_smooth(method="lm", size =0.5, se = TRUE, alpha = 0.4, color = "black")
+# gg <- gg + labs(x = "Sample No.", y = "No. of annotated cells") + theme(text = element_text(size = 60))
 
-#### ggsave####
-ggsave(filename = args_output, 
-       plot = gg,
-       dpi = 100, 
-       width = 20.0, 
-       height = 20.0,
-       limitsize = FALSE)
+# #### ggsave####
+# ggsave(filename = args_output, 
+#        plot = gg,
+#        dpi = 100, 
+#        width = 20.0, 
+#        height = 20.0,
+#        limitsize = FALSE)
 
 #### sort one k#####
 df_weight_all %>% 
