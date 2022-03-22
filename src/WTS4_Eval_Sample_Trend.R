@@ -15,15 +15,27 @@ args_input_path<- args[5]
 
 # #### test args####
 # # input sample_cls
-# args_input_cls <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Cluster_sample/k_Number_5/sample_cls.RData")
+# args_input_cls <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Cluster_sample/k_Number_9/sample_cls.RData")
 # # output ggplot
-# args_output <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/DimReduc_sample/k_Number_5/Eval_Sample_trend.png")
+# args_output <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/DimReduc_sample/k_Number_9/Eval_Sample_trend.png")
 # # params merged_cls
-# args_input_merged_cls <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/MCMIHOOI/Merged_cls/k_Number_5.RData")
+# args_input_merged_cls <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/MCMIHOOI/Merged_cls/k_Number_9.RData")
 # # input merged_distance
-# args_input_MCMIHOOI <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/MCMIHOOI/Merged_data/k_Number_5.RData")
+# args_input_MCMIHOOI <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/MCMIHOOI/Merged_data/k_Number_9.RData")
 # # params dist path
 # args_input_path<- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Distance")
+
+# #### test args n1_28sample####
+# # input sample_cls
+# args_input_cls <- c("output/WTS4/n1_28sample/stimAfter/SBD_abs/Cluster_sample/k_Number_9/sample_cls.RData")
+# # output ggplot
+# args_output <- c("output/WTS4/n1_28sample/stimAfter/SBD_abs/DimReduc_sample/k_Number_9/Eval_Sample_trend.png")
+# # params merged_cls
+# args_input_merged_cls <- c("output/WTS4/n1_28sample/stimAfter/SBD_abs/MCMIHOOI/Merged_cls/k_Number_9.RData")
+# # input merged_distance
+# args_input_MCMIHOOI <- c("output/WTS4/n1_28sample/stimAfter/SBD_abs/MCMIHOOI/Merged_data/k_Number_9.RData")
+# # params dist path
+# args_input_path<- c("output/WTS4/n1_28sample/stimAfter/SBD_abs/Distance")
 
 ##### load sample_cls list####
 load(args_input_cls)
