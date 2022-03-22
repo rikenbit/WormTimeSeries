@@ -20,7 +20,8 @@ rule all:
         expand('output/WTS4/{normalize_P}/{range}/{dist}/DimReduc_sample/k_Number_{N_cls}/Eval_sample.png',
             range=time_range,
             dist=dist_data,
-            N_cls=N_CLUSTERS
+            N_cls=N_CLUSTERS,
+            normalize_P=normalize_pattern
             )
         
 rule WTS4_Eval_sample:
