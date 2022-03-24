@@ -1,41 +1,41 @@
 # WTS4_Noisy_Label
 ###################################################
-# No. of Clusters
-N_CLUSTERS = list(map(str, range(2, 21)))
-# N_CLUSTERS = ["3"]
+# N_SAMPLES = list(map(str, range(1, 29)))
+# # remove artifact
+# N_SAMPLES.remove('3')
+# N_SAMPLES.remove('8')
+# N_SAMPLES.remove('20')
+# N_SAMPLES.remove('25')
+N_SAMPLES = ["2"]
 
-# Distance Data
-dist_data = ["EUCL","SBD_abs"]
-# dist_data = ["SBD_abs"]
+NOISE_TEST = ["n1_noise"]
 
-# data time range
-time_range = ["stimAfter"]
-
-# ReClustering method
-ReClustering_method = ["CSPA","OINDSCAL","MCMIHOOI"]
-# ReClustering_method = ["CSPA"]
+# N_TRY = list(map(str, range(1, 11)))
+N_TRY = ["1"]
 
 rule all:
     input:
-        expand('output/WTS4/normalize_1/{range}/{dist}/{Re_cls}/Merged_data/k_Number_{N_cls}.RData',
-            range=time_range,
-            dist=dist_data,
-            N_cls=N_CLUSTERS,
-            Re_cls=ReClustering_method
+        expand('data/{NOISE}_{TRY}/ReadData_{N}.RData',
+            N=N_SAMPLES,
+            NOISE=NOISE_TEST,
+            TRY=N_TRY
             )
         
 rule WTS4_Noisy_Label:
     input:
-        Mem_matrix = 'output/WTS4/normalize_1/{range}/{dist}/Membership/k_Number_{N_cls}.RData'
+        ReadData = 'data/normalize_1/ReadData_{N}.RData'
     output:
-        m_data = 'output/WTS4/normalize_1/{range}/{dist}/{Re_cls}/Merged_data/k_Number_{N_cls}.RData'
+        'data/{NOISE}_{TRY}/ReadData_{N}.RData'
+    params:
+        merged_cls = 'output/WTS4/normalize_1/stimAfter/SBD_abs/MCMIHOOI/Merged_cls/k_Number_9.RData'
     benchmark:
-        'benchmarks/WTS4/normalize_1/{range}/{dist}/{Re_cls}/Merged_data/k_Number_{N_cls}.txt'
+        'benchmarks/WTS4/{NOISE}_{TRY}/ReadData_{N}.txt'
     container:
-        "docker://docker_images"
+        "docker://yamaken37/cluster_sample:20220119"
+        # tidyverseが入っているコンテナとして選んだ
     resources:
         mem_gb=200
     log:
-        'logs/WTS4/normalize_1/{range}/{dist}/{Re_cls}/Merged_data/k_Number_{N_cls}.log'
+        'logs/WTS4/{NOISE}_{TRY}/ReadData_{N}.log'
     shell:
-        'src/WTS4_Noisy_Label.sh {wildcards.Re_cls} {input.Mem_matrix} {output.m_data}>& {log}'
+        'src/WTS4_Noisy_Label.sh {input.ReadData} {wildcards.N} {params.merged_cls} {wildcards.TRY} {output}>& {log}'
