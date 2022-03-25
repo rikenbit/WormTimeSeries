@@ -38,7 +38,7 @@ args_SBD <- args[5]
 #### load NeuronActivity####
 load(args_neuron)
 # 元データがディレクトリごとではなく，ファイル名で各サンプルがわかれている対応
-# eval(parse(text=paste0("ReadData <- ReadData_",args_sample)))
+eval(parse(text=paste0("ReadData <- ReadData_",args_sample)))
 
 #### switch time range & trim ReadData####
 ReadData <- switch(args_time,
