@@ -40,41 +40,77 @@
 #     shell:
 #         'src/WTS4_{wildcards.dist}.sh {wildcards.N} {input.RData} {wildcards.range} {params.stim_xlsx} {output.dist_matrix}>& {log}'
 
-# WTS4 SBD 
-###################################################
-N_SAMPLES = ["3","8","20","25"]
+# # WTS4 SBD 
+# ###################################################
+# N_SAMPLES = ["3","8","20","25"]
 
-# NOISE_TEST = ["n1_28sample","normalize_1"]
-NOISE_TEST = ["n1_28sample"]
+# # NOISE_TEST = ["n1_28sample","normalize_1"]
+# NOISE_TEST = ["n1_28sample"]
+
+# # Distance Data
+# dist_data = ["EUCL","SBD_abs"]
+# # data time range
+# time_range = ["all","stimAfter"]
+
+# rule all:
+#     input:
+#         expand('output/WTS4/{NOISE}/{range}/{dist}/Distance/SampleNumber_{N}.RData', 
+#             N=N_SAMPLES,
+#             dist=dist_data,
+#             range=time_range,
+#             NOISE=NOISE_TEST
+#             )
+        
+# rule DistMatrix:
+#     input:
+#         RData = 'data/{NOISE}/ReadData_{N}.RData'
+#     output:
+#         dist_matrix = 'output/WTS4/{NOISE}/{range}/{dist}/Distance/SampleNumber_{N}.RData'
+#     params:
+#         stim_xlsx = 'data/stimulation/stimulation_timing.xlsx'
+#     benchmark:
+#         'benchmarks/WTS4/{NOISE}/{range}/{dist}/Distance/SampleNumber_{N}.txt'
+#     conda:
+#         '../envs/myenv_WTS4_{dist}.yaml'
+#     resources:
+#         mem_gb=200
+#     log:
+#         'logs/WTS4/{NOISE}/{range}/{dist}/Distance/SampleNumber_{N}.log'
+#     shell:
+#         'src/WTS4_{wildcards.dist}.sh {wildcards.N} {input.RData} {wildcards.range} {params.stim_xlsx} {output.dist_matrix}>& {log}'
+
+# WTS4 SBD n1_28sample_trim20
+###################################################
+
+N_SAMPLES = ["20"]
 
 # Distance Data
-dist_data = ["EUCL","SBD_abs"]
+dist_data = ["SBD_abs"]
 # data time range
-time_range = ["all","stimAfter"]
+time_range = ["stimAfter"]
 
 rule all:
     input:
-        expand('output/WTS4/{NOISE}/{range}/{dist}/Distance/SampleNumber_{N}.RData', 
+        expand('output/WTS4/n1_28sample_trim20/{range}/{dist}/Distance/SampleNumber_{N}.RData', 
             N=N_SAMPLES,
             dist=dist_data,
-            range=time_range,
-            NOISE=NOISE_TEST
+            range=time_range
             )
         
-rule DistMatrix:
+rule WTS4_DistMatrix:
     input:
-        RData = 'data/{NOISE}/ReadData_{N}.RData'
+        RData = 'data/normalize_1/ReadData_{N}.RData'
     output:
-        dist_matrix = 'output/WTS4/{NOISE}/{range}/{dist}/Distance/SampleNumber_{N}.RData'
+        dist_matrix = 'output/WTS4/n1_28sample_trim20/{range}/{dist}/Distance/SampleNumber_{N}.RData'
     params:
         stim_xlsx = 'data/stimulation/stimulation_timing.xlsx'
     benchmark:
-        'benchmarks/WTS4/{NOISE}/{range}/{dist}/Distance/SampleNumber_{N}.txt'
+        'benchmarks/WTS4/n1_28sample_trim20/{range}/{dist}/Distance/SampleNumber_{N}.txt'
     conda:
         '../envs/myenv_WTS4_{dist}.yaml'
     resources:
         mem_gb=200
     log:
-        'logs/WTS4/{NOISE}/{range}/{dist}/Distance/SampleNumber_{N}.log'
+        'logs/WTS4/n1_28sample_trim20/{range}/{dist}/Distance/SampleNumber_{N}.log'
     shell:
         'src/WTS4_{wildcards.dist}.sh {wildcards.N} {input.RData} {wildcards.range} {params.stim_xlsx} {output.dist_matrix}>& {log}'
