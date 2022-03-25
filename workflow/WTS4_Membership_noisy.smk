@@ -1,12 +1,12 @@
 # WTS4_Membership n1_28sample_trim20
 ###################################################
 # 28SAMPLES
-# N_SAMPLES = list(map(str, range(1, 29)))
-N_SAMPLES = ["3"]
+N_SAMPLES = list(map(str, range(1, 29)))
+# N_SAMPLES = ["3"]
 
 # No. of Clusters
-# N_CLUSTERS = list(map(str, range(2, 21)))
-N_CLUSTERS = ["3"]
+N_CLUSTERS = list(map(str, range(2, 21)))
+# N_CLUSTERS = ["3"]
 
 # Distance Data
 dist_data = ["SBD_abs"]
