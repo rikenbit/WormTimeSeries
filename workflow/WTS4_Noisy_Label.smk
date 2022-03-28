@@ -1,13 +1,14 @@
 # WTS4_Noisy_Label
 ###################################################
-# N_SAMPLES = list(map(str, range(1, 29)))
-# # remove artifact
-# N_SAMPLES.remove('3')
-# N_SAMPLES.remove('8')
-# N_SAMPLES.remove('20')
-# N_SAMPLES.remove('25')
-N_SAMPLES = ["2"]
+N_SAMPLES = list(map(str, range(1, 29)))
+# remove artifact
+N_SAMPLES.remove('3')
+N_SAMPLES.remove('8')
+N_SAMPLES.remove('20')
+N_SAMPLES.remove('25')
+# N_SAMPLES = ["2"]
 
+# data group
 NOISE_TEST = ["n1_noise"]
 
 N_TRY = list(map(str, range(1, 11)))
