@@ -14,7 +14,7 @@ args_test_number <- args[4]
 # save ALL_Ann_df
 args_output <- args[5]
   
-#### test args####
+# #### test args####
 # # path NeuronActivity Data
 # args_ReadData <- c("data/normalize_1/ReadData_2.RData")
 # # sample number サンプル番号の指定
@@ -33,14 +33,14 @@ load(args_ReadData)
 eval(parse(text=paste0("ReadData <- ReadData_",args_sample)))
 
 #### 数字列のデータフレーム####
-grep("^[0-9]", colnames(ReadData), invert=FALSE) %>% 
+grep("^[0-9]", colnames(ReadData), invert=FALSE) %>%
   ReadData[,.] -> not_Ann_df
 
 #### 細胞名列のデータフレーム####
 grep("^[0-9]", colnames(ReadData), invert=TRUE) %>% 
   ReadData[,.] -> Ann_df
 
-#### アノテーションで使われていない細胞名を取得####
+#### 和集合の細胞名を取得####
 load(args_merged_cls)
 as.data.frame(merged_cls) %>% 
   rownames_to_column("cell_type") %>% 
@@ -48,20 +48,24 @@ as.data.frame(merged_cls) %>%
 
 #### 使われていない細胞名を取得####
 setdiff(all_celltype, 
-        colnames(Ann_df)) -> not_Used_celltype
+        colnames(Ann_df)
+        ) -> not_Used_celltype
 
-#### ランダムに割り当てる細胞名を抽出####
+#### ランダムに割り当てる値を抽出####
 # 乱数固定
 set.seed(args_test_number)
-sample(not_Used_celltype, 
-       ncol(not_Ann_df)) -> Ramdom_celltype
+# 重複を許して、数字列から値（6000行）を抽出
+sample(colnames(not_Ann_df), 
+       length(not_Used_celltype),
+       replace = TRUE
+       ) -> Ramdom_celltype
 
 #### insert random celltype####
-Labeled_Ann_df <- not_Ann_df
-colnames(Labeled_Ann_df) <- Ramdom_celltype
+Labeled_Ann_df <- not_Ann_df[, Ramdom_celltype]
+colnames(Labeled_Ann_df) <- not_Used_celltype
 
 #### bind data.frame####
-cbind.data.frame(Labeled_Ann_df, Ann_df) -> ALL_Ann_df
+cbind.data.frame(Ann_df, Labeled_Ann_df) -> ALL_Ann_df
 
 #### save####
 ReadData <- ALL_Ann_df
