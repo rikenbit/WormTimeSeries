@@ -38,13 +38,7 @@ rule all:
         
 rule WTS4_Membership_Label:
     input:
-        expand('output/WTS4/{NOISE}_{TRY}/{range}/{dist}/Distance/SampleNumber_{N}.RData',
-            dist=dist_data,
-            range=time_range,
-            N=N_SAMPLES,
-            NOISE=NOISE_TEST,
-            TRY=N_TRY
-            )
+        Noise_matrix = 'output/WTS4/{NOISE}_{TRY}/{range}/{dist}/Distance/SampleNumber_{N}.RData'
     output:
         Mem_matrix = 'output/WTS4/{NOISE}_{TRY}/NoiseSampleNumber_{N}/{range}/{dist}/Membership/k_Number_{N_cls}.RData'
     params:
@@ -59,4 +53,4 @@ rule WTS4_Membership_Label:
     log:
         'logs/WTS4/{NOISE}_{TRY}/NoiseSampleNumber_{N}/{range}/{dist}/Membership/k_Number_{N_cls}.log'
     shell:
-        'src/WTS4_Membership_Label.sh {wildcards.N_cls} {params.dist_matrix_path} {input} {output.Mem_matrix} {wildcards.N} >& {log}'
+        'src/WTS4_Membership_Label.sh {wildcards.N_cls} {params.dist_matrix_path} {input.Noise_matrix} {output.Mem_matrix} {wildcards.N} >& {log}'

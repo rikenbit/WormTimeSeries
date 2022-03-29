@@ -59,7 +59,7 @@ change_d <- d
 # 入れ替える順番取得
 noise_order <- which(sample_sort_num==args_noise_sample)
 # 入れ替え
-D[[args_noise_sample]] <- change_d
+D[[noise_order]] <- change_d
 
 #### Clustering against each distance matrix####
 C <- lapply(D, function(d, k) {
