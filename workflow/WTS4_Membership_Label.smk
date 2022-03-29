@@ -22,8 +22,8 @@ time_range = ["stimAfter"]
 # data group
 NOISE_TEST = ["n1_noise"]
 
-# N_TRY = list(map(str, range(1, 11)))
-N_TRY = ["1"]
+N_TRY = list(map(str, range(1, 11)))
+# N_TRY = ["1"]
 
 rule all:
     input:
