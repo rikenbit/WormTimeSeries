@@ -1,17 +1,17 @@
 # WTS4_Membership_Label
 ###################################################
 # SAMPLE NUMBER
-# N_SAMPLES = list(map(str, range(1, 29)))
-# # remove artifact
-# N_SAMPLES.remove('3')
-# N_SAMPLES.remove('8')
-# N_SAMPLES.remove('20')
-# N_SAMPLES.remove('25')
-N_SAMPLES = ["10"]
+N_SAMPLES = list(map(str, range(1, 29)))
+# remove artifact
+N_SAMPLES.remove('3')
+N_SAMPLES.remove('8')
+N_SAMPLES.remove('20')
+N_SAMPLES.remove('25')
+# N_SAMPLES = ["10"]
 
 # No. of Clusters
-N_CLUSTERS = list(map(str, range(2, 21)))
-# N_CLUSTERS = ["3"]
+# N_CLUSTERS = list(map(str, range(2, 21)))
+N_CLUSTERS = ["3"]
 
 # Distance Data
 dist_data = ["SBD_abs"]
