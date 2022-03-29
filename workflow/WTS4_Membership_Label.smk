@@ -10,8 +10,8 @@
 N_SAMPLES = ["10"]
 
 # No. of Clusters
-# N_CLUSTERS = list(map(str, range(2, 21)))
-N_CLUSTERS = ["3"]
+N_CLUSTERS = list(map(str, range(2, 21)))
+# N_CLUSTERS = ["3"]
 
 # Distance Data
 dist_data = ["SBD_abs"]
