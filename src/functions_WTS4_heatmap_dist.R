@@ -1,0 +1,22 @@
+#library
+##################################################
+library(tidyverse)
+library(RColorBrewer)
+library(viridis)
+library(usedist)
+##################################################
+ggplot_ghm = function(x) {
+	ghm <- ggplot(x, aes(x = col_celltype, y = row_celltype, fill = dist_value))
+	ghm <- ghm + geom_tile()
+	ghm <- ghm + theme_bw()
+	ghm <- ghm + theme(plot.background = element_blank(),
+	                   panel.grid.minor = element_blank(),
+	                   panel.grid.major = element_blank(),
+	                   panel.background = element_blank(),
+	                   axis.line = element_blank(),
+	                   axis.ticks = element_blank(),
+	                   strip.background = element_rect(fill = "white", colour = "white"),
+	                   axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+	ghm <- ghm + scale_fill_viridis(na.value = "white") #heatmap color is viridis
+	return(ghm)
+}
