@@ -1,41 +1,41 @@
 # WTS4_heatmap_dist
-###################################################
-# No. of Clusters
-N_CLUSTERS = list(map(str, range(2, 21)))
-# N_CLUSTERS = ["3"]
-
+##################################################
 # Distance Data
-dist_data = ["EUCL","SBD_abs"]
-# dist_data = ["SBD_abs"]
+# dist_data = ["EUCL","SBD_abs"]
+dist_data = ["SBD_abs"]
 
 # data time range
 time_range = ["stimAfter"]
 
-# ReClustering method
-ReClustering_method = ["CSPA","OINDSCAL","MCMIHOOI"]
-# ReClustering_method = ["CSPA"]
+N_SAMPLES = list(map(str, range(1, 29)))
+# remove artifact
+N_SAMPLES.remove('3')
+N_SAMPLES.remove('8')
+N_SAMPLES.remove('20')
+N_SAMPLES.remove('25')
 
 rule all:
     input:
-        expand('output/WTS4/normalize_1/{range}/{dist}/{Re_cls}/Merged_data/k_Number_{N_cls}.RData',
+        expand('output/WTS4/normalize_1/{range}/{dist}/Dist_heatmap/SampleNumber_{N}.png',
             range=time_range,
             dist=dist_data,
-            N_cls=N_CLUSTERS,
-            Re_cls=ReClustering_method
+            N=N_SAMPLES
             )
         
 rule WTS4_heatmap_dist:
     input:
-        Mem_matrix = 'output/WTS4/normalize_1/{range}/{dist}/Membership/k_Number_{N_cls}.RData'
+        distance = 'output/WTS4/normalize_1/{range}/{dist}/Distance/SampleNumber_{N}.RData'
     output:
-        m_data = 'output/WTS4/normalize_1/{range}/{dist}/{Re_cls}/Merged_data/k_Number_{N_cls}.RData'
+        heatmap = 'output/WTS4/normalize_1/{range}/{dist}/Dist_heatmap/SampleNumber_{N}.png'
+    params:
+        merged_cls = 'output/WTS4/normalize_1/{range}/{dist}/MCMIHOOI/Merged_cls/k_Number_9.RData'
     benchmark:
-        'benchmarks/WTS4/normalize_1/{range}/{dist}/{Re_cls}/Merged_data/k_Number_{N_cls}.txt'
+        'benchmarks/WTS4/normalize_1/{range}/{dist}/Dist_heatmap/SampleNumber_{N}.txt'
     container:
-        "docker://docker_images"
+        "docker://yamaken37/heatmap_dist:20220331"
     resources:
         mem_gb=200
     log:
-        'logs/WTS4/normalize_1/{range}/{dist}/{Re_cls}/Merged_data/k_Number_{N_cls}.log'
+        'logs/WTS4/normalize_1/{range}/{dist}/Dist_heatmap/SampleNumber_{N}.log'
     shell:
-        'src/WTS4_heatmap_dist.sh {wildcards.Re_cls} {input.Mem_matrix} {output.m_data}>& {log}'
+        'src/WTS4_heatmap_dist.sh {input.distance} {params.merged_cls} {output.heatmap}>& {log}'

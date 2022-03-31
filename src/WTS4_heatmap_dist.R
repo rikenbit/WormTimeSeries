@@ -73,4 +73,5 @@ ggsave(filename = args_output_heatmap,
        plot = ghm, 
        dpi = 80, 
        width = 24.0, 
-       height = 22.0)
+       height = 22.0
+       )
