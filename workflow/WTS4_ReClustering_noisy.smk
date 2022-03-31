@@ -25,12 +25,13 @@ ReClustering_method = ["MCMIHOOI"]
 N_TRY = ["1"]
 
 # SAMPLE NUMBER
-N_SAMPLES = list(map(str, range(1, 29)))
-# remove artifact
-N_SAMPLES.remove('3')
-N_SAMPLES.remove('8')
-N_SAMPLES.remove('20')
-N_SAMPLES.remove('25')
+# N_SAMPLES = list(map(str, range(1, 29)))
+# # remove artifact
+# N_SAMPLES.remove('3')
+# N_SAMPLES.remove('8')
+# N_SAMPLES.remove('20')
+# N_SAMPLES.remove('25')
+N_SAMPLES = ["1"]
 
 rule all:
     input:
