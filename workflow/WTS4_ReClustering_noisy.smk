@@ -21,8 +21,8 @@ time_range = ["stimAfter"]
 ReClustering_method = ["MCMIHOOI"]
 
 # NOISE TRY
-# N_TRY = list(map(str, range(1, 11)))
-N_TRY = ["1"]
+N_TRY = list(map(str, range(1, 11)))
+# N_TRY = ["1"]
 
 # SAMPLE NUMBER
 N_SAMPLES = list(map(str, range(1, 29)))

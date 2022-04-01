@@ -11,11 +11,11 @@ args_output_heatmap <- args[3]
   
 #### test args####
 # # 距離行列
-# args_input_distance <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Distance/SampleNumber_1.RData")
+# args_input_distance <- c("output/WTS4/n1_28sample/stimAfter/SBD_abs/Distance/SampleNumber_1.RData")
 # # 細胞名の和集合取得
-# args_params_celltype <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/MCMIHOOI/Merged_cls/k_Number_9.RData")
+# args_params_celltype <- c("output/WTS4/n1_28sample/stimAfter/SBD_abs/MCMIHOOI/Merged_cls/k_Number_9.RData")
 # # ヒートマップ
-# args_output_heatmap <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Dist_heatmap/SampleNumber_1.png")
+# args_output_heatmap <- c("output/WTS4/n1_28sample/stimAfter/SBD_abs/Dist_heatmap/SampleNumber_1.png")
 
 #### load distance####
 load(args_input_distance)
@@ -62,7 +62,7 @@ left_join(long_celltype,
 
 #### plot_title####
 str_remove(args_output_heatmap, 
-           "output/WTS4/normalize_1/stimAfter/") %>% 
+           "output/WTS4/n1_28sample/stimAfter/") %>% 
   str_remove(., 
              ".png") -> plot_title
 
