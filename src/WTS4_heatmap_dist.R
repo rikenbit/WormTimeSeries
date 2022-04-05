@@ -77,7 +77,8 @@ df_ghm_lbs$col_celltype <- factor(df_ghm_lbs$col_celltype, levels = lbs)
 
 #### plot_title####
 str_remove(args_output_heatmap, 
-           "output/WTS4/n1_28sample/stimAfter/") %>% 
+           # "output/WTS4/n1_28sample/stimAfter/") %>% 
+           "output/WTS4/normalize_1/stimAfter/") %>% 
   str_remove(., 
              ".png") -> plot_title
 
@@ -95,6 +96,6 @@ ghm <- ggplot_ghm(df_ghm_lbs) +
 ggsave(filename = args_output_heatmap, 
        plot = ghm, 
        dpi = 80, 
-       width = 23.5, 
-       height = 22.0
+       width = 24.8, 
+       height = 23.0
        )
