@@ -15,10 +15,10 @@ library(tidyverse)
     return(return_object)
 }
 
-.list_beeswarm = function(x) {
-    df_weight_all %>% 
-        dplyr::filter(SampleNumber == x) %>% 
-        dplyr::arrange(as.numeric(Cluster)) %>% 
-        .$weight_abs -> return_object
-    return(return_object)
-}
+# .list_beeswarm = function(x) {
+#     df_weight_all %>% 
+#         dplyr::filter(SampleNumber == x) %>% 
+#         dplyr::arrange(as.numeric(Cluster)) %>% 
+#         .$weight_abs -> return_object
+#     return(return_object)
+# }

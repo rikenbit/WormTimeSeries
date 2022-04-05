@@ -13,12 +13,23 @@ time_range = ["stimAfter"]
 # ReClustering method
 ReClustering_method = ["MCMIHOOI"]
 
+# NOISE TRY
+N_TRY = list(map(str, range(1, 11)))
+# N_TRY = ["1"]
+
+# SAMPLE NUMBER
+N_SAMPLES = list(map(str, range(1, 29)))
+# remove artifact
+N_SAMPLES.remove('3')
+N_SAMPLES.remove('8')
+N_SAMPLES.remove('20')
+N_SAMPLES.remove('25')
+
 rule all:
     input: 
         expand('output/WTS4/{NOISE}_{TRY}/NoiseSampleNumber_{N}/{range}/{dist}/{Re_cls}/Plot_SampleWeight.png',
             range=time_range,
             dist=dist_data,
-            N_cls=N_CLUSTERS,
             Re_cls=ReClustering_method,
             NOISE=NOISE_TEST,
             N=N_SAMPLES,
@@ -30,7 +41,7 @@ rule WTS4_Plot_SampleWeight_noisy:
         'output/WTS4/{NOISE}_{TRY}/NoiseSampleNumber_{N}/{range}/{dist}/{Re_cls}/Plot_SampleWeight.png'
     params:
         weight_path  = 'output/WTS4/{NOISE}_{TRY}/NoiseSampleNumber_{N}/{range}/{dist}/{Re_cls}/Merged_data',
-        sample_path  = 'output/WTS4/{NOISE}_{TRY}/NoiseSampleNumber_{N}/{range}/{dist}/Distance'
+        sample_path  = 'output/WTS4/{NOISE}_{TRY}/{range}/{dist}/Distance'
     benchmark:
         'benchmarks/WTS4/{NOISE}_{TRY}/NoiseSampleNumber_{N}/{range}/{dist}/{Re_cls}/Plot_SampleWeight.txt'
     container:

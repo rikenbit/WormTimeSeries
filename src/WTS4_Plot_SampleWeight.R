@@ -11,6 +11,11 @@ args_output <- args[3]
 # args_sample_path <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Distance")
 # args_output <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/MCMIHOOI/Plot_SampleWeight.png")
 
+# args_weight_path <- c("output/WTS4/n1_noise_6/NoiseSampleNumber_15/stimAfter/SBD_abs/MCMIHOOI/Merged_data")
+# args_sample_path <- c("output/WTS4/n1_noise_6/stimAfter/SBD_abs/Distance")
+# args_output <- c("output/WTS4/n1_noise_6/NoiseSampleNumber_15/stimAfter/SBD_abs/MCMIHOOI/Plot_SampleWeight.png")
+
+
 #### sample number####
 sample_path_list <- list.files(args_sample_path, pattern="SampleNumber_", full.names=TRUE)
 sample_path_list %>% 
@@ -47,8 +52,8 @@ df_weight_group %>%
 #### list_sample_weight####
 # weightの大きい順にリストを作成
 # purrr
-sample_sort_weight %>% 
-    purrr::map(., .list_beeswarm) -> list_sample_weight
+# sample_sort_weight %>% 
+#     purrr::map(., .list_beeswarm) -> list_sample_weight
 
 #### beeswarm####
 # beeswarm(list_sample_weight, labels = sample_sort_weight)
