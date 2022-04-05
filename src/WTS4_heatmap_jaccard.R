@@ -2,9 +2,10 @@ source("src/functions_WTS4_heatmap_jaccard.R")
 
 #### args setting####
 #### test args####
-
-#### MCMI####
 args_input_MCMI <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/MCMIHOOI/Merged_cls/k_Number_9.RData")
+args_input_CSPA <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/CSPA/Merged_cls/k_Number_5.RData")
+args_output_heatmap <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Jaccard/heatmap.png")
+#### MCMI####
 load(args_input_MCMI)
 merged_cls %>% 
     as.data.frame() %>% 
@@ -12,7 +13,6 @@ merged_cls %>%
             dplyr::select(cell_type=1, cluster=2) -> MCMI_merged_cls
 
 #### CSPA####
-args_input_CSPA <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/CSPA/Merged_cls/k_Number_5.RData")
 load(args_input_CSPA)
 merged_cls %>% 
     as.data.frame() %>% 
@@ -53,7 +53,7 @@ df_jaccard %>%
 
 #### plot_title####
 str_remove(args_output_heatmap, 
-           "output/WTS4/n1_28sample/stimAfter/") %>% 
+           "output/WTS4/normalize_1/stimAfter/") %>% 
   str_remove(., 
              ".png") -> plot_title
 
@@ -74,4 +74,3 @@ ggsave(filename = args_output_heatmap,
        width = 23.5, 
        height = 22.0
 )
-
