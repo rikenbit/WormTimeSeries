@@ -1,8 +1,8 @@
 # WTS4_heatmap_dist
 ##################################################
 # Distance Data
-# dist_data = ["EUCL","SBD_abs"]
-dist_data = ["SBD_abs"]
+dist_data = ["EUCL","SBD_abs"]
+# dist_data = ["SBD_abs"]
 
 # data time range
 time_range = ["stimAfter"]
