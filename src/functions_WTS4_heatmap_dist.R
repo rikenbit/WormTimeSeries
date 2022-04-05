@@ -18,6 +18,7 @@ ggplot_ghm = function(x) {
 	                   axis.ticks = element_blank(),
 	                   strip.background = element_rect(fill = "white", colour = "white"),
 	                   axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
-	ghm <- ghm + scale_fill_viridis(na.value = "black", direction = -1) #heatmap color is viridis
+	ghm <- ghm + scale_fill_viridis(na.value = "grey", direction = -1) # heatmap color is viridis http://www.okadajp.org/RWiki/?色見本
+	ghm <- ghm + scale_y_discrete(limits = rev(levels(x$row_celltype))) # reverse y axis
 	return(ghm)
 }

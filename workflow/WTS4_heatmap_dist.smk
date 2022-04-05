@@ -1,41 +1,44 @@
 # WTS4_heatmap_dist
 ##################################################
 # Distance Data
-dist_data = ["EUCL","SBD_abs"]
-# dist_data = ["SBD_abs"]
+# dist_data = ["EUCL","SBD_abs"]
+dist_data = ["SBD_abs"]
 
 # data time range
 time_range = ["stimAfter"]
 
 N_SAMPLES = list(map(str, range(1, 29)))
-# # remove artifact
-# N_SAMPLES.remove('3')
-# N_SAMPLES.remove('8')
-# N_SAMPLES.remove('20')
-# N_SAMPLES.remove('25')
+# remove artifact
+N_SAMPLES.remove('3')
+N_SAMPLES.remove('8')
+N_SAMPLES.remove('20')
+N_SAMPLES.remove('25')
+
+NOISE_TEST = ["normalize_1"]
 
 rule all:
     input:
-        expand('output/WTS4/n1_28sample/{range}/{dist}/Dist_heatmap/SampleNumber_{N}.png',
+        expand('output/WTS4/{NOISE}/{range}/{dist}/Dist_heatmap/SampleNumber_{N}.png',
             range=time_range,
             dist=dist_data,
-            N=N_SAMPLES
+            N=N_SAMPLES,
+            NOISE=NOISE_TEST
             )
         
 rule WTS4_heatmap_dist:
     input:
-        distance = 'output/WTS4/n1_28sample/{range}/{dist}/Distance/SampleNumber_{N}.RData'
+        distance = 'output/WTS4/{NOISE}/{range}/{dist}/Distance/SampleNumber_{N}.RData'
     output:
-        heatmap = 'output/WTS4/n1_28sample/{range}/{dist}/Dist_heatmap/SampleNumber_{N}.png'
+        heatmap = 'output/WTS4/{NOISE}/{range}/{dist}/Dist_heatmap/SampleNumber_{N}.png'
     params:
-        merged_cls = 'output/WTS4/n1_28sample/stimAfter/SBD_abs/MCMIHOOI/Merged_cls/k_Number_9.RData'
+        merged_cls = 'output/WTS4/{NOISE}/{range}/{dist}/MCMIHOOI/Merged_cls/k_Number_9.RData'
     benchmark:
-        'benchmarks/WTS4/n1_28sample/{range}/{dist}/Dist_heatmap/SampleNumber_{N}.txt'
+        'benchmarks/WTS4/{NOISE}/{range}/{dist}/Dist_heatmap/SampleNumber_{N}.txt'
     container:
         "docker://yamaken37/heatmap_dist:20220331"
     resources:
         mem_gb=200
     log:
-        'logs/WTS4/n1_28sample/{range}/{dist}/Dist_heatmap/SampleNumber_{N}.log'
+        'logs/WTS4/{NOISE}/{range}/{dist}/Dist_heatmap/SampleNumber_{N}.log'
     shell:
         'src/WTS4_heatmap_dist.sh {input.distance} {params.merged_cls} {output.heatmap}>& {log}'
