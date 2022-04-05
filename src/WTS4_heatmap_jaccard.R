@@ -58,19 +58,11 @@ str_remove(args_output_heatmap,
              ".png") -> plot_title
 
 #### geom_tile####
-ghm <- ggplot_ghm(df_ghm) + 
-  # ggtitle(plot_title) + 
-  theme(plot.title = element_text(size = 30, hjust = 0.5)) +
-  theme(axis.title = element_text(size = 40)) + 
-  theme(legend.key.height = unit(1.5, "cm")) +
-  theme(legend.key.width = unit(1.5, "cm")) +
-  theme(legend.text = element_text(size = 30)) + 
-  theme(legend.title = element_text(size = 30))
-
+ghm <- ggplot_ghm(df_ghm)
 #### ggsave####
 ggsave(filename = args_output_heatmap, 
        plot = ghm, 
        dpi = 80, 
-       width = 23.5, 
-       height = 22.0
-)
+       width = 18.0, 
+       height = 26.0
+       )

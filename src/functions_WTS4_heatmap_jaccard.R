@@ -16,15 +16,20 @@ ggplot_ghm = function(x) {
   ghm <- ghm + geom_tile()
   ghm <- ghm + theme_bw()
   ghm <- ghm + theme(
-    # plot.background = element_blank(),
     panel.grid.minor = element_blank(),
     panel.grid.major = element_blank(),
     panel.background = element_blank(),
     axis.line = element_blank(),
     axis.ticks = element_blank(),
     strip.background = element_rect(fill = "white", colour = "white"),
-    axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+    plot.title = element_text(size = 30, hjust = 0.5),
+    axis.title = element_text(size = 40),
+    axis.text = element_text(size = 30),
+    legend.key.height = unit(1.5, "cm"),
+    legend.key.width = unit(1.5, "cm"),
+    legend.text = element_text(size = 30),
+    legend.title = element_text(size = 30)
+    )
   ghm <- ghm + scale_fill_viridis(na.value = "grey", direction = 1) # heatmap color is viridis http://www.okadajp.org/RWiki/?色見本
-  # ghm <- ghm + scale_y_discrete(limits = rev(levels(x$MCMI_k))) # reverse y axis
   return(ghm)
 }
