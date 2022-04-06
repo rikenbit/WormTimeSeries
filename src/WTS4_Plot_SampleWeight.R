@@ -78,6 +78,15 @@ gg <- gg +
 # all text size
 gg <- gg + theme(text = element_text(size = 60)) 
 
+#### plot_title####
+str_remove(args_output, 
+           "output/WTS4/") %>% 
+  str_remove(., 
+             "/MCMIHOOI/Plot_SampleWeight.png") -> plot_title
+gg <- gg + 
+  ggtitle(plot_title) + 
+  theme(plot.title = element_text(size = 30, hjust = 0.5))
+  
 #### ggsave####
 ggsave(filename = args_output, 
        plot = gg,
