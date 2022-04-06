@@ -18,13 +18,13 @@ N_TRY = list(map(str, range(1, 11)))
 # N_TRY = ["1"]
 
 # SAMPLE NUMBER
-N_SAMPLES = list(map(str, range(1, 29)))
-# remove artifact
-N_SAMPLES.remove('3')
-N_SAMPLES.remove('8')
-N_SAMPLES.remove('20')
-N_SAMPLES.remove('25')
-
+# N_SAMPLES = list(map(str, range(1, 29)))
+# # remove artifact
+# N_SAMPLES.remove('3')
+# N_SAMPLES.remove('8')
+# N_SAMPLES.remove('20')
+# N_SAMPLES.remove('25')
+N_SAMPLES = ["1"]
 rule all:
     input: 
         expand('output/WTS4/{NOISE}_{TRY}/NoiseSampleNumber_{N}/{range}/{dist}/{Re_cls}/Plot_SampleWeight.png',
