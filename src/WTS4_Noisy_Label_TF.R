@@ -68,6 +68,8 @@ colnames(Labeled_Ann_df) <- not_Used_celltype
 not_Ann_df %>% 
   as.matrix() %>% 
   t() -> A
+# 乱数固定
+set.seed(args_test_number)
 B <- random.sampling(A, n=length(not_Used_celltype))
 # random.sampling関数が行列の想定が逆なのでt()で転値
 B %>% 
