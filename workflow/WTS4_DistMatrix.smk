@@ -126,7 +126,7 @@ N_SAMPLES.remove('25')
 # N_SAMPLES = ["2"]
 
 # data group
-NOISE_TEST = ["n1_noise"]
+NOISE_TEST = ["n1_noise", "n1_noise_TF"]
 
 N_TRY = list(map(str, range(1, 11)))
 # N_TRY = ["3"]
