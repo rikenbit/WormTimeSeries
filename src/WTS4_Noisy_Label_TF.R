@@ -64,36 +64,21 @@ sample(colnames(not_Ann_df),
 Labeled_Ann_df <- not_Ann_df[, Ramdom_celltype]
 colnames(Labeled_Ann_df) <- not_Used_celltype
 
+#### 時系列random.sampling####
+not_Ann_df %>% 
+  as.matrix() %>% 
+  t() -> A
+B <- random.sampling(A, n=length(not_Used_celltype))
+# random.sampling関数が行列の想定が逆なのでt()で転値
+B %>% 
+  t() %>% 
+  as.data.frame() -> Labeled_TF
+colnames(Labeled_TF) <- colnames(Labeled_Ann_df)
+
 #### bind data.frame####
-cbind.data.frame(Ann_df, Labeled_Ann_df) -> ALL_Ann_df
+# cbind.data.frame(Ann_df, Labeled_Ann_df) -> ALL_Ann_df
+cbind.data.frame(Ann_df, Labeled_TF) -> ALL_Ann_df
 
 #### save####
 ReadData <- ALL_Ann_df
 save(ReadData, file=args_output)
-
-#### sample code####
-# 赤の細胞達（n=20とする）
-A <- matrix(runif(20*6000), nrow=20, ncol=6000)
-
-# 緑（数字名の細胞達、n=30とする）にあてがうためのデータをランダムに生成
-random.sampling <- function(A, n){
-  # 各行(細胞)x各列のランダムサンプリング
-  out <- unlist(
-    # 各行(各細胞)だけ、割り当てる細胞数分実行
-    lapply(seq(n), 
-           function(x){
-             # MARGIN = 2,各列（各TimeFrame）に対して関数適用。
-             apply(A, 2, 
-                   # replace=FALSEなので重複なしでランダムサンプリング。
-                   # 緑（数字名の細胞達）の「ある1TimeFrame」の「ある細胞」のデータを取り出す
-                   function(xx){sample(xx, 1)}
-             )
-           }
-    )
-  )
-  # 数値ベクトルの形になっているので、行列の形式に当てはめる
-  dim(out) <- c(n, length(out)/n)
-  out
-}
-
-B <- random.sampling(A, n=30)
