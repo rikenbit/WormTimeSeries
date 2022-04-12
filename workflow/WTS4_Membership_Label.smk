@@ -1,5 +1,6 @@
 # WTS4_Membership_Label
 ###################################################
+
 # SAMPLE NUMBER
 N_SAMPLES = list(map(str, range(1, 29)))
 # remove artifact
@@ -20,7 +21,8 @@ dist_data = ["SBD_abs"]
 time_range = ["stimAfter"]
 
 # data group
-NOISE_TEST = ["n1_noise"]
+# NOISE_TEST = ["n1_noise"]
+NOISE_TEST = ["n1_noise", "n1_noise_TF"]
 
 N_TRY = list(map(str, range(1, 11)))
 # N_TRY = ["1"]

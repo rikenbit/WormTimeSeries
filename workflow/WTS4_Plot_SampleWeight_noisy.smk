@@ -1,7 +1,8 @@
 # WTS4_Plot_SampleWeight_noisy ラベルノイズ
 ###################################################
 # NOISE SAMPLE PATERN
-NOISE_TEST = ["n1_noise"]
+# NOISE_TEST = ["n1_noise"]
+NOISE_TEST = ["n1_noise", "n1_noise_TF"]
 
 # Distance Data
 # dist_data = ["EUCL","SBD_abs"]

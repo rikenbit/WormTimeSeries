@@ -3,7 +3,8 @@
 # NOISE SAMPLE PATERN
 # NOISE_TEST = ["n1_28sample","n1_24sample_add3","n1_24sample_add8","n1_24sample_add20","n1_24sample_add25"]
 # NOISE_TEST = ["n1_28sample_trim20"]
-NOISE_TEST = ["n1_noise"]
+# NOISE_TEST = ["n1_noise"]
+NOISE_TEST = ["n1_noise", "n1_noise_TF"]
 
 # No. of Clusters
 N_CLUSTERS = list(map(str, range(2, 21)))
