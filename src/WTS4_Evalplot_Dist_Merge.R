@@ -99,16 +99,41 @@ gg <- ggplot(df_long,
                  y=Eval_Value,
                  colour = DataName)
              ) +
-  geom_line(size = 3) +
-  geom_point(size = 6) +
+  geom_line(size = 6) +
+  geom_point(size = 12) +
   theme(text = element_text(size = 120)) +
   labs(x = "Number of clusters",
        y = label_y,
        color = "Clustering methods") +
-  scale_color_hue(labels = c(EUCL_CSPA = "CSPA (Euclid)", 
-                             EUCL_MCMIHOOI = "MC-MI-HOOI (Euclid)", 
+  scale_color_hue(labels = c(EUCL_CSPA = "CSPA (Euclidean)", 
+                             EUCL_MCMIHOOI = "MC-MI-HOOI (Euclidean)", 
                              mSBD_CSPA = "CSPA (mSBD)", 
                              mSBD_MCMIHOOI = "WormTensor"))
+# #### point_shape#####
+# gg <- ggplot(df_long, 
+#              aes(x=k_number,
+#                  y=Eval_Value,
+#                  colour = DataName,
+#                  shape = DataName)
+#              ) +
+#     geom_line(size = 6) +
+#     geom_point(size = 12) +
+#     theme(text = element_text(size = 120)) +
+#     labs(x = "Number of clusters",
+#          y = label_y) +
+#     scale_color_hue(name ="Clustering methods",
+#                     labels = c(EUCL_CSPA = "CSPA (Euclidean)", 
+#                                EUCL_MCMIHOOI = "MC-MI-HOOI (Euclidean)", 
+#                                mSBD_CSPA = "CSPA (mSBD)", 
+#                                mSBD_MCMIHOOI = "WormTensor")
+#                     ) +
+#     scale_shape_manual(values=c(15,16,17,18),
+#                        name ="Clustering methods",
+#                        labels = c(EUCL_CSPA = "CSPA (Euclidean)", 
+#                                   EUCL_MCMIHOOI = "MC-MI-HOOI (Euclidean)", 
+#                                   mSBD_CSPA = "CSPA (mSBD)", 
+#                                   mSBD_MCMIHOOI = "WormTensor")
+#                        )
 
 #### ggsave####
 ggsave(filename = args_output, 
