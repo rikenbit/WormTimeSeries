@@ -97,12 +97,14 @@ gg_k <- ggplot(df_eval_wide, aes(x = SampleNumber, y= annotated_count, group=1))
 gg_k <- gg_k + scale_x_discrete(limits=sample_sort_weight_k)
 gg_k <- gg_k + geom_line(color = "black", size= 2)
 gg_k <- gg_k + geom_smooth(method="lm", size =0.5, se = TRUE, alpha = 0.4, color = "black")
-gg_k <- gg_k + labs(x = "Sample No.", y = "No. of annotated cells") + theme(text = element_text(size = 60))
+gg_k <- gg_k + labs(x = "Sample No.", y = "No. of identified cells") + theme(text = element_text(size = 60))
 
 ### ggsave####
 ggsave(filename = args_output_k, 
        plot = gg_k,
        dpi = 100, 
-       width = 30.0, 
-       height = 30.0,
+       # width = 30.0, 
+       # height = 30.0,
+       width = 20.0, 
+       height = 20.0,
        limitsize = FALSE)

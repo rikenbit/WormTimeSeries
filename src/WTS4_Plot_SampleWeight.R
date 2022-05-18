@@ -69,8 +69,8 @@ gg <- gg + guides(colour="none")
 # https://stats.biopapyrus.jp/r/ggplot/geom-boxplot.html
 gg <- gg + geom_boxplot(outlier.shape = NA, alpha =0.8) #外れ値のプロットを省く
 gg <- gg + geom_point(position = position_jitter(width=0.05), size = 3.0 ,alpha = 0.7)
-# gg <- gg + labs(fill="sample") + xlab("sample") + ylab("weight")
-gg <- gg + xlab("Sample No.") + ylab("weight") + scale_y_continuous(limits = c(0, 0.6))
+# gg <- gg + labs(fill="sample") + xlab("sample") + ylab("Weight")
+gg <- gg + xlab("Sample No.") + ylab("Weight") + scale_y_continuous(limits = c(0, 0.6))
 gg <- gg + 
     # ggtitle("weight beeswarm (sort by weight average)") +
     # theme(plot.title = element_text(hjust = 0.5)) + 
@@ -78,14 +78,14 @@ gg <- gg +
 # all text size
 gg <- gg + theme(text = element_text(size = 60)) 
 
-#### plot_title####
-str_remove(args_output, 
-           "output/WTS4/") %>% 
-  str_remove(., 
-             "/MCMIHOOI/Plot_SampleWeight.png") -> plot_title
-gg <- gg + 
-  ggtitle(plot_title) + 
-  theme(plot.title = element_text(size = 30, hjust = 0.5))
+# #### plot_title####
+# str_remove(args_output, 
+#            "output/WTS4/") %>% 
+#   str_remove(., 
+#              "/MCMIHOOI/Plot_SampleWeight.png") -> plot_title
+# gg <- gg + 
+#   ggtitle(plot_title) + 
+#   theme(plot.title = element_text(size = 30, hjust = 0.5))
   
 #### ggsave####
 ggsave(filename = args_output, 

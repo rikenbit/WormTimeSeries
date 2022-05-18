@@ -12,8 +12,8 @@ dist_data = ["SBD_abs"]
 time_range = ["stimAfter"]
 
 # normalize pattern
-# normalize_pattern = ["normalize_1"]
-normalize_pattern = ["n1_28sample"]
+normalize_pattern = ["normalize_1"]
+# normalize_pattern = ["n1_28sample"]
 
 rule all:
     input:
