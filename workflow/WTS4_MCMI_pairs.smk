@@ -41,7 +41,7 @@ rule WTS4_MCMI_pairs:
         Merged_data = 'output/WTS4/normalize_1/{range}/{dist}/{Re_cls}/Merged_data/k_Number_{N_cls}.RData',
         Consistency = 'output/WTS4/normalize_1/{range}/{dist}/ClsCount/k_Number_{N_cls}/df_count_sum.RData',
         No_of_cells = 'output/WTS4/normalize_1/{range}/{dist}/Distance/CellCount.RData',
-        Cluster = 'output/WTS4/normalize_1/{range}/{dist}/MCMIHOOI/Merged_cls/k_Number_{N_cls}.RData'
+        Cluster = 'output/WTS4/normalize_1/{range}/{dist}/{Re_cls}/Merged_cls/k_Number_{N_cls}.RData'
 
     output:
         Cluster = 'output/WTS4/normalize_1/{range}/{dist}/{Re_cls}/PairPlot/k_Number_{N_cls}/Cluster.png',
