@@ -76,7 +76,7 @@ df_eval_wide <- data.frame(SampleNumber = as.character(sample_sort_num),
 # gg <- gg + scale_x_discrete(limits=sample_sort_weight)
 # gg <- gg + geom_line(color = "black", size= 2)
 # gg <- gg + geom_smooth(method="lm", size =0.5, se = TRUE, alpha = 0.4, color = "black")
-# gg <- gg + labs(x = "Sample No.", y = "No. of annotated cells") + theme(text = element_text(size = 60))
+# gg <- gg + labs(x = "Animal No.", y = "No. of annotated cells") + theme(text = element_text(size = 60))
 
 # #### ggsave####
 # ggsave(filename = args_output, 
@@ -97,7 +97,7 @@ gg_k <- ggplot(df_eval_wide, aes(x = SampleNumber, y= annotated_count, group=1))
 gg_k <- gg_k + scale_x_discrete(limits=sample_sort_weight_k)
 gg_k <- gg_k + geom_line(color = "black", size= 2)
 gg_k <- gg_k + geom_smooth(method="lm", size =0.5, se = TRUE, alpha = 0.4, color = "black")
-gg_k <- gg_k + labs(x = "Sample No.", y = "No. of identified cells") + theme(text = element_text(size = 60))
+gg_k <- gg_k + labs(x = "Animal No.", y = "No. of identified cells") + theme(text = element_text(size = 60))
 
 ### ggsave####
 ggsave(filename = args_output_k, 
