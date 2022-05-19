@@ -31,8 +31,8 @@ ggplot_ghm = function(x) {
     legend.title = element_text(size = 60)
     )
   ghm <- ghm + scale_fill_viridis(na.value = "grey", direction = 1) # heatmap color is viridis http://www.okadajp.org/RWiki/?色見本
-  ghm <- ghm + labs(x = "CSPA",
-                    y = "MCMI")
+  ghm <- ghm + labs(x = "CSPA with mSBD",
+                    y = "WormTensor")
   ghm <- ghm + labs(fill = "Jaccard")
   return(ghm)
 }
