@@ -59,11 +59,12 @@
 ###################################################
 # NOISE SAMPLE PATERN
 # NOISE_TEST = ["normalize_1","n1_28sample","n1_24sample_add3","n1_24sample_add8","n1_24sample_add20","n1_24sample_add25"]
-# NOISE_TEST = ["n1_28sample"]
+NOISE_TEST = ["n1_28sample"]
 # NOISE_TEST = ["normalize_1"]
 # NOISE_TEST = ["n1_28sample_trim20"]
 # NOISE_TEST = ["n1_27sample_rm20"]
-NOISE_TEST = ["n1_24sample_add3","n1_24sample_add8","n1_24sample_add25"]
+# NOISE_TEST = ["n1_24sample_add3","n1_24sample_add8","n1_24sample_add25","n1_24sample_add20"]
+# NOISE_TEST = ["n1_24sample_add20"]
 
 # Distance Data
 # dist_data = ["EUCL","SBD_abs"]

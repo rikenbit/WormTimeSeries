@@ -1,8 +1,8 @@
 # WTS4_DimReduc_split
 ###################################################
 # No. of Clusters
-N_CLUSTERS = list(map(str, range(2, 21)))
-# N_CLUSTERS = ["9"]
+# N_CLUSTERS = list(map(str, range(2, 21)))
+N_CLUSTERS = ["9"]
 
 # Distance Data
 dist_data = ["EUCL","SBD_abs"]
@@ -13,11 +13,12 @@ time_range = ["stimAfter"]
 
 # ReClustering method
 # ReClustering_method = ["CSPA","OINDSCAL","MCMIHOOI"]
-ReClustering_method = ["CSPA","MCMIHOOI"]
+# ReClustering_method = ["CSPA","MCMIHOOI"]
+ReClustering_method = ["MCMIHOOI"]
 
 # Dimensionality Reduction Method
-DimReduc = ["tsne","umap"]
-# DimReduc = ["tsne"]
+# DimReduc = ["tsne","umap"]
+DimReduc = ["umap"]
 
 rule all:
     input:
