@@ -18,15 +18,9 @@ rule all:
         
 rule WTS4_fix_dist_celltype:
     input:
-        expand('output/WTS4/normalize_1/{range}/{dist}/Distance/SampleNumber_{N}.RData',
-            N=N_SAMPLES,
-            dist=dist_data,
-            range=time_range
-            )
+        'output/WTS4/normalize_1/{range}/{dist}/Distance/SampleNumber_{N}.RData'
     output:
-        dist_matrix = 'output/WTS4/normalize_1/{range}/{dist}/Distance_fix/SampleNumber_{N}.RData'
-    params:
-        stim_xlsx = 'data/stimulation/stimulation_timing.xlsx'
+        'output/WTS4/normalize_1/{range}/{dist}/Distance_fix/SampleNumber_{N}.RData'
     benchmark:
         'benchmarks/WTS4/normalize_1/{range}/{dist}/Distance_fix/SampleNumber_{N}.txt'
     container:
@@ -37,4 +31,4 @@ rule WTS4_fix_dist_celltype:
     log:
         'logs/WTS4/normalize_1/{range}/{dist}/Distance_fix/SampleNumber_{N}.log'
     shell:
-        'src/WTS4_fix_dist_celltype.sh {input} {output}>& {log}'
+        'src/WTS4_fix_dist_celltype.sh {input} {output} >& {log}'
