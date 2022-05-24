@@ -12,8 +12,8 @@ dist_data = ["EUCL","SBD_abs"]
 time_range = ["stimAfter"]
 
 # ReClustering method
-ReClustering_method = ["CSPA","OINDSCAL","MCMIHOOI"]
-# ReClustering_method = ["CSPA"]
+# ReClustering_method = ["CSPA","OINDSCAL","MCMIHOOI"]
+ReClustering_method = ["CSPA","MCMIHOOI"]
 
 rule all:
     input:
