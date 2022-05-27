@@ -37,7 +37,7 @@ rule WTS4_Behavior_ClsCount:
         count_all = 'output/WTS4/{normalize_P}/{range}/{dist}/ClsCount/k_Number_{N_cls}/df_count_all.RData',
         count_sum = 'output/WTS4/{normalize_P}/{range}/{dist}/ClsCount/k_Number_{N_cls}/df_count_sum.RData'
     params:
-        behavior_label_path = 'data/WTS4_Eval_behavior_fix.xlsx',
+        behavior_label_path = 'data/WTS4_Eval_behavior_newlabel.xlsx',
         sample_path  = 'output/WTS4/{normalize_P}/{range}/{dist}/Distance'
     benchmark:
         'benchmarks/WTS4/{normalize_P}/{range}/{dist}/ClsCount/k_Number_{N_cls}/Behavior_ClsCount.txt'

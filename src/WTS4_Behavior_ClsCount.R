@@ -17,7 +17,7 @@ args_sample_path <- args[6]
 # 
 # args_k <- c("5")
 # 
-# args_eval_label <- c("data/WTS4_Eval_behavior_fix.xlsx")
+# args_eval_label <- c("data/WTS4_Eval_behavior_newlabel.xlsx")
 # args_sample_path <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Distance")
 
 #### No. of Clusters####

@@ -5,20 +5,20 @@
 N_CLUSTERS = ["9"]
 
 # Distance Data
-dist_data = ["EUCL","SBD_abs"]
-# dist_data = ["SBD_abs"]
+# dist_data = ["EUCL","SBD_abs"]
+dist_data = ["SBD_abs"]
 
 # data time range
 time_range = ["stimAfter"]
 
 # ReClustering method
 # ReClustering_method = ["CSPA","OINDSCAL","MCMIHOOI"]
-# ReClustering_method = ["CSPA","MCMIHOOI"]
-ReClustering_method = ["MCMIHOOI"]
+ReClustering_method = ["CSPA","MCMIHOOI"]
+# ReClustering_method = ["MCMIHOOI"]
 
 # Dimensionality Reduction Method
 # DimReduc = ["tsne","umap"]
-DimReduc = ["umap"]
+DimReduc = ["tsne"]
 
 rule all:
     input:
