@@ -24,6 +24,8 @@ args_output_gg_NT <- args[9]
 args_output_gg_eval_label <- args[10]
 args_output_gg_count_sum <- args[11]
 args_output_gg_cell_count <- args[12]
+# Additional File 1: Cellular labels to interpret the clustering results
+args_output_csv <- args[13]
 
 # #### test args####
 # args_input_distance <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/CSPA/Merged_distance/k_Number_5.RData")
@@ -31,7 +33,7 @@ args_output_gg_cell_count <- args[12]
 # args_DimReduc <- c("tsne")
 # args_output <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/CSPA/Merged_tsne/k_Number_5.png")
 # args_NL <- c("data/igraph/Fig1_HNS.RData")
-# args_eval_label <- c("data/WTS4_Eval_behavior_fix.xlsx")
+# args_eval_label <- c("data/WTS4_Eval_behavior_newlabel.xlsx")
 # args_cell_count <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Distance/CellCount.RData")
 # args_count_sum <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/ClsCount/k_Number_5/df_count_sum.RData")
 
@@ -40,6 +42,7 @@ args_output_gg_cell_count <- args[12]
 # args_output_gg_eval_label <- c('output/WTS4/normalize_1/stimAfter/SBD_abs/CSPA/Merged_tsne/k_Number_5_gg_eval_label.png')
 # args_output_gg_count_sum <- c('output/WTS4/normalize_1/stimAfter/SBD_abs/CSPA/Merged_tsne/k_Number_5_gg_count_sum.png')
 # args_output_gg_cell_count <- c('output/WTS4/normalize_1/stimAfter/SBD_abs/CSPA/Merged_tsne/k_Number_5_gg_cell_count.png')
+# args_output_csv <- c('output/WTS4/normalize_1/stimAfter/SBD_abs/CSPA/Merged_tsne/label_table_k9.csv')
 
 #### load dist object####
 load(args_input_distance)
@@ -247,61 +250,50 @@ gg_count_sum <- ggplot(df_merged,
          y = cord_y) +
   theme(legend.key.height = unit(1.5, "cm")) +
   theme(legend.key.width = unit(1.5, "cm"))
-# #### patchwork 5plot####
-# # annotation
-# str_remove(args_output, 
-#            "output/WTS4/normalize_1/stimAfter/") %>% 
-#     str_remove(., 
-#                "_plot.png") -> plot_title
-# # patchwork
-# gg <- gg_cls + 
-#     gg_NT +
-#     gg_eval_label +
-#     gg_count_sum +
-#     gg_cell_count +
-#     plot_layout(nrow = 1) +
-#     plot_annotation(
-#         title = plot_title,
-#         theme = theme(plot.title = element_text(size = 60, hjust = 0.5))
-#     )
-
-# #### ggsave####
-# ggsave(filename = args_output, 
-#        plot = gg,
-#        dpi = 100, 
-#        width = 116.0, 
-#        height = 20.0,
-#        limitsize = FALSE)
 
 #### ggsave####
 ggsave(filename = args_output_gg_cls, 
        plot = gg_cls,
        dpi = 100, 
-       width = 21.0, 
+       width = 25.0, 
        height = 20.0,
        limitsize = FALSE)
 ggsave(filename = args_output_gg_NT, 
        plot = gg_NT,
        dpi = 100, 
-       width = 21.0, 
+       width = 25.0, 
        height = 20.0,
        limitsize = FALSE)
 ggsave(filename = args_output_gg_eval_label, 
        plot = gg_eval_label,
        dpi = 100, 
-       width = 21.0, 
+       width = 25.0, 
        height = 20.0,
        limitsize = FALSE)
 ggsave(filename = args_output_gg_count_sum, 
        plot = gg_count_sum,
        dpi = 100, 
-       width = 21.0, 
+       width = 25.0, 
        height = 20.0,
        limitsize = FALSE)
 ggsave(filename = args_output_gg_cell_count, 
        plot = gg_cell_count,
        dpi = 100, 
-       width = 21.0, 
+       width = 25.0, 
        height = 20.0,
        limitsize = FALSE)
 
+#### write.csv#####
+label_table <- data.frame(
+  Cell_type = df_merged$cell_type,
+  Cluster = df_merged$cls,
+  Neuron_type = df_merged$NeuronType,
+  Class = df_merged$Classes,
+  Consistency = df_merged$Count_sum,
+  No_cells = df_merged$CellCount,
+  stringsAsFactors = FALSE
+  )
+
+write.csv(label_table, 
+          args_output_csv, 
+          row.names=FALSE)
