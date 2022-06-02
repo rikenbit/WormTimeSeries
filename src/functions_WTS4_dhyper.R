@@ -14,30 +14,11 @@ library(tidyverse)
 # 
 # Log10p <- -log10(p)
 
-dhyper_all_PC1_neg = function(x) {
-    table_merged %>% 
-        dplyr::filter(.,Cluster==x) %>% 
-        .[,"PC1_neg"] %>% 
-        na.omit() %>% 
-        length() -> y
-    table_merged[,"PC1_neg"] %>% 
-        na.omit() %>% 
-        length() -> m
-    table_merged %>% 
-        nrow() - m -> n
-    table_merged %>% 
-        dplyr::filter(.,Cluster==x) %>% 
-        length() -> k
-    p <- dhyper(y, m, n, k)
-    Log10p <- -log10(p)
-	return(Log10p)
-}
-
 dhyper_all_cls = function(x) {
     purrr::map_dbl(sort(unique(table_merged[,"Cluster"])),
                    dhyper_all, 
                    y = x)
-}
+    }
 
 dhyper_all = function(x,y) {
     table_merged %>% 
@@ -45,14 +26,18 @@ dhyper_all = function(x,y) {
         .[,y] %>% 
         na.omit() %>% 
         length() -> z
+    
     table_merged[,y] %>% 
         na.omit() %>% 
         length() -> m
+    
     table_merged %>% 
         nrow() - m -> n
+    
     table_merged %>% 
         dplyr::filter(.,Cluster==x) %>% 
         length() -> k
+    
     p <- dhyper(z, m, n, k)
     Log10p <- -log10(p)
     return(Log10p)
