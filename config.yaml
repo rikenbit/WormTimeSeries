@@ -1,4 +1,4 @@
-# Sample sheets
+Sample sheets
 
 # SAMPLE_SHEET_CFP: data/raw_CFP/WTS1_sample_sheet.csv
 raw_CFP: data/raw_CFP/WTS1_sample_sheet.csv
@@ -25,3 +25,6 @@ normalize_4: data/normalize_4/WTS1_sample_sheet.csv
 # DATA_DIR_normalize_4: normalize_4
 
 DATA_DIR_n1_28sample: n1_28sample
+
+# WTS2_correlogram_cells
+# normalize_1: output/WTS4/normalize_1/PeriodicACF/sample_over5.csv

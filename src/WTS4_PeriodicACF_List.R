@@ -52,3 +52,30 @@ ACF_table %>%
 write.csv(ACF_sample, 
           args_output_sample, 
           row.names=FALSE)
+
+# for (i in 1:nrow(ACF_sample)) {
+#     sample_number <-ACF_sample$sample_number[i]
+#     sample_celltype<- ACF_sample$cell_type[i]
+#     
+#     eval(parse(text=paste0("sample_fullpath <- list.files(path='output/WTS2/correlogram/Data_normalize_1/TF_after/LAG_600/ACF_Acf/SampleNumber_",sample_number,"/',
+#                               pattern = sample_celltype,
+#                               full.names = TRUE)")))
+#     eval(parse(text=paste0("dir.create('output/WTS2/correlogram/Data_normalize_1/TF_after/LAG_600/",sample_celltype,"', showWarnings = TRUE)")))
+#     eval(parse(text=paste0("cp_path <- c('output/WTS2/correlogram/Data_normalize_1/TF_after/LAG_600/",sample_celltype,"/SampleNumber_",sample_number,".png')")))
+#     file.copy(sample_fullpath,cp_path)
+# }
+
+# # #sample_number <- 1
+# # sample_number <-ACF_sample$sample_number[1]
+# # # sample_celltype <- c("ASER")
+# # sample_celltype<- ACF_sample$cell_type[1]
+# # 
+# # sample_fullpath <- c("output/WTS2/correlogram/Data_normalize_1/TF_after/LAG_600/ACF_Acf/SampleNumber_1/CellNumber_89_CellType_ASKR.png")
+# eval(parse(text=paste0("sample_fullpath <- list.files(path='output/WTS2/correlogram/Data_normalize_1/TF_after/LAG_600/ACF_Acf/SampleNumber_",sample_number,"/',
+#                               pattern = sample_celltype,
+#                               full.names = TRUE)")))
+# # dir.create('output/WTS2/correlogram/Data_normalize_1/TF_after/LAG_600/ASKR', showWarnings = TRUE)
+# eval(parse(text=paste0("dir.create('output/WTS2/correlogram/Data_normalize_1/TF_after/LAG_600/",sample_celltype,"', showWarnings = TRUE)")))
+# # cp_path <- c('output/WTS2/correlogram/Data_normalize_1/TF_after/LAG_600/ASKR/SampleNumber_1.png')
+# eval(parse(text=paste0("cp_path <- c('output/WTS2/correlogram/Data_normalize_1/TF_after/LAG_600/",sample_celltype,"/SampleNumber_",sample_number,".png')")))
+# file.copy(sample_fullpath,cp_path)

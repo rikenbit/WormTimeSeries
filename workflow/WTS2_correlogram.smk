@@ -35,7 +35,7 @@ LAG_50['LAG'] = '50'
 LAG_300 = df_TF.copy()
 LAG_300['LAG'] = '300'
 LAG_500 = df_TF.copy()
-LAG_500['LAG'] = '500'
+LAG_500['LAG'] = '600'
 
 df_LAG = pd.concat([LAG_50,LAG_300,LAG_500], axis=0)
 # ACF = ["Acf","pAcf"]
