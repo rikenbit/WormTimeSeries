@@ -29,12 +29,21 @@ rule all:
             Re_cls=ReClustering_method,
             DR=DimReduc,
             normalize_P=normalize_pattern
+            ),
+        expand('output/WTS4/{normalize_P}/{range}/{dist}/{Re_cls}/Merged_{DR}/dhyper_q_table_k{N_cls}.csv',
+            range=time_range,
+            dist=dist_data,
+            N_cls=N_CLUSTERS,
+            Re_cls=ReClustering_method,
+            DR=DimReduc,
+            normalize_P=normalize_pattern
             )
 rule WTS4_dhyper:
     input:
         csv = 'output/WTS4/{normalize_P}/{range}/{dist}/{Re_cls}/Merged_{DR}/label_table_k{N_cls}.csv'
     output:
-        csv = 'output/WTS4/{normalize_P}/{range}/{dist}/{Re_cls}/Merged_{DR}/dhyper_table_k{N_cls}.csv'
+        csv = 'output/WTS4/{normalize_P}/{range}/{dist}/{Re_cls}/Merged_{DR}/dhyper_table_k{N_cls}.csv',
+        csv_q = 'output/WTS4/{normalize_P}/{range}/{dist}/{Re_cls}/Merged_{DR}/dhyper_q_table_k{N_cls}.csv'
     params:
         ann = 'data/label_table_ann.csv'
     benchmark:
@@ -46,4 +55,4 @@ rule WTS4_dhyper:
     log:
         'logs/WTS4/{normalize_P}/{range}/{dist}/{Re_cls}/Merged_{DR}/dhyper_table_k{N_cls}.log'
     shell:
-        'src/WTS4_dhyper.sh {input.csv} {params.ann} {output.csv} >& {log}'
+        'src/WTS4_dhyper.sh {input.csv} {params.ann} {output.csv} {output.csv_q} >& {log}'

@@ -39,6 +39,7 @@ dhyper_all = function(x,y) {
         length() -> k
     
     p <- dhyper(z, m, n, k)
-    Log10p <- -log10(p)
-    return(Log10p)
+    # Log10p <- -log10(p)
+    # return(Log10p)
+    return(p)
 }
