@@ -48,8 +48,9 @@ write.csv(table_dhyper_LOG,
 names(list_dhyper_q) <- colnames(table_dhyper)
 list_dhyper_q %>% 
     as.data.frame() -> table_dhyper_q
+-log10(table_dhyper_q) -> table_dhyper_LOG
 
 #### ggsave q value####
-write.csv(table_dhyper_q, 
+write.csv(table_dhyper_LOG, 
           args_output_q_csv, 
           row.names=FALSE)

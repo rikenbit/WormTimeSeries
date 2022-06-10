@@ -1,7 +1,8 @@
 # WTS4_PeriodicACF_List
 ###################################################
 # No. of observation
-N_observation = ["5"]
+# N_observation = ["5"]
+N_observation = ["2"]
 
 # normalize pattern
 normalize_pattern = ["normalize_1"]
