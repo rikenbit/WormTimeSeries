@@ -34,4 +34,4 @@ rule WTS4_Plot_SampleWeight:
     log:
         'logs/WTS4/normalize_1/{range}/{dist}/{Re_cls}/Plot_SampleWeight.log'
     shell:
-        'src/WTS4_Plot_SampleWeight.sh {params.weight_path} {params.sample_path} {output}>& {log}'
+        'src/WTS4_Plot_SampleWeight.sh {params.weight_path} {params.sample_path} {output} >& {log}'
