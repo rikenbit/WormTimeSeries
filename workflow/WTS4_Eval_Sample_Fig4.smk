@@ -3,7 +3,8 @@
 ###################################################
 # No. of Clusters
 # N_CLUSTERS = list(map(str, range(2, 21)))
-N_CLUSTERS = ["9"]
+# N_CLUSTERS = ["9"]
+N_CLUSTERS = ["6"]
 
 # Distance Data
 dist_data = ["SBD_abs"]
