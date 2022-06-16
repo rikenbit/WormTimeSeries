@@ -67,6 +67,6 @@ ggsave(filename = args_output_heatmap,
        dpi = 80, 
        # width = 18.0, 
        # height = 26.0
-       width = 20.0, 
+       width = 24.0, 
        height = 18.0
        )
