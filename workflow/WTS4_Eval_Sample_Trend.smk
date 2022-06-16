@@ -8,12 +8,13 @@ time_range = ["stimAfter"]
 dist_data = ["SBD_abs"]
 
 # No. of Clusters
-N_CLUSTERS = list(map(str, range(2, 21)))
+# N_CLUSTERS = list(map(str, range(2, 21)))
 # N_CLUSTERS = ["9"]
+N_CLUSTERS = ["6"]
 
 # normalize pattern
-# normalize_pattern = ["normalize_1"]
-normalize_pattern = ["n1_28sample"]
+normalize_pattern = ["normalize_1"]
+# normalize_pattern = ["n1_28sample"]
 
 rule all:
     input:
@@ -32,7 +33,7 @@ rule WTS4_Eval_Sample_Trend:
     output:
         'output/WTS4/{normalize_P}/{range}/{dist}/DimReduc_sample/k_Number_{N_cls}/Eval_Sample_trend.png'
     params:
-        merged_label_path = 'data/WTS4_Eval_sample_fix.xlsx',
+        # merged_label_path = 'data/WTS4_Eval_sample_fix.xlsx',
         input_path = 'output/WTS4/{normalize_P}/{range}/{dist}/Distance'
     benchmark:
         'benchmarks/WTS4/{normalize_P}/{range}/{dist}/DimReduc_sample/k_Number_{N_cls}/Eval_Sample_trend.txt'
