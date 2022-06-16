@@ -3,7 +3,8 @@
 # No. of Clusters
 # N_CLUSTERS = list(map(str, range(2, 21)))
 # N_CLUSTERS = ["9"]
-N_CLUSTERS = list(map(str, range(2, 14)))
+# N_CLUSTERS = list(map(str, range(2, 14)))
+N_CLUSTERS = ["6"]
 
 # Distance Data
 dist_data = ["EUCL","SBD_abs"]
@@ -49,7 +50,8 @@ rule WTS4_MCMI_pairs:
         Class = 'output/WTS4/normalize_1/{range}/{dist}/{Re_cls}/PairPlot/k_Number_{N_cls}/Class.png'
     params:
         NL = 'data/igraph/Fig1_HNS.RData',
-        EL = 'data/WTS4_Eval_behavior_fix.xlsx'
+        # EL = 'data/WTS4_Eval_behavior_fix.xlsx'
+        EL = 'data/WTS4_Eval_behavior_ACF.xlsx'
     benchmark:
         'benchmarks/WTS4/normalize_1/{range}/{dist}/{Re_cls}/PairPlot/k_Number_{N_cls}/MCMI_pairs.txt'
     container:
