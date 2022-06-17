@@ -4,7 +4,8 @@
 # N_CLUSTERS = list(map(str, range(2, 21)))
 # N_CLUSTERS = ["9"]
 # N_CLUSTERS = list(map(str, range(2, 14)))
-N_CLUSTERS = ["6"]
+# N_CLUSTERS = ["6"]
+N_CLUSTERS = ["12"]
 
 # Distance Data
 dist_data = ["EUCL","SBD_abs"]
