@@ -232,7 +232,7 @@ gg_label_ARI <- cowplot::ggdraw(aligned_plots_result[[1]]) + cowplot::draw_plot(
 gg_label_plot <- gg_label_ARI +
     plot_layout(nrow = 1) +
     plot_annotation(title = "",
-                    caption = 'made with patchwork',
+                    # caption = 'made with patchwork',
                     theme = theme(plot.title = element_text(size = 60, hjust = 0.5))
                     )
 
