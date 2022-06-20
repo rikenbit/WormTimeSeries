@@ -12,6 +12,8 @@ args_input_merged_cls <- args[3]
 args_input_MCMIHOOI <- args[4]
 # params dist path
 args_input_path<- args[5]
+# output ggplot single
+args_output_plot <- args[6]
 
 # #### test args####
 # # input sample_cls
@@ -24,6 +26,8 @@ args_input_path<- args[5]
 # args_input_MCMIHOOI <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/MCMIHOOI/Merged_data/k_Number_9.RData")
 # # params dist path
 # args_input_path<- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Distance")
+# output ggplot single
+# args_output_plot <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/DimReduc_sample/k_Number_6/Eval_Sample_trend_plot.png")
 
 # #### test args n1_28sample####
 # # input sample_cls
@@ -190,5 +194,51 @@ ggsave(filename = args_output,
        plot = gg,
        dpi = 100, 
        width = 60.0,
+       height = 20.0,
+       limitsize = FALSE)
+#### gg gg_label_ARI####
+g1 <- ggplot(df_eval_wide, aes(x = SampleNumber, y= ARI , group=1))
+g1 <- g1 + geom_line(color = "red", size= 2)
+g1 <- g1 + scale_x_discrete(limits=df_weight$SampleNumber)
+g1 <- g1 + theme_half_open()
+g1 <- g1 + theme(text = element_text(size = 36))
+g1 <- g1 + theme(axis.title.y=element_text(colour = "red",size = 36))
+g1 <- g1 + geom_smooth(method="lm", size =0.5, se = TRUE, alpha = 0.4, color = "red")
+g1 <- g1 + theme(legend.position = 'none')
+# add code
+g1 <- g1 + xlab("Animal No.") 
+g1 <- g1 + theme(axis.text.x= element_text(size = 36))
+g1 <- g1 + theme(axis.text.y= element_text(size = 36))
+
+g2 <- ggplot(df_eval_wide, aes(x = SampleNumber, y= annotated_count, group=1))
+g2 <- g2 + geom_line(color = "black", size= 2)
+g2 <- g2 + scale_x_discrete(limits=df_weight$SampleNumber)
+g2 <- g2 + scale_y_continuous(position = "right")
+g2 <- g2 + geom_smooth(method="lm", size =0.5, se = TRUE, alpha = 0.4, color = "black")
+g2 <- g2 + theme_half_open()
+# theme_half_openで軸の書式(色・文字サイズ)がリセットされる
+g2 <- g2 + theme(text = element_text(size = 36))
+g2 <- g2 + theme(axis.title.x=element_blank(),
+                 axis.text.x=element_blank(),
+                 axis.ticks.x=element_blank())
+# add code
+g2 <- g2 + xlab("Animal No.")  + ylab("No. of identified cells") 
+g2 <- g2 + theme(axis.text.y= element_text(size = 36))
+
+aligned_plots_result <- cowplot::align_plots(g1, g2, align="hv", axis="tblr")
+gg_label_ARI <- cowplot::ggdraw(aligned_plots_result[[1]]) + cowplot::draw_plot(aligned_plots_result[[2]])
+
+#### ggsave gg_label_ARI####
+gg_label_plot <- gg_label_ARI +
+    plot_layout(nrow = 1) +
+    plot_annotation(title = "",
+                    caption = 'made with patchwork',
+                    theme = theme(plot.title = element_text(size = 60, hjust = 0.5))
+                    )
+
+ggsave(filename = args_output_plot, 
+       plot = gg_label_plot,
+       dpi = 100, 
+       width = 20.0,
        height = 20.0,
        limitsize = FALSE)
