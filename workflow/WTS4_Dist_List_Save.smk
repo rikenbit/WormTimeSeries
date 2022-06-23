@@ -8,9 +8,16 @@ dist_data = ["EUCL","SBD_abs"]
 time_range = ["stimAfter"]
 
 # NORMALIZE & SAMPLES
-NOISE_TEST = ["n1_28sample"]
+# NOISE_TEST = ["n1_28sample"]
+NOISE_TEST = ["normalize_1"]
 
+# N_SAMPLES = list(map(str, range(1, 29)))
 N_SAMPLES = list(map(str, range(1, 29)))
+# remove artifact
+N_SAMPLES.remove('3')
+N_SAMPLES.remove('8')
+N_SAMPLES.remove('20')
+N_SAMPLES.remove('25')
 
 rule all:
     input:
