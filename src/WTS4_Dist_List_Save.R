@@ -9,6 +9,9 @@ args_output <- args[2]
 # args_sample_path <- c("output/WTS4/n1_28sample/stimAfter/SBD_abs/Distance")
 # args_output <- c("output/WTS4/n1_28sample/stimAfter/SBD_abs/Distance/Ds.RData")
 
+# args_sample_path <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Distance")
+# args_output <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Distance/Ds.RData")
+
 # リスト化するサンプルの数字を取得
 sample_path_list <- list.files(args_sample_path, pattern="SampleNumber_", full.names=TRUE)
 sample_path_list %>% 
@@ -26,10 +29,11 @@ for(i in sample_sort_num){
 
 Ds <- list()
 
-for(i in sample_sort_num){
+for(i in seq(length(sample_sort_num))){
     load(input_path_list[i])
+    x <- sample_sort_num[i]
     # Ds <- c(Ds, animal_i=list(d))
-    eval(parse(text=paste0("Ds <- c(Ds, animal_",i,"=list(d))")))
+    eval(parse(text=paste0("Ds <- c(Ds, animal_",x,"=list(d))")))
 }
 #### save####
 save(Ds, file=args_output)
