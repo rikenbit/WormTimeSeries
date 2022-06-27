@@ -4,8 +4,7 @@
 normalize_pattern = ["normalize_1"]
 
 # No. of Clusters
-# N_CLUSTERS = list(map(str, range(2, 21)))
-N_CLUSTERS = ["3","4"]
+N_CLUSTERS = list(map(str, range(2, 21)))
 
 # Distance Data
 dist_data = ["EUCL","SBD_abs"]
