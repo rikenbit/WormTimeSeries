@@ -24,13 +24,12 @@ rule WTS4_Dist_Filter:
     output:
         'output/WTS4/{normalize_P}/{range}/{dist}/Distance/Ds_F.RData'
     benchmark:
-        'benchmarks/WTS4/{normalize_P}/{range}/{dist}/Distance/Ds_F.RData.txt'
+        'benchmarks/WTS4/{normalize_P}/{range}/{dist}/Distance/Ds_F.txt'
     container:
-        "docker://yamaken37/silhouette_usedist:20220215"
-        
+        "docker://yamaken37/dist_filter:20220624"
     resources:
         mem_gb=200
     log:
-        'logs/WTS4/{normalize_P}/{range}/{dist}/Distance/Ds_F.RData.log'
+        'logs/WTS4/{normalize_P}/{range}/{dist}/Distance/Ds_F.log'
     shell:
         'src/WTS4_Dist_Filter.sh {input} {output}>& {log}'

@@ -6,7 +6,7 @@ args_input <- args[1]
 args_output <- args[2]
 #### test args####
 # args_input <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Distance/Ds.RData")
-# args_output  <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Distance/Ds_F.RData")
+# args_output <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Distance/Ds_F.RData")
 
 # load Ds
 load(args_input)
