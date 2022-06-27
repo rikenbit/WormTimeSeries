@@ -5,7 +5,7 @@ normalize_pattern = ["normalize_1"]
 
 # No. of Clusters
 # N_CLUSTERS = list(map(str, range(2, 21)))
-N_CLUSTERS = ["3"]
+N_CLUSTERS = ["3","4"]
 
 # Distance Data
 dist_data = ["EUCL","SBD_abs"]
@@ -24,11 +24,7 @@ rule all:
         
 rule WTS4_Membership_F:
     input:
-        expand('output/WTS4/{normalize_P}/{range}/{dist}/Distance/Ds_F.RData',
-            dist=dist_data,
-            range=time_range,
-            normalize_P=normalize_pattern
-            )
+        'output/WTS4/{normalize_P}/{range}/{dist}/Distance/Ds_F.RData'
     output:
         'output/WTS4/{normalize_P}/{range}/{dist}/Membership_F/k_Number_{N_cls}.RData'
     benchmark:
