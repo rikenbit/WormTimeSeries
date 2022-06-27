@@ -38,7 +38,8 @@ rule all:
         
 rule ReClustering:
     input:
-        Mem_matrix = 'output/WTS4/normalize_1/{range}/{dist}/Membership/k_Number_{N_cls}.RData'
+        # Mem_matrix = 'output/WTS4/normalize_1/{range}/{dist}/Membership/k_Number_{N_cls}.RData'
+        Mem_matrix = 'output/WTS4/normalize_1/{range}/{dist}/Membership_F/k_Number_{N_cls}.RData'
     output:
         m_data = 'output/WTS4/normalize_1/{range}/{dist}/{Re_cls}/Merged_data/k_Number_{N_cls}.RData',
         m_distance = 'output/WTS4/normalize_1/{range}/{dist}/{Re_cls}/Merged_distance/k_Number_{N_cls}.RData',
