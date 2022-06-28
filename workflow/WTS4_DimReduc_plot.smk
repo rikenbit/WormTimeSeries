@@ -75,7 +75,7 @@ rule all:
 
 rule WTS4_DimReduc_plot:
     input:
-        cord = 'output/WTS4/{normalize_P}/{range}/{dist}/{Re_cls}/Merged_{DR}_cord/k_Number_{N_cls}.Rata',
+        cord = 'output/WTS4/{normalize_P}/{range}/{dist}/{Re_cls}/Merged_{DR}_cord/k_Number_{N_cls}.RData',
         m_cls = 'output/WTS4/{normalize_P}/{range}/{dist}/{Re_cls}/Merged_cls/k_Number_{N_cls}.RData'
     output:
         gg_cls = 'output/WTS4/{normalize_P}/{range}/{dist}/{Re_cls}/Merged_{DR}_plot/k_Number_{N_cls}_gg_cls.png',

@@ -138,7 +138,7 @@ if (args_DimReduc == "tsne") {
   cord_x <- c("UMAP-1")
   cord_y <- c("UMAP-2")
 } else {
-  cord_x <-  c("cord-1")
+  cord_x <- c("cord-1")
   cord_y <- c("cord-2")
 }
 

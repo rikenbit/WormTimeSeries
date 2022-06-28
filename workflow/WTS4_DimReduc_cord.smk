@@ -24,7 +24,7 @@ normalize_pattern = ["normalize_1"]
 
 rule all:
     input:
-        expand('output/WTS4/{normalize_P}/{range}/{dist}/{Re_cls}/Merged_{DR}_cord/k_Number_{N_cls}.Rata',
+        expand('output/WTS4/{normalize_P}/{range}/{dist}/{Re_cls}/Merged_{DR}_cord/k_Number_{N_cls}.RData',
             range=time_range,
             dist=dist_data,
             N_cls=N_CLUSTERS,
@@ -36,7 +36,7 @@ rule WTS4_DimReduc_cord:
     input:
         'output/WTS4/{normalize_P}/{range}/{dist}/{Re_cls}/Merged_distance/k_Number_{N_cls}.RData'
     output:
-        'output/WTS4/{normalize_P}/{range}/{dist}/{Re_cls}/Merged_{DR}_cord/k_Number_{N_cls}.Rata'
+        'output/WTS4/{normalize_P}/{range}/{dist}/{Re_cls}/Merged_{DR}_cord/k_Number_{N_cls}.RData'
     benchmark:
         'benchmarks/WTS4/{normalize_P}/{range}/{dist}/{Re_cls}/Merged_{DR}_cord/k_Number_{N_cls}.txt'
     container:

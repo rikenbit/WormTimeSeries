@@ -1,4 +1,4 @@
-# WTS4_Membership_F_F
+# WTS4_Membership_F
 ###################################################
 # normalize pattern
 normalize_pattern = ["normalize_1"]
@@ -15,6 +15,12 @@ time_range = ["stimAfter"]
 rule all:
     input:
         expand('output/WTS4/{normalize_P}/{range}/{dist}/Membership_F/k_Number_{N_cls}.RData', 
+            dist=dist_data,
+            range=time_range,
+            N_cls=N_CLUSTERS,
+            normalize_P=normalize_pattern
+            ),
+        expand('output/WTS4/{normalize_P}/{range}/{dist}/Cluster_sample/k_Number_{N_cls}/sample_cls.RData', 
             dist=dist_data,
             range=time_range,
             N_cls=N_CLUSTERS,
