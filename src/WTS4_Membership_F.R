@@ -8,7 +8,7 @@ args_k <- args[1]
 args_input <- args[2]
 # output
 args_output <- args[3]
-
+args_output_cls <- args[4]
 #### test args####
 # # No. of Clusters 
 # args_k <- c("3")
@@ -26,6 +26,8 @@ load(args_input)
 C <- lapply(Ds_F, function(d, k){
     cutree(hclust(d, method="ward.D2"), k)
 }, k=k)
+#### save####
+save(C, file=args_output_cls)
 
 # Cluster Labels → Indicator Matrices
 Hs <- lapply(C, function(x){
@@ -54,5 +56,5 @@ for(i in seq_along(Hs)){
     newHs[[i]] <- out
 }
 
-#### ggsave####
+#### save####
 save(newHs, file=args_output)

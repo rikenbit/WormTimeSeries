@@ -25,7 +25,8 @@ rule WTS4_Membership_F:
     input:
         'output/WTS4/{normalize_P}/{range}/{dist}/Distance/Ds_F.RData'
     output:
-        'output/WTS4/{normalize_P}/{range}/{dist}/Membership_F/k_Number_{N_cls}.RData'
+        membership ='output/WTS4/{normalize_P}/{range}/{dist}/Membership_F/k_Number_{N_cls}.RData',
+        cluster ='output/WTS4/{normalize_P}/{range}/{dist}/Cluster_sample/k_Number_{N_cls}/sample_cls.RData'
     benchmark:
         'benchmarks/WTS4/{normalize_P}/{range}/{dist}/Membership_F/k_Number_{N_cls}.txt'
     container:
@@ -35,4 +36,4 @@ rule WTS4_Membership_F:
     log:
         'logs/WTS4/{normalize_P}/{range}/{dist}/Membership_F/k_Number_{N_cls}.log'
     shell:
-        'src/WTS4_Membership_F.sh {wildcards.N_cls} {input} {output}>& {log}'
+        'src/WTS4_Membership_F.sh {wildcards.N_cls} {input} {output.membership} {output.cluster} >& {log}'
