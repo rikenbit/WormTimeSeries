@@ -49,15 +49,6 @@ df_weight_group %>%
         .$SampleNumber %>% 
             c() -> sample_sort_weight
 
-#### list_sample_weight####
-# weightの大きい順にリストを作成
-# purrr
-# sample_sort_weight %>% 
-#     purrr::map(., .list_beeswarm) -> list_sample_weight
-
-#### beeswarm####
-# beeswarm(list_sample_weight, labels = sample_sort_weight)
-
 #### ggplot####
 gg <- ggplot(df_weight_all, aes(x=factor(SampleNumber, levels = sample_sort_weight), 
                                 y=weight_abs, 
@@ -71,21 +62,9 @@ gg <- gg + geom_boxplot(outlier.shape = NA, alpha =0.8) #外れ値のプロッ�
 gg <- gg + geom_point(position = position_jitter(width=0.05), size = 3.0 ,alpha = 0.7)
 # gg <- gg + labs(fill="sample") + xlab("sample") + ylab("Weight")
 gg <- gg + xlab("Animal No.") + ylab("Weight") + scale_y_continuous(limits = c(0, 0.6))
-gg <- gg + 
-    # ggtitle("weight beeswarm (sort by weight average)") +
-    # theme(plot.title = element_text(hjust = 0.5)) + 
-    theme(legend.position = "none")
+gg <- gg + theme(legend.position = "none")
 # all text size
 gg <- gg + theme(text = element_text(size = 60)) 
-
-# #### plot_title####
-# str_remove(args_output, 
-#            "output/WTS4/") %>% 
-#   str_remove(., 
-#              "/MCMIHOOI/Plot_SampleWeight.png") -> plot_title
-# gg <- gg + 
-#   ggtitle(plot_title) + 
-#   theme(plot.title = element_text(size = 30, hjust = 0.5))
   
 #### ggsave####
 ggsave(filename = args_output, 
