@@ -4,8 +4,10 @@ source("src/functions_WTS4_heatmap_jaccard.R")
 #### test args####
 # args_input_MCMI <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/MCMIHOOI/Merged_cls/k_Number_9.RData")
 # args_input_CSPA <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/CSPA/Merged_cls/k_Number_5.RData")
+# args_input_MCMI <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/MCMIHOOI/Merged_cls/k_Number_6.RData")
+# args_input_CSPA <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/CSPA/Merged_cls/k_Number_7.RData")
 args_input_MCMI <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/MCMIHOOI/Merged_cls/k_Number_6.RData")
-args_input_CSPA <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/CSPA/Merged_cls/k_Number_7.RData")
+args_input_CSPA <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/CSPA/Merged_cls/k_Number_5.RData")
 args_output_heatmap <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Jaccard/heatmap.png")
 #### MCMI####
 load(args_input_MCMI)
@@ -67,6 +69,6 @@ ggsave(filename = args_output_heatmap,
        dpi = 80, 
        # width = 18.0, 
        # height = 26.0
-       width = 24.0, 
+       width = 20.0, 
        height = 18.0
        )
