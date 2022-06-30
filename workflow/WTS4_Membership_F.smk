@@ -1,13 +1,16 @@
 # WTS4_Membership_F
 ###################################################
 # normalize pattern
-normalize_pattern = ["normalize_1"]
+# normalize_pattern = ["normalize_1"]
+normalize_pattern = ["n1_24sample_add3","n1_24sample_add8","n1_24sample_add25","n1_24sample_add20","n1_27sample_rm20","n1_28sample"]
 
 # No. of Clusters
 N_CLUSTERS = list(map(str, range(2, 21)))
 
 # Distance Data
-dist_data = ["EUCL","SBD_abs"]
+# dist_data = ["EUCL","SBD_abs"]
+dist_data = ["SBD_abs"]
+
 # data time range
 # time_range = ["all","stimAfter"]
 time_range = ["stimAfter"]
