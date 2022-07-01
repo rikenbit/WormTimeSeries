@@ -179,7 +179,11 @@ gg_NT <- ggplot(df_merged,
                      force = 6.0) +# ラベル間の反発力
     theme(text = element_text(size = 60)) +
     labs(x = cord_x,
-         y = cord_y) 
+         y = cord_y) +
+    scale_color_hue(labels = c(Endorgan = "Non-neuronal cells", 
+                                Interneuron = "Interneuron", 
+                                Motorneuron = "Motor neuron", 
+                                Sensory = "Sensory neuron"))
 
 #### ggplot eval_label####
 gg_eval_label <- ggplot(df_merged, 

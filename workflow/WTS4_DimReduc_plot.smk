@@ -1,19 +1,19 @@
 # WTS4_DimReduc_plot
 ###################################################
 # No. of Clusters
-N_CLUSTERS = list(map(str, range(2, 21)))
-# N_CLUSTERS = ["9"]
+# N_CLUSTERS = list(map(str, range(2, 21)))
+N_CLUSTERS = ["6"]
 
 # Distance Data
-dist_data = ["EUCL","SBD_abs"]
-# dist_data = ["SBD_abs"]
+# dist_data = ["EUCL","SBD_abs"]
+dist_data = ["SBD_abs"]
 
 # data time range
 time_range = ["stimAfter"]
 
 # ReClustering method
-ReClustering_method = ["CSPA","MCMIHOOI"]
-# ReClustering_method = ["MCMIHOOI"]
+# ReClustering_method = ["CSPA","MCMIHOOI"]
+ReClustering_method = ["MCMIHOOI"]
 
 # Dimensionality Reduction Method
 DimReduc = ["tsne","umap"]
