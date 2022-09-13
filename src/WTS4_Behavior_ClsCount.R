@@ -11,11 +11,11 @@ args_sample_path <- args[6]
   
 # #### test args####
 # # No. of Clusters
-# args_input_cls <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Cluster_sample/k_Number_5/sample_cls.RData")
-# args_output_all <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/ClsCount/k_Number_5/df_count_all.RData")
-# args_output_sum <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/ClsCount/k_Number_5/df_count_sum.RData")
+# args_input_cls <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Cluster_sample/k_Number_6/sample_cls.RData")
+# args_output_all <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/ClsCount/k_Number_6/df_count_all.RData")
+# args_output_sum <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/ClsCount/k_Number_6/df_count_sum.RData")
 # 
-# args_k <- c("5")
+# args_k <- c("6")
 # 
 # args_eval_label <- c("data/WTS4_Eval_behavior_ACF.xlsx")
 # args_sample_path <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Distance")
