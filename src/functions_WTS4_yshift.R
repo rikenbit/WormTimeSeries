@@ -1,9 +1,8 @@
 #library
 ##################################################
-library(tidyverse)
+# library(tidyverse)
 library(openxlsx)
 library(dtwclust)
-library(usedist)
 ##################################################
 # setting Random number generator
 RNGkind(kind = "Mersenne-Twister")
@@ -14,14 +13,7 @@ RNGkind(kind = "Mersenne-Twister")
                                  sheet = "Sheet1",
                                  rowNames = FALSE,
                                  colNames =TRUE)
-    stimtimng_sheet %>% 
-        dplyr::select(sample_number = 1, 
-                      stim_first = 7,
-        ) %>% 
-        filter(sample_number == args_sample) %>% 
-        .$stim_first %>% 
-        trunc() -> stimtimng #切り捨て
-    # ceiling() -> stimtimng #切り上げ
+    stimtimng <- trunc(stimtimng_sheet[args_sample,7]) #切り捨て
     return_object <- x[stimtimng:nrow(x),]
     return(return_object)
 }
@@ -77,4 +69,12 @@ RNGkind(kind = "Mersenne-Twister")
     }
     # return
     list(dist = 1 - m, yshift = yshift, shift_value = shift)
+}
+
+.filter_cellnames <- function(X){
+    D <- X
+    D_cell <- colnames(D)
+    D_cell_f <- D_cell[grep("^[0-9]", D_cell, invert=TRUE)]
+    D_f <- D[D_cell_f,D_cell_f]
+    D_f
 }

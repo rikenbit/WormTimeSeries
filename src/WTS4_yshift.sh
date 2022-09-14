@@ -11,11 +11,6 @@
 #SBATCH -p node03-06
 SLURM_RESTART_COUNT=2
 
-# conda
-# echo $@
-# echo $CONDA_PREFIX
-# $CONDA_PREFIX/bin/Rscript src/WTS4_yshift.R $@
-
-# docker
 echo $@
-Rscript src/WTS4_yshift.R $@
+echo $CONDA_PREFIX
+$CONDA_PREFIX/bin/Rscript src/WTS4_yshift.R $@
