@@ -1,41 +1,47 @@
 # WTS4_yshift_visualize
 ###################################################
-# No. of Clusters
-N_CLUSTERS = list(map(str, range(2, 21)))
-# N_CLUSTERS = ["3"]
+N_SAMPLES = list(map(str, range(1, 29)))
+
+# remove artifact
+N_SAMPLES.remove('3')
+N_SAMPLES.remove('8')
+N_SAMPLES.remove('20')
+N_SAMPLES.remove('25')
+
 
 # Distance Data
-dist_data = ["EUCL","SBD_abs"]
-# dist_data = ["SBD_abs"]
-
+dist_data = ["SBD_abs"]
 # data time range
 time_range = ["stimAfter"]
 
-# ReClustering method
-ReClustering_method = ["CSPA","OINDSCAL","MCMIHOOI"]
-# ReClustering_method = ["CSPA"]
-
 rule all:
     input:
-        expand('output/WTS4/normalize_1/{range}/{dist}/{Re_cls}/Merged_data/k_Number_{N_cls}.RData',
-            range=time_range,
+        expand('output/WTS4/normalize_1/{range}/{dist}/Shift/SampleNumber_{N}.RData', 
+            N=N_SAMPLES,
             dist=dist_data,
-            N_cls=N_CLUSTERS,
-            Re_cls=ReClustering_method
+            range=time_range
+            ),
+        expand('output/WTS4/normalize_1/{range}/{dist}/Shift_F/SampleNumber_{N}.RData', 
+            N=N_SAMPLES,
+            dist=dist_data,
+            range=time_range
             )
         
 rule WTS4_yshift_visualize:
     input:
-        Mem_matrix = 'output/WTS4/normalize_1/{range}/{dist}/Membership/k_Number_{N_cls}.RData'
+        RData = 'data/normalize_1/ReadData_{N}.RData'
     output:
-        m_data = 'output/WTS4/normalize_1/{range}/{dist}/{Re_cls}/Merged_data/k_Number_{N_cls}.RData'
+        Shift = 'output/WTS4/normalize_1/{range}/{dist}/Shift/SampleNumber_{N}.RData',
+        Shift_F = 'output/WTS4/normalize_1/{range}/{dist}/Shift_F/SampleNumber_{N}.RData'
+    params:
+        stim_xlsx = 'data/stimulation/stimulation_timing.xlsx'
     benchmark:
-        'benchmarks/WTS4/normalize_1/{range}/{dist}/{Re_cls}/Merged_data/k_Number_{N_cls}.txt'
-    container:
-        "docker://docker_images"
+        'benchmarks/WTS4/normalize_1/{range}/{dist}/Shift/SampleNumber_{N}.txt'
+    conda:
+        '../envs/myenv_WTS4_{dist}.yaml'
     resources:
         mem_gb=200
     log:
-        'logs/WTS4/normalize_1/{range}/{dist}/{Re_cls}/Merged_data/k_Number_{N_cls}.log'
+        'logs/WTS4/normalize_1/{range}/{dist}/Shift/SampleNumber_{N}.log'
     shell:
-        'src/WTS4_yshift_visualize.sh {wildcards.Re_cls} {input.Mem_matrix} {output.m_data}>& {log}'
+        'src/WTS4_yshift_visualize.sh {wildcards.N} {input.RData} {wildcards.range} {params.stim_xlsx} {output.Shift} {output.Shift_F} >& {log}'
