@@ -23,7 +23,7 @@ args_output <- args[5]
 # # filter (label combination)
 # args_label_comb <- c("ALL")
 # # output 
-# args_output <- ("output/WTS4/normalize_1/stimAfter/SBD_abs/Shift_F/vis_abs/ALL.")
+# args_output <- ("output/WTS4/normalize_1/stimAfter/SBD_abs/Shift_F/vis_abs/ALL.png")
 
 #### load####
 # load matrix
@@ -51,7 +51,12 @@ if (args_label_comb=="No_F") {
 
 #### sort cell type####
 if (args_label_comb=="No_F") {
-    input_mat_F_S <- input_mat_F
+    label_df %>%
+        dplyr::filter(CellType %in% colnames(input_mat)) %>%
+        .$CellType -> hit_cell
+    unhit_cell <- colnames(input_mat)[which(is.na(match(colnames(input_mat), hit_cell)))]
+    No_F_order <- c(hit_cell, unhit_cell)
+    input_mat_F_S <- input_mat_F[No_F_order, No_F_order]
 } else {
     label_df %>%
         dplyr::filter(CellType %in% colnames(input_mat_F)) %>%
@@ -60,12 +65,22 @@ if (args_label_comb=="No_F") {
 }
 
 #### visualize ####
-ghm <- vis_ghm[[args_type]](input_mat_F_S)
+if (args_label_comb=="No_F") {
+    args_textsize <- 25
+} else {
+    args_textsize <- 60
+    }
+
+ghm <- vis_ghm[[args_type]](input_mat_F_S) + 
+    # theme(text = element_text(size = 40)) +
+    theme(text = element_text(size = args_textsize)) +
+    theme(legend.key.height = unit(1.5, "cm")) +
+    theme(legend.key.width = unit(1.5, "cm"))
 
 #### save####
 ggsave(filename = args_output, 
        plot = ghm, 
-       dpi = 50, 
-       width = 30, 
-       height = 40
+       dpi = 80, 
+       width = 40, 
+       height = 36
        )

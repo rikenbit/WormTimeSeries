@@ -1,13 +1,12 @@
 # WTS4_yshift_visualize
 ###################################################
 N_SAMPLES = list(map(str, range(1, 29)))
-
 # remove artifact
 N_SAMPLES.remove('3')
 N_SAMPLES.remove('8')
 N_SAMPLES.remove('20')
 N_SAMPLES.remove('25')
-
+# N_SAMPLES = ["21"]
 
 # Distance Data
 dist_data = ["SBD_abs"]
@@ -24,6 +23,14 @@ value_type =["zahlen","abs"]
 
 # filter (label combination)
 label_comb =["No_F","ALL","NaCl","1n","1p","1np"]
+#### filter description
+# "No_F" is no filter
+# "ALL" = c("NaCl", "PC1_neg", "PC1_pos", "PC2", "PC3"),
+# "NaCl" = c("NaCl"),
+# "1n" = c("PC1_neg"),
+# "1p" = c("PC1_pos"),
+# "1np" = c("PC1_neg", "PC1_pos")
+####
 
 rule all:
     input:
@@ -45,8 +52,8 @@ rule WTS4_yshift_visualize:
         label = 'data/WTS4_Eval_behavior_ACF.xlsx'
     benchmark:
         'benchmarks/WTS4/normalize_1/{range}/{dist}/{in_mat}/SampleNumber_{N}/{v_type}/{l_comb}.txt'
-    conda:
-        '../envs/myenv_WTS4_{dist}.yaml'
+    container:
+        "docker://yamaken37/yshift_visualize:20220921"
     resources:
         mem_gb=200
     log:
