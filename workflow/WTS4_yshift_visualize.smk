@@ -11,37 +11,45 @@ N_SAMPLES.remove('25')
 
 # Distance Data
 dist_data = ["SBD_abs"]
+
 # data time range
 time_range = ["stimAfter"]
 
+# input matrix
+# input_mat = ["Shift_F","Shift_F_M_ave","Shift_F_M_sd"]
+input_matrix = ["Shift_F"]
+
+# value type
+value_type =["zahlen","abs"]
+
+# filter (label combination)
+label_comb =["No_F","ALL","NaCl","1n","1p","1np"]
+
 rule all:
     input:
-        expand('output/WTS4/normalize_1/{range}/{dist}/Shift/SampleNumber_{N}.RData', 
+        expand('output/WTS4/normalize_1/{range}/{dist}/{in_mat}/SampleNumber_{N}/{v_type}/{l_comb}.png', 
             N=N_SAMPLES,
             dist=dist_data,
-            range=time_range
-            ),
-        expand('output/WTS4/normalize_1/{range}/{dist}/Shift_F/SampleNumber_{N}.RData', 
-            N=N_SAMPLES,
-            dist=dist_data,
-            range=time_range
+            range=time_range,
+            in_mat=input_matrix,
+            v_type=value_type,
+            l_comb=label_comb
             )
         
 rule WTS4_yshift_visualize:
     input:
-        RData = 'data/normalize_1/ReadData_{N}.RData'
+        RData = 'output/WTS4/normalize_1/{range}/{dist}/{in_mat}/SampleNumber_{N}.RData'
     output:
-        Shift = 'output/WTS4/normalize_1/{range}/{dist}/Shift/SampleNumber_{N}.RData',
-        Shift_F = 'output/WTS4/normalize_1/{range}/{dist}/Shift_F/SampleNumber_{N}.RData'
+        heatmap = 'output/WTS4/normalize_1/{range}/{dist}/{in_mat}/SampleNumber_{N}/{v_type}/{l_comb}.png'
     params:
-        stim_xlsx = 'data/stimulation/stimulation_timing.xlsx'
+        label = 'data/WTS4_Eval_behavior_ACF.xlsx'
     benchmark:
-        'benchmarks/WTS4/normalize_1/{range}/{dist}/Shift/SampleNumber_{N}.txt'
+        'benchmarks/WTS4/normalize_1/{range}/{dist}/{in_mat}/SampleNumber_{N}/{v_type}/{l_comb}.txt'
     conda:
         '../envs/myenv_WTS4_{dist}.yaml'
     resources:
         mem_gb=200
     log:
-        'logs/WTS4/normalize_1/{range}/{dist}/Shift/SampleNumber_{N}.log'
+        'logs/WTS4/normalize_1/{range}/{dist}/{in_mat}/SampleNumber_{N}/{v_type}/{l_comb}.log'
     shell:
-        'src/WTS4_yshift_visualize.sh {wildcards.N} {input.RData} {wildcards.range} {params.stim_xlsx} {output.Shift} {output.Shift_F} >& {log}'
+        'src/WTS4_yshift_visualize.sh {input.RData} {params.label} {wildcards.v_type} {wildcards.l_comb} {output.heatmap} >& {log}'

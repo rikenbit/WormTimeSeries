@@ -57,12 +57,12 @@ vis_abs <- function(x) {
 vis_ghm <- list(
     "zahlen" = vis_z,
     "abs" = vis_abs
-)
+    )
 
 vis_labels <- list(
-    "ALL" = c("NaCl","PC1_neg","PC1_pos","PC2","PC3"),
+    "ALL" = c("NaCl", "PC1_neg", "PC1_pos", "PC2", "PC3"),
     "NaCl" = c("NaCl"),
     "1n" = c("PC1_neg"),
     "1p" = c("PC1_pos"),
-    "1np" = c("PC1_neg","PC1_pos")
+    "1np" = c("PC1_neg", "PC1_pos")
     )

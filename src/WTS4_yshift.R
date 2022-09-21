@@ -12,8 +12,8 @@ args_time <- args[3]
 args_stim_xlsx <- args[4]
 # output y-shiftの総当たり結果の行列
 args_output<- args[5]
-# 数字の細胞除去
-args_output_F <- args[6]
+# 値の形式　数字の細胞除去の有無
+args_in_mat <- args[6]
 
 # #### test args####
 # # sample number サンプル番号の指定
@@ -62,12 +62,11 @@ rownames(out_all) <- rownames(ReadData_t)
 colnames(out_all) <- rownames(ReadData_t)
 
 #### save####
-shift_matrix <- out_all
+shift_matrix <- switch (args_in_mat,
+                        "Shift" = out_all,
+                        "Shift_F" = .filter_cellnames(out_all)
+                        )
 save(shift_matrix, file=args_output)
-
-shift_matrix_F <- .filter_cellnames(shift_matrix)
-save(shift_matrix_F, file=args_output_F)
-
 # out_allは行方向の細胞を基準（ゼロ）としたさいの列方向の細胞の平行移動
 # 下記コマンドでどれだけ平行移動したか取得できる
 # out_all["HYPL10VL",]やout_all[2,]やout_all[c("GLRR","HYPL10VL"),]やout_all[c("ASER","BAGR","BAGL"),c("ASER","BAGR","BAGL")]

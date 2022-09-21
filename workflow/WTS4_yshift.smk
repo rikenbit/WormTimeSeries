@@ -13,35 +13,32 @@ N_SAMPLES.remove('25')
 dist_data = ["SBD_abs"]
 # data time range
 time_range = ["stimAfter"]
+# input matrix
+input_matrix = ["Shift","Shift_F"]
 
 rule all:
     input:
-        expand('output/WTS4/normalize_1/{range}/{dist}/Shift/SampleNumber_{N}.RData', 
+        expand('output/WTS4/normalize_1/{range}/{dist}/{in_mat}/SampleNumber_{N}.RData', 
             N=N_SAMPLES,
             dist=dist_data,
-            range=time_range
-            ),
-        expand('output/WTS4/normalize_1/{range}/{dist}/Shift_F/SampleNumber_{N}.RData', 
-            N=N_SAMPLES,
-            dist=dist_data,
-            range=time_range
+            range=time_range,
+            in_mat=input_matrix
             )
         
 rule WTS4_yshift:
     input:
         RData = 'data/normalize_1/ReadData_{N}.RData'
     output:
-        Shift = 'output/WTS4/normalize_1/{range}/{dist}/Shift/SampleNumber_{N}.RData',
-        Shift_F = 'output/WTS4/normalize_1/{range}/{dist}/Shift_F/SampleNumber_{N}.RData'
+        Shift = 'output/WTS4/normalize_1/{range}/{dist}/{in_mat}/SampleNumber_{N}.RData'
     params:
         stim_xlsx = 'data/stimulation/stimulation_timing.xlsx'
     benchmark:
-        'benchmarks/WTS4/normalize_1/{range}/{dist}/Shift/SampleNumber_{N}.txt'
+        'benchmarks/WTS4/normalize_1/{range}/{dist}/{in_mat}/SampleNumber_{N}.txt'
     conda:
         '../envs/myenv_WTS4_{dist}.yaml'
     resources:
         mem_gb=200
     log:
-        'logs/WTS4/normalize_1/{range}/{dist}/Shift/SampleNumber_{N}.log'
+        'logs/WTS4/normalize_1/{range}/{dist}/{in_mat}/SampleNumber_{N}.log'
     shell:
-        'src/WTS4_yshift.sh {wildcards.N} {input.RData} {wildcards.range} {params.stim_xlsx} {output.Shift} {output.Shift_F} >& {log}'
+        'src/WTS4_yshift.sh {wildcards.N} {input.RData} {wildcards.range} {params.stim_xlsx} {output.Shift} {wildcards.in_mat} >& {log}'
