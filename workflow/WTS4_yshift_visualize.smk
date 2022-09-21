@@ -19,7 +19,8 @@ time_range = ["stimAfter"]
 input_matrix = ["Shift_F"]
 
 # value type
-value_type =["zahlen","abs"]
+# value_type =["zahlen","abs"]
+value_type =["zahlen"]
 
 # filter (label combination)
 label_comb =["No_F","ALL","NaCl","1n","1p","1np"]
