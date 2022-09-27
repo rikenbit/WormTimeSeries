@@ -1,5 +1,6 @@
 # WTS4_yshift_visualize
 ###################################################
+
 N_SAMPLES = list(map(str, range(1, 29)))
 # remove artifact
 N_SAMPLES.remove('3')
@@ -15,7 +16,7 @@ dist_data = ["SBD_abs"]
 time_range = ["stimAfter"]
 
 # input matrix
-# input_mat = ["Shift_F","Shift_F_M_ave","Shift_F_M_sd"]
+# input_mat = ["Shift_F","Shift_FM_ave","Shift_FM_sd"]
 input_matrix = ["Shift_F"]
 
 # value type

@@ -1,41 +1,36 @@
 # WTS4_yshift_merge
 ###################################################
-# No. of Clusters
-N_CLUSTERS = list(map(str, range(2, 21)))
-# N_CLUSTERS = ["3"]
-
 # Distance Data
-dist_data = ["EUCL","SBD_abs"]
-# dist_data = ["SBD_abs"]
+dist_data = ["SBD_abs"]
 
 # data time range
 time_range = ["stimAfter"]
 
-# ReClustering method
-ReClustering_method = ["CSPA","OINDSCAL","MCMIHOOI"]
-# ReClustering_method = ["CSPA"]
+# input matrix
+input_matrix = ["ave"]
 
 rule all:
     input:
-        expand('output/WTS4/normalize_1/{range}/{dist}/{Re_cls}/Merged_data/k_Number_{N_cls}.RData',
-            range=time_range,
+        expand('output/WTS4/normalize_1/{range}/{dist}/Shift_FM_{in_mat}/SampleNumber_ALL.RData', 
+            N=N_SAMPLES,
             dist=dist_data,
-            N_cls=N_CLUSTERS,
-            Re_cls=ReClustering_method
+            range=time_range,
+            in_mat=input_matrix
             )
         
+        
 rule WTS4_yshift_merge:
-    input:
-        Mem_matrix = 'output/WTS4/normalize_1/{range}/{dist}/Membership/k_Number_{N_cls}.RData'
     output:
-        m_data = 'output/WTS4/normalize_1/{range}/{dist}/{Re_cls}/Merged_data/k_Number_{N_cls}.RData'
+        Shift = 'output/WTS4/normalize_1/{range}/{dist}/Shift_FM_{in_mat}/SampleNumber_ALL.RData'
+    params:
+        mat_dir = 'output/WTS4/normalize_1/{range}/{dist}/Shift_F'
     benchmark:
-        'benchmarks/WTS4/normalize_1/{range}/{dist}/{Re_cls}/Merged_data/k_Number_{N_cls}.txt'
+        'benchmarks/WTS4/normalize_1/{range}/{dist}/Shift_FM_{in_mat}/SampleNumber_ALL.txt'
     container:
         "docker://docker_images"
     resources:
         mem_gb=200
     log:
-        'logs/WTS4/normalize_1/{range}/{dist}/{Re_cls}/Merged_data/k_Number_{N_cls}.log'
+        'logs/WTS4/normalize_1/{range}/{dist}/Shift_FM_{in_mat}/SampleNumber_ALL.log'
     shell:
-        'src/WTS4_yshift_merge.sh {wildcards.Re_cls} {input.Mem_matrix} {output.m_data}>& {log}'
+        'src/WTS4_yshift_merge.sh {params.mat_dir} {output.Shift}>& {log}'
