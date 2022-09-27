@@ -12,6 +12,9 @@ args_type <- args[3]
 args_label_comb <- args[4]
 # output 
 args_output <- args[5]
+# threshold of value
+args_thrr <- args[6]
+args_thrr <- as.numeric(args_thrr)
     
 # #### test args####
 # # input matrix
@@ -24,7 +27,9 @@ args_output <- args[5]
 # args_label_comb <- c("ALL")
 # # output 
 # args_output <- ("output/WTS4/normalize_1/stimAfter/SBD_abs/Shift_F/vis_abs/ALL.png")
-
+# threshold of value
+# args_thrr <- c("500")
+# args_thrr <- as.numeric(args_thrr)
 #### load####
 # load matrix
 load(args_input)
@@ -63,6 +68,9 @@ if (args_label_comb=="No_F") {
             .$CellType -> input_mat_order
     input_mat_F_S <- input_mat_F[input_mat_order, input_mat_order]
 }
+
+######## threshold########
+input_mat_F_S[(input_mat_F_S > args_thrr | input_mat_F_S < -args_thrr)] <- NA
 
 #### visualize ####
 if (args_label_comb=="No_F") {

@@ -27,8 +27,8 @@ value_type =["zahlen","abs"]
 # value_type =["zahlen"]
 
 # filter (label combination)
-# label_comb =["No_F","ALL","NaCl","1n","1p","1np"]
-label_comb =["No_F"]
+label_comb =["No_F","ALL","NaCl","1n","1p","1np"]
+# label_comb =["No_F"]
 
 #### filter description
 # "No_F" is no filter
@@ -40,7 +40,7 @@ label_comb =["No_F"]
 ####
 
 # threshold of value
-threshold =["1000"]
+threshold =["600","3000"]
 
 rule all:
     input:
