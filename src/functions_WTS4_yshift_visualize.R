@@ -17,7 +17,6 @@ ggplot_ghm <- function(x) {
         axis.ticks = element_blank(),
         strip.background = element_rect(fill = "white", colour = "white"),
         axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
-    ghm <- ghm + scale_fill_viridis(na.value = "grey", direction = 1) 
     ghm <- ghm + scale_y_discrete(limits = colnames(input_mat_F_S))
     ghm <- ghm + scale_x_discrete(limits = colnames(input_mat_F_S))
     return(ghm)
@@ -38,6 +37,7 @@ vis_z <- function(x) {
     x |> 
         con_heatmap_df() |> 
             ggplot_ghm() -> ghm
+    ghm <- ghm + scale_fill_viridis(na.value = "grey", direction = 1) 
     return(ghm)
 }
 
@@ -47,6 +47,7 @@ vis_abs <- function(x) {
         abs() |> 
             con_heatmap_df() |> 
                 ggplot_ghm() -> ghm
+    ghm <- ghm + scale_fill_viridis(na.value = "grey", direction = -1) 
     return(ghm)
 }
 
