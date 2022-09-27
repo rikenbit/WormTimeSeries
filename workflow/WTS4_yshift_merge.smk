@@ -40,4 +40,4 @@ rule WTS4_yshift_merge:
     log:
         'logs/WTS4/normalize_1/{range}/{dist}/{in_mat}M_{stat}/Sample_ALL.log'
     shell:
-        'src/WTS4_yshift_merge.sh {params.Shift_mat} {output} {wildcards.in_mat} >& {log}'
+        'src/WTS4_yshift_merge.sh {params.Shift_mat} {output} {wildcards.stat} >& {log}'
