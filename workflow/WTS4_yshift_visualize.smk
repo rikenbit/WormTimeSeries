@@ -2,13 +2,13 @@
 ###################################################
 
 # SAMPLE
-# N_SAMPLES = list(map(str, range(1, 29)))
-# # remove artifact
-# N_SAMPLES.remove('3')
-# N_SAMPLES.remove('8')
-# N_SAMPLES.remove('20')
-# N_SAMPLES.remove('25')
-N_SAMPLES = ["ALL"]
+N_SAMPLES = list(map(str, range(1, 29)))
+# remove artifact
+N_SAMPLES.remove('3')
+N_SAMPLES.remove('8')
+N_SAMPLES.remove('20')
+N_SAMPLES.remove('25')
+# N_SAMPLES = ["ALL"]
 
 
 # Distance Data
@@ -18,8 +18,8 @@ dist_data = ["SBD_abs"]
 time_range = ["stimAfter"]
 
 # input matrix
-# input_matrix = ["Shift_F"]
-input_matrix = ["Shift_FM_mean","Shift_FM_sd","Shift_FM_count"]
+input_matrix = ["Shift_F"]
+# input_matrix = ["Shift_FM_mean","Shift_FM_sd","Shift_FM_count"]
 
 
 # value type

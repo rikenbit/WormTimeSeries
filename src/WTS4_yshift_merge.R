@@ -8,11 +8,11 @@ args_stat <- args[3]
 
 # #### test args####
 # args_input <- ("output/WTS4/normalize_1/stimAfter/SBD_abs/Shift_F")
-# args_output <- ("output/WTS4/normalize_1/stimAfter/SBD_abs/Shift_FM_mean/SampleNumber_ALL.RData")
-# args_stat <- ("mean")
+# args_output <- ("output/WTS4/normalize_1/stimAfter/SBD_abs/Shift_FM_count/SampleNumber_ALL.RData")
+# args_stat <- ("count")
 
 #### load&list####
-sample_path_list <- list.files(args_input, pattern="SampleNumber_", full.names=TRUE)
+sample_path_list <- list.files(args_input, pattern=".RData", full.names=TRUE)
 sample_path_list |> 
     str_remove(args_input) |> 
     str_remove("/SampleNumber_") |> 

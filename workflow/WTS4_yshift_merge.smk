@@ -16,6 +16,7 @@ time_range = ["stimAfter"]
 input_matrix = ["Shift_F"]
 # stat methods
 stat_value = ["mean","sd","count"]
+# stat_value = ["count"]
 
 rule all:
     input:
