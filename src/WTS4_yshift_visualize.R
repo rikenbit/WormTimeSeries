@@ -15,8 +15,16 @@ args_output <- args[5]
 # threshold of value
 args_thrr <- args[6]
 args_thrr <- as.numeric(args_thrr)
-    
-# #### test args####
+
+# stat type
+args_stat <- args[7]
+args_stat_limit <- switch(args_stat,
+                          "M_mean" = args_thrr,
+                          "M_sd" = args_thrr * 3,
+                          "M_count" = 24
+)
+args_stat_limit <- as.numeric(args_stat_limit)
+#### test args####
 # # input matrix
 # args_input <- ("output/WTS4/normalize_1/stimAfter/SBD_abs/Shift_F/SampleNumber_1.RData")
 # # labels
@@ -25,11 +33,19 @@ args_thrr <- as.numeric(args_thrr)
 # args_type <- ("abs")
 # # filter (label combination)
 # args_label_comb <- c("ALL")
-# # output 
+# # output
 # args_output <- ("output/WTS4/normalize_1/stimAfter/SBD_abs/Shift_F/vis_abs/ALL.png")
-# threshold of value
+# #threshold of value
 # args_thrr <- c("500")
 # args_thrr <- as.numeric(args_thrr)
+# # stat type
+# args_stat <- c("M_sd")
+# args_stat_limit <- switch(args_stat,
+#               "M_mean" = args_thrr,
+#               "M_sd" = args_thrr * 3,
+#               "M_count" = 24
+# )
+# args_stat_limit <- as.numeric(args_stat_limit)
 #### load####
 # load matrix
 load(args_input)
@@ -70,7 +86,7 @@ if (args_label_comb=="No_F") {
 }
 
 ######## threshold########
-input_mat_F_S[(input_mat_F_S > args_thrr | input_mat_F_S < -args_thrr)] <- NA
+input_mat_F_S[(input_mat_F_S > args_stat_limit | input_mat_F_S < -args_stat_limit)] <- NA
 
 #### visualize ####
 if (args_label_comb=="No_F") {
