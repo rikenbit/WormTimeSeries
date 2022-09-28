@@ -109,7 +109,8 @@ label_comb =["No_F","ALL","NaCl","1n","1p","1np"]
 threshold =["500"]
 
 # vis value type
-value_stat = ["mean","sd","count"]
+# value_stat = ["mean","sd","count"]
+value_stat = ["count"]
 
 rule all:
     input:
