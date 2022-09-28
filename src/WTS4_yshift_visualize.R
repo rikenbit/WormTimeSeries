@@ -19,14 +19,14 @@ args_thrr <- as.numeric(args_thrr)
 # stat type
 args_stat <- args[7]
 args_stat_limit <- switch(args_stat,
-                          "M_mean" = args_thrr,
-                          "M_sd" = args_thrr * 3,
-                          "M_count" = 24
+                          "mean" = args_thrr,
+                          "sd" = args_thrr * 3,
+                          "count" = 24
 )
 args_stat_limit <- as.numeric(args_stat_limit)
-#### test args####
+# #### test args####
 # # input matrix
-# args_input <- ("output/WTS4/normalize_1/stimAfter/SBD_abs/Shift_F/SampleNumber_1.RData")
+# args_input <- ("output/WTS4/normalize_1/stimAfter/SBD_abs/Shift_FM_mean/SampleNumber_ALL.RData")
 # # labels
 # args_label <-("data/WTS4_Eval_behavior_ACF.xlsx")
 # # value type
@@ -34,12 +34,12 @@ args_stat_limit <- as.numeric(args_stat_limit)
 # # filter (label combination)
 # args_label_comb <- c("ALL")
 # # output
-# args_output <- ("output/WTS4/normalize_1/stimAfter/SBD_abs/Shift_F/vis_abs/ALL.png")
+# args_output <- ("output/WTS4/normalize_1/stimAfter/SBD_abs/Shift_FM_mean/SampleNumber_ALL/abs/500/ALL.png")
 # #threshold of value
 # args_thrr <- c("500")
 # args_thrr <- as.numeric(args_thrr)
 # # stat type
-# args_stat <- c("M_sd")
+# args_stat <- c("M_mean")
 # args_stat_limit <- switch(args_stat,
 #               "M_mean" = args_thrr,
 #               "M_sd" = args_thrr * 3,

@@ -47,7 +47,7 @@ vis_abs <- function(x) {
         abs() |> 
             con_heatmap_df() |> 
                 ggplot_ghm() -> ghm
-    ghm <- ghm + scale_fill_viridis(na.value = "grey", direction = -1) 
+    ghm <- ghm + scale_fill_viridis(na.value = "grey", direction = -1, limits=c(0, args_stat_limit)) 
     return(ghm)
 }
 

@@ -86,7 +86,7 @@ dist_data = ["SBD_abs"]
 time_range = ["stimAfter"]
 
 # input matrix
-input_matrix = ["Shift_F"]
+input_matrix = ["Shift_FM"]
 
 
 # value type
@@ -109,11 +109,11 @@ label_comb =["No_F","ALL","NaCl","1n","1p","1np"]
 threshold =["500"]
 
 # vis value type
-stat_type = ["M_mean","M_sd","M_count"]
+value_stat = ["mean","sd","count"]
 
 rule all:
     input:
-        expand('output/WTS4/normalize_1/{range}/{dist}/{in_mat}{s_type}/SampleNumber_{N}/{v_type}/{v_thr}/{l_comb}.png', 
+        expand('output/WTS4/normalize_1/{range}/{dist}/{in_mat}_{v_stat}/SampleNumber_{N}/{v_type}/{v_thr}/{l_comb}.png', 
             N=N_SAMPLES,
             dist=dist_data,
             range=time_range,
@@ -121,23 +121,23 @@ rule all:
             v_type=value_type,
             l_comb=label_comb,
             v_thr=threshold,
-            s_type=stat_type
+            v_stat=value_stat
             )
         
 rule WTS4_yshift_visualize:
     input:
-        RData = 'output/WTS4/normalize_1/{range}/{dist}/{in_mat}{s_type}/SampleNumber_{N}.RData'
+        RData = 'output/WTS4/normalize_1/{range}/{dist}/{in_mat}_{v_stat}/SampleNumber_{N}.RData'
     output:
-        heatmap = 'output/WTS4/normalize_1/{range}/{dist}/{in_mat}{s_type}/SampleNumber_{N}/{v_type}/{v_thr}/{l_comb}.png'
+        heatmap = 'output/WTS4/normalize_1/{range}/{dist}/{in_mat}_{v_stat}/SampleNumber_{N}/{v_type}/{v_thr}/{l_comb}.png'
     params:
         label = 'data/WTS4_Eval_behavior_ACF.xlsx'
     benchmark:
-        'benchmarks/WTS4/normalize_1/{range}/{dist}/{in_mat}{s_type}/SampleNumber_{N}/{v_type}/{v_thr}/{l_comb}.txt'
+        'benchmarks/WTS4/normalize_1/{range}/{dist}/{in_mat}_{v_stat}/SampleNumber_{N}/{v_type}/{v_thr}/{l_comb}.txt'
     container:
         "docker://yamaken37/yshift_visualize:20220921"
     resources:
         mem_gb=200
     log:
-        'logs/WTS4/normalize_1/{range}/{dist}/{in_mat}{s_type}/SampleNumber_{N}/{v_type}/{v_thr}/{l_comb}.log'
+        'logs/WTS4/normalize_1/{range}/{dist}/{in_mat}_{v_stat}/SampleNumber_{N}/{v_type}/{v_thr}/{l_comb}.log'
     shell:
-        'src/WTS4_yshift_visualize.sh {input.RData} {params.label} {wildcards.v_type} {wildcards.l_comb} {output.heatmap} {wildcards.v_thr} {wildcards.s_type} >& {log}'
+        'src/WTS4_yshift_visualize.sh {input.RData} {params.label} {wildcards.v_type} {wildcards.l_comb} {output.heatmap} {wildcards.v_thr} {wildcards.v_stat} >& {log}'
