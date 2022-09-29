@@ -33,7 +33,6 @@ con_heatmap_df <- function(x) {
 }
 
 vis_z <- function(x) {
-    # input_mat_F_S |> 
     x |> 
         con_heatmap_df() |> 
             ggplot_ghm() -> ghm
@@ -42,11 +41,11 @@ vis_z <- function(x) {
 }
 
 vis_abs <- function(x) {
-    # input_mat_F_S |> 
     x |> 
         abs() |> 
             con_heatmap_df() |> 
                 ggplot_ghm() -> ghm
+    # ghm <- ghm + scale_fill_viridis(na.value = "grey", direction = -1, limits=c(0, args_thrr)) 
     if (args_stat=="count") {
         ghm <- ghm + scale_fill_viridis(na.value = "grey", direction = 1, limits=c(0, args_stat_limit)) 
     } else {

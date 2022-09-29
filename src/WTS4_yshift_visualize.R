@@ -24,6 +24,7 @@ args_stat_limit <- switch(args_stat,
                           "count" = 24
 )
 args_stat_limit <- as.numeric(args_stat_limit)
+
 # #### test args####
 # # input matrix
 # args_input <- ("output/WTS4/normalize_1/stimAfter/SBD_abs/Shift_FM_mean/SampleNumber_ALL.RData")
@@ -86,6 +87,7 @@ if (args_label_comb=="No_F") {
 }
 
 ######## threshold########
+# input_mat_F_S[(input_mat_F_S > args_thrr | input_mat_F_S < -args_thrr)] <- NA
 input_mat_F_S[(input_mat_F_S > args_stat_limit | input_mat_F_S < -args_stat_limit)] <- NA
 
 #### visualize ####

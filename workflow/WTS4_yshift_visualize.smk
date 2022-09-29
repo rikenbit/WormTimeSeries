@@ -2,14 +2,14 @@
 # ###################################################
 
 # # SAMPLE
-# # N_SAMPLES = list(map(str, range(1, 29)))
-# # # remove artifact
-# # N_SAMPLES.remove('3')
-# # N_SAMPLES.remove('8')
-# # N_SAMPLES.remove('20')
-# # N_SAMPLES.remove('25')
+# N_SAMPLES = list(map(str, range(1, 29)))
+# # remove artifact
+# N_SAMPLES.remove('3')
+# N_SAMPLES.remove('8')
+# N_SAMPLES.remove('20')
+# N_SAMPLES.remove('25')
 
-# N_SAMPLES = ["ALL"]
+# # N_SAMPLES = ["ALL"]
 
 
 # # Distance Data
@@ -19,17 +19,17 @@
 # time_range = ["stimAfter"]
 
 # # input matrix
-# # input_matrix = ["Shift_F"]
-# input_matrix = ["Shift_FM_mean","Shift_FM_sd","Shift_FM_count"]
+# input_matrix = ["Shift_F"]
+# # input_matrix = ["Shift_FM_mean","Shift_FM_sd","Shift_FM_count"]
 
 
 # # value type
 # value_type =["zahlen","abs"]
-# # value_type =["zahlen"]
+# # value_type =["abs"]
 
 # # filter (label combination)
 # label_comb =["No_F","ALL","NaCl","1n","1p","1np"]
-# # label_comb =["No_F"]
+# # label_comb =["1np"]
 
 # #### filter description
 # # "No_F" is no filter
@@ -41,7 +41,7 @@
 # ####
 
 # # threshold of value
-# threshold =["600","3000"]
+# threshold =["500"]
 
 # rule all:
 #     input:
@@ -109,8 +109,8 @@ label_comb =["No_F","ALL","NaCl","1n","1p","1np"]
 threshold =["500"]
 
 # vis value type
-# value_stat = ["mean","sd","count"]
-value_stat = ["count"]
+value_stat = ["mean","sd","count"]
+# value_stat = ["count"]
 
 rule all:
     input:
