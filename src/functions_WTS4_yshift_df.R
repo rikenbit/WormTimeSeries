@@ -3,10 +3,6 @@
 library(tidyverse)
 library(usedist)
 ##################################################
-.func = function(x) {
-	return(return_object)
-}
-
 .yshift_dfr = function(x) {
     cell_2 <-colnames(shift_matrix)[indices[x,][1]]
     cell_1 <- rownames(shift_matrix)[indices[x,][2]]
@@ -18,6 +14,7 @@ library(usedist)
     ) -> return_object
     return(return_object)
 }
+
 .mSBD_dfr = function(x) {
     cell_2 <-colnames(mat_d_f)[indices[x,][1]]
     cell_1 <- rownames(mat_d_f)[indices[x,][2]]

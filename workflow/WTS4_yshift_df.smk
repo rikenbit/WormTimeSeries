@@ -1,41 +1,31 @@
 # WTS4_yshift_df
 ###################################################
-# No. of Clusters
-N_CLUSTERS = list(map(str, range(2, 21)))
-# N_CLUSTERS = ["3"]
-
-# Distance Data
-dist_data = ["EUCL","SBD_abs"]
-# dist_data = ["SBD_abs"]
-
-# data time range
-time_range = ["stimAfter"]
-
-# ReClustering method
-ReClustering_method = ["CSPA","OINDSCAL","MCMIHOOI"]
-# ReClustering_method = ["CSPA"]
+N_SAMPLES = list(map(str, range(1, 29)))
+# remove artifact
+N_SAMPLES.remove('3')
+N_SAMPLES.remove('8')
+N_SAMPLES.remove('20')
+N_SAMPLES.remove('25')
 
 rule all:
     input:
-        expand('output/WTS4/normalize_1/{range}/{dist}/{Re_cls}/Merged_data/k_Number_{N_cls}.RData',
-            range=time_range,
-            dist=dist_data,
-            N_cls=N_CLUSTERS,
-            Re_cls=ReClustering_method
+        expand('output/WTS4/normalize_1/stimAfter/SBD_abs/yShift_df/SampleNumber_{N}.RData',
+            N=N_SAMPLES
             )
         
 rule WTS4_yshift_df:
     input:
-        Mem_matrix = 'output/WTS4/normalize_1/{range}/{dist}/Membership/k_Number_{N_cls}.RData'
+        yshift = 'output/WTS4/normalize_1/stimAfter/SBD_abs/Shift_F/SampleNumber_{N}.RData',
+        dist = 'output/WTS4/normalize_1/stimAfter/SBD_abs/Distance/SampleNumber_{N}.RData'
     output:
-        m_data = 'output/WTS4/normalize_1/{range}/{dist}/{Re_cls}/Merged_data/k_Number_{N_cls}.RData'
+        'output/WTS4/normalize_1/stimAfter/SBD_abs/yShift_df/SampleNumber_{N}.RData'
     benchmark:
-        'benchmarks/WTS4/normalize_1/{range}/{dist}/{Re_cls}/Merged_data/k_Number_{N_cls}.txt'
+        'benchmarks/WTS4/normalize_1/stimAfter/SBD_abs/yShift_df/SampleNumber_{N}.txt'
     container:
-        "docker://docker_images"
+        "docker://yamaken37/dist_filter:20220624"
     resources:
         mem_gb=200
     log:
-        'logs/WTS4/normalize_1/{range}/{dist}/{Re_cls}/Merged_data/k_Number_{N_cls}.log'
+        'logs/WTS4/normalize_1/stimAfter/SBD_abs/yShift_df/SampleNumber_{N}.log'
     shell:
-        'src/WTS4_yshift_df.sh {wildcards.Re_cls} {input.Mem_matrix} {output.m_data}>& {log}'
+        'src/WTS4_yshift_df.sh {input.yshift} {input.dist} {output} >& {log}'
