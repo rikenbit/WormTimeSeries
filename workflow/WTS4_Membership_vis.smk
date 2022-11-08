@@ -25,7 +25,7 @@ rule WTS4_Membership_vis:
     benchmark:
         'benchmarks/WTS4/normalize_1/stimAfter/SBD_abs/Membership_vis/k_Number_{N_cls}/SampleNumber_{N}.txt'
     container:
-        "docker://yamaken37/dist_filter:20220624"
+        "docker://yamaken37/eval_sample:20220106"
     resources:
         mem_gb=200
     log:

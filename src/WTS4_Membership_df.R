@@ -8,8 +8,8 @@ args_animal <- args[3]
 args_sample_path <- args[4]
 #### test args####
 # args_input <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Membership_F/k_Number_6.RData")
-# args_output <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Membership_df/k_Number_6/SampleNumber_28.RData")
-# args_animal <-c("28")
+# args_output <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Membership_df/k_Number_6/SampleNumber_2.RData")
+# args_animal <-c("2")
 # args_sample_path <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Distance")
 
 load(args_input)
