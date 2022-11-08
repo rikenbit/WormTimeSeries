@@ -24,7 +24,9 @@ sample_path_list %>%
     sort() -> sample_sort_num
 
 #### list####
-mem_list <- newHs
+lapply(newHs, function(x){
+    x[sort(rownames(x)),]
+}) -> mem_list 
 names(mem_list) <- as.character(sample_sort_num)
 #### 各個体####
 mem <- mem_list[[args_animal]]
