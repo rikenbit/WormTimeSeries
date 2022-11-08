@@ -13,3 +13,6 @@ library(tidyverse)
     ) -> return_object
     return(return_object)
 }
+.mem_vec = function(x) {
+    mem_mat[merge_df_sep[x,1],merge_df_sep[x,2]]
+}

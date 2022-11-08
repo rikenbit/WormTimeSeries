@@ -24,25 +24,27 @@ sample_path_list %>%
     sort() -> sample_sort_num
 
 #### list####
+# ソート&listに名前
 lapply(newHs, function(x){
     x[sort(rownames(x)),]
 }) -> mem_list 
 names(mem_list) <- as.character(sample_sort_num)
+
 #### 各個体####
 mem <- mem_list[[args_animal]]
 mem_mat <- mem %*% t(mem)
 
-#### matrix to df####
-indices <- t(combn(seq(nrow(mem_mat)), 2))
-purrr::map_dfr(1:nrow(indices), .mem_df) -> mem_df
-
 #### merge yshift####
 args_yshift <- paste0("output/WTS4/normalize_1/stimAfter/SBD_abs/yShift_df/SampleNumber_",args_animal,".RData")
 load(args_yshift)
-yshift_mem_df <- merge(merge_df, 
-                       mem_df,
-                       by.x = "cell_cell", 
-                       by.y = "cell_cell",
-                       all.x = TRUE)
+
+merge_df |> 
+    separate(cell_cell, c("cell1", "cell2"), sep="_") -> merge_df_sep
+
+purrr::map_dbl(1:nrow(merge_df_sep), .mem_vec)-> mem_vec
+
+merge_df |> 
+    dplyr::mutate(member=mem_vec) -> yshift_mem_df
+
 ########
 save(yshift_mem_df, file=args_output)

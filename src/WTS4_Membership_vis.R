@@ -7,8 +7,6 @@ args_input <- args[1]
 # output
 args_output <- args[2]
 #### test args####
-# args_input <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Membership_df/k_Number_6/SampleNumber_1.RData")
-# args_output <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Membership_vis/k_Number_6/SampleNumber_1.png")
 # args_input <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Membership_df/k_Number_6/SampleNumber_2.RData")
 # args_output <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Membership_vis/k_Number_6/SampleNumber_2.png")
 
