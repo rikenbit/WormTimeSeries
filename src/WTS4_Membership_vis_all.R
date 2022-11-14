@@ -16,10 +16,35 @@ load(args_input)
 #### yshift list to df####
 dfr_yshift <- purrr::map_dfr(names(DFs), .DFs_yshift)
 
-#### ggplot####
-cord_x <- c("Membership")
-cord_y <- c("yshift")
-#### ggplot density####
+# #### ggplot####
+# cord_x <- c("Membership")
+# cord_y <- c("yshift")
+
+#### ggplot density all fill_Member####
+# gg_dens <- ggplot(dfr_yshift,
+#                   aes(x = yshift,
+#                       fill=factor(member))
+# ) +
+#     geom_density(alpha=0.2) +
+#     labs(x = cord_x,
+#          y = cord_y,
+#          fill = "Membership") +
+#     ylim(c(0, 0.05)) +
+#     xlim(c(-1000, 1000))
+
+# #### ggplot density all fill_Member facet_wrap####
+# gg_dens <- ggplot(dfr_yshift,
+#                   aes(x = yshift)
+# ) +
+#     geom_density(fill="blue", alpha=0.2) +
+#     labs(x = cord_x,
+#          y = cord_y,
+#          fill = "Animal_all") +
+#     ylim(c(0, 0.05)) +
+#     xlim(c(-1000, 1000)) +
+#     facet_wrap(member ~ ., nrow=2)
+
+#### ggplot density group facet_wrap####
 cord_x <- c("yshift")
 cord_y <- c("density")
 
@@ -44,6 +69,7 @@ gg_dens <- ggplot(dfr_yshift,
           ) +
     facet_wrap(member ~ ., nrow=2)
 
+#### ggplot density group####
 # gg_dens <- ggplot(dfr_yshift[dfr_yshift$member==1,], 
 #                   aes(x = yshift,
 #                       fill=factor(animal, levels = names(DFs))
