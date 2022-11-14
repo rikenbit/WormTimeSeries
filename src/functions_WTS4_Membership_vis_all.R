@@ -37,7 +37,10 @@ library(patchwork)
     }
     p_value_res <- c(T_pvalue,U_pvalue,F_pvalue)
     q_value_res <- p.adjust(p_value_res,"BH")
-    
+    #### Ave.####
+    ave_yshift <- mean(DF$yshift)
+    #### 2SD####
+    sd_2_yshift <- sd(DF$yshift)
     #### data.frame####
     data.frame(Animal = x,
                T_pvalue = p_value_res[1],
@@ -46,6 +49,8 @@ library(patchwork)
                U_qvalue = q_value_res[2],
                F_pvalue = p_value_res[3],
                F_qvalue = q_value_res[3],
+               Ave_yshift = ave_yshift,
+               SD_2_yshift = sd_2_yshift,
                stringsAsFactors = FALSE,
                row.names = NULL) -> return_object
     return(return_object)

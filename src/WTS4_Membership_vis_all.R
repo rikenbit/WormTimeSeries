@@ -176,7 +176,8 @@ ggsave(filename = args_output,
 #### ggsave p q value####
 purrr::map_dfr(names(DFs), .DFs_test) -> Test_table
 column_to_rownames(Test_table, "Animal") -> Test_table 
--log10(Test_table) -> Test_table_LOG
+Test_table_LOG <- Test_table
+Test_table_LOG[,1:6] <- -log10(Test_table_LOG[,1:6]) 
 write.csv(Test_table_LOG, 
           args_output_csv, 
           row.names=TRUE)
