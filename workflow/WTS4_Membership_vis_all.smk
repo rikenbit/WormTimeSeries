@@ -29,4 +29,4 @@ rule WTS4_Membership_vis_all:
     log:
         'logs/WTS4/normalize_1/stimAfter/SBD_abs/Membership_vis_all/k_Number_{N_cls}.log'
     shell:
-        'src/WTS4_Membership_vis_all.sh {input} {output.out_png} {output.out_csv} >& {log}'        
+        'src/WTS4_Membership_vis_all.sh {input} {output.out_png} {output.out_csv} >& {log}'
