@@ -19,17 +19,18 @@
 # time_range = ["stimAfter"]
 
 # # input matrix
-# input_matrix = ["Shift_F"]
+# input_matrix = ["Ds_F_mat"]
+# # input_matrix = ["Shift_F"]
 # # input_matrix = ["Shift_FM_mean","Shift_FM_sd","Shift_FM_count"]
 
 
 # # value type
-# value_type =["zahlen","abs"]
-# # value_type =["abs"]
+# # value_type =["zahlen","abs"]
+# value_type =["abs"]
 
 # # filter (label combination)
-# label_comb =["No_F","ALL","NaCl","1n","1p","1np"]
-# # label_comb =["1np"]
+# # label_comb =["No_F","ALL","NaCl","1n","1p","1np"]
+# label_comb =["1np"]
 
 # #### filter description
 # # "No_F" is no filter
@@ -41,7 +42,8 @@
 # ####
 
 # # threshold of value
-# threshold =["500"]
+# threshold =["1"]
+# # threshold =["500"]
 
 # rule all:
 #     input:
@@ -77,6 +79,13 @@
 # WTS4_yshift_visualize
 ###################################################
 N_SAMPLES = ["ALL"]
+# # SAMPLE
+# N_SAMPLES = list(map(str, range(1, 29)))
+# # remove artifact
+# N_SAMPLES.remove('3')
+# N_SAMPLES.remove('8')
+# N_SAMPLES.remove('20')
+# N_SAMPLES.remove('25')
 
 
 # Distance Data
@@ -86,15 +95,16 @@ dist_data = ["SBD_abs"]
 time_range = ["stimAfter"]
 
 # input matrix
-input_matrix = ["Shift_FM"]
+input_matrix = ["Ds_F_mat"]
+# input_matrix = ["Shift_FM"]
 
 
 # value type
 value_type =["abs"]
 
 # filter (label combination)
-label_comb =["No_F","ALL","NaCl","1n","1p","1np"]
-# label_comb =["No_F"]
+# label_comb =["No_F","ALL","NaCl","1n","1p","1np"]
+label_comb =["1np"]
 
 #### filter description
 # "No_F" is no filter
@@ -106,10 +116,12 @@ label_comb =["No_F","ALL","NaCl","1n","1p","1np"]
 ####
 
 # threshold of value
-threshold =["500"]
+threshold =["1"]
+# threshold =["500"]
 
 # vis value type
-value_stat = ["mean","sd","count"]
+value_stat = ["mean"]
+# value_stat = ["mean","sd","count"]
 # value_stat = ["count"]
 
 rule all:

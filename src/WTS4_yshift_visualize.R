@@ -24,6 +24,7 @@ args_stat_limit <- switch(args_stat,
                           "count" = 24
 )
 args_stat_limit <- as.numeric(args_stat_limit)
+# args_stat_limit <- as.numeric("1")
 
 # #### test args####
 # # input matrix
@@ -34,6 +35,7 @@ args_stat_limit <- as.numeric(args_stat_limit)
 # args_type <- ("abs")
 # # filter (label combination)
 # args_label_comb <- c("ALL")
+# args_label_comb <- c("1np")
 # # output
 # args_output <- ("output/WTS4/normalize_1/stimAfter/SBD_abs/Shift_FM_mean/SampleNumber_ALL/abs/500/ALL.png")
 # #threshold of value
@@ -50,7 +52,8 @@ args_stat_limit <- as.numeric(args_stat_limit)
 #### load####
 # load matrix
 load(args_input)
-input_mat <- shift_matrix
+# input_mat <- shift_matrix
+input_mat <- 1-shift_matrix
 # load label table
 read.xlsx(args_label,
           sheet = "Sheet1",

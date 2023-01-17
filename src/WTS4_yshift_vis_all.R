@@ -126,16 +126,36 @@ dfr_yshift %>% mutate(yshift_abs = case_when(abs(yshift) <= 100 ~ "0~100",
                                                      "0~100"))
                       ) -> dfr_yshift_group
 
+# #### ggplot density group not scaled####
+# gg <- ggplot(dfr_yshift_group,
+#              # dfr_yshift_group[dfr_yshift_group$yshift_abs!="1000以上",],
+#              aes(x = 1-mSBD,
+#                  # fill=yshift_abs,
+#                  col=yshift_abs)
+#              ) +
+#     # geom_density(alpha=0.8) +
+#     geom_density(linewidth = 4.5) +
+#     labs(x = cord_x,
+#          y = cord_y,
+#          title = ggplot_title,
+#          # fill = "yshift_abs",
+#          col = "yshift_abs") +
+#     theme(plot.title = element_text(hjust = 0.5)) +
+#     theme(text = element_text(size = 90))
+
+#### ggplot density group scaled by count####
 gg <- ggplot(dfr_yshift_group,
-             # dfr_yshift_group[dfr_yshift_group$yshift_abs!="1000以上",],
              aes(x = 1-mSBD,
-                 fill=yshift_abs)
+                 number_of_cases=nrow(dfr_yshift_group),
+                 y=(..count..)/number_of_cases,
+                 col=yshift_abs)
              ) +
-    geom_density(alpha=0.8) +
+    geom_density(linewidth = 4.5) + 
     labs(x = cord_x,
          y = cord_y,
          title = ggplot_title,
-         fill = "yshift_abs") +
+         col = "yshift_abs") +
+    ylim(c(0, 3)) +
     theme(plot.title = element_text(hjust = 0.5)) +
     theme(text = element_text(size = 90))
 
