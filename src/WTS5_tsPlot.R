@@ -9,7 +9,6 @@ args_stim_xlsx <- c("data/stimulation/stimulation_timing.xlsx")
 args_input_stim <- c("data/stimulation/stim_2.RData")
 args_yshift <- c("output/WTS5/normalize_1/stimAfter/SBD_abs/SampleNumber_2/yshift.RData")
 args_yshift_value <- c("output/WTS5/normalize_1/stimAfter/SBD_abs/SampleNumber_2/yshift_value.RData")
-# args_label_table <- c("output/WTS5/normalize_1/stimAfter/SBD_abs/SampleNumber_2/label_table.RData")
 #### load Neuron Activity Data####
 load(args_input_n)
 eval(parse(text=paste0("input_n <- ReadData_", args_sample)))
@@ -42,7 +41,7 @@ df_input_n %>%
           by.y = "time_frame", 
           all.x = TRUE) -> df_input
 #### load yshift Neuron Activity Data#####
-# sbd_yshift_df ASER  に対するyshift後の神経活動値
+# sbd_yshift_df 神経活動値（yshift後）
 load(args_yshift)
 #### merge input , yshift Neuron Activity Data####
 df_input %>% 
@@ -53,17 +52,11 @@ df_input %>%
           all.x = TRUE) -> df_tsPlot
 
 #### load yshift filter####
-# yshift_value_table yshift値とyshift_filter（外れ値フィルター？）
+# yshift_value_table y_shift値
+############
 load(args_yshift_value)
-#### load label####
-# df_label なくても問題ない
-# load(args_label_table)
-# yshift_value_table %>% 
-#     merge(., 
-#           df_label, 
-#           by.x = "cell_type", 
-#           by.y = "cell_type", 
-#           all.x = TRUE) -> df_label_filter
+############
+
 #### merge all####
 df_tsPlot %>% 
     merge(., 
@@ -74,24 +67,17 @@ df_tsPlot %>%
 df_tsPlot$time_frame <- as.numeric(df_tsPlot$time_frame)
 #### ggtheme####
 sX <- scale_x_continuous(name = "TimeFrame(1frame/0.2sec)",
-                         breaks = seq(0, length(timeframe), by= 1000)
-)
+                         breaks = seq(0, 
+                                      length(timeframe), 
+                                      by= 1000)
+                         )
 t_1 <- theme(plot.title = element_text(size = 30, hjust = 0.5, family ="HiraKakuPro-W3"))
 t_2 <- theme(axis.title = element_text(size = 20))
 t_3 <- theme(legend.title = element_text(size = 28),
              legend.text = element_text(size = 20)
 )
-#### ggplot labeled cell####
-# label_filter_df <- filter(df_label_filter, 
-#                           label_acf==1, 
-#                           yshift_filter==1)
-# # sort yshift_abs
-# label_filter_df %>% 
-#     dplyr::arrange(yshift_abs) %>% 
-#     .$cell_type -> label_filter_list
+
 label_filter_list <- c("ASER","ASEL")
-# match("ASER", label_filter_list) -> yshift_order
-# c(label_filter_list[yshift_order], label_filter_list[-yshift_order]) -> label_filter_list
 
 seq(1:length(label_filter_list)) %>%
     purrr::map(., .plot_yshift) -> gg_cells
