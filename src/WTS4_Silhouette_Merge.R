@@ -33,7 +33,7 @@ gg_sil <- fviz_silhouette(sil)
 eval_result <- mean(gg_sil$data$sil_width)
 
 #### save eval_result####
-# save(eval_result, file=args_output_value)
+save(eval_result, file=args_output_value)
 
 #### silhouette ggplot####
 gg_sil <- myfviz_silhouette(sil, gg_sil$data$cluster, label=TRUE) +
@@ -53,4 +53,4 @@ ggsave(filename = args_output_plot,
 
 #### save gg_sil####
 # patchworkで次元圧縮図に加える
-# save(gg_sil, file=args_output_gg)
+save(gg_sil, file=args_output_gg)
