@@ -24,7 +24,7 @@ normalize_pattern = ["normalize_1"]
 
 rule all:
     input:
-        expand('output/WTS4/{normalize_P}/{range}/{dist}/{Re_cls}/Merged_{DR}_plot/k_Number_{N_cls}_gg_cls.eps',
+        expand('output/WTS4/{normalize_P}/{range}/{dist}/{Re_cls}/Merged_{DR}_plot/k_Number_{N_cls}_gg_cls.svg',
             range=time_range,
             dist=dist_data,
             N_cls=N_CLUSTERS,
@@ -32,7 +32,7 @@ rule all:
             DR=DimReduc,
             normalize_P=normalize_pattern
             ),
-        expand('output/WTS4/{normalize_P}/{range}/{dist}/{Re_cls}/Merged_{DR}_plot/k_Number_{N_cls}_gg_NT.eps',
+        expand('output/WTS4/{normalize_P}/{range}/{dist}/{Re_cls}/Merged_{DR}_plot/k_Number_{N_cls}_gg_NT.svg',
             range=time_range,
             dist=dist_data,
             N_cls=N_CLUSTERS,
@@ -40,7 +40,7 @@ rule all:
             DR=DimReduc,
             normalize_P=normalize_pattern
             ),
-        expand('output/WTS4/{normalize_P}/{range}/{dist}/{Re_cls}/Merged_{DR}_plot/k_Number_{N_cls}_gg_eval_label.eps',
+        expand('output/WTS4/{normalize_P}/{range}/{dist}/{Re_cls}/Merged_{DR}_plot/k_Number_{N_cls}_gg_eval_label.svg',
             range=time_range,
             dist=dist_data,
             N_cls=N_CLUSTERS,
@@ -48,7 +48,7 @@ rule all:
             DR=DimReduc,
             normalize_P=normalize_pattern
             ),
-        expand('output/WTS4/{normalize_P}/{range}/{dist}/{Re_cls}/Merged_{DR}_plot/k_Number_{N_cls}_gg_count_sum.eps',
+        expand('output/WTS4/{normalize_P}/{range}/{dist}/{Re_cls}/Merged_{DR}_plot/k_Number_{N_cls}_gg_count_sum.svg',
             range=time_range,
             dist=dist_data,
             N_cls=N_CLUSTERS,
@@ -56,7 +56,7 @@ rule all:
             DR=DimReduc,
             normalize_P=normalize_pattern
             ),
-        expand('output/WTS4/{normalize_P}/{range}/{dist}/{Re_cls}/Merged_{DR}_plot/k_Number_{N_cls}_gg_cell_count.eps',
+        expand('output/WTS4/{normalize_P}/{range}/{dist}/{Re_cls}/Merged_{DR}_plot/k_Number_{N_cls}_gg_cell_count.svg',
             range=time_range,
             dist=dist_data,
             N_cls=N_CLUSTERS,
@@ -78,11 +78,11 @@ rule WTS4_DimReduc_plot:
         cord = 'output/WTS4/{normalize_P}/{range}/{dist}/{Re_cls}/Merged_{DR}_cord/k_Number_{N_cls}.RData',
         m_cls = 'output/WTS4/{normalize_P}/{range}/{dist}/{Re_cls}/Merged_cls/k_Number_{N_cls}.RData'
     output:
-        gg_cls = 'output/WTS4/{normalize_P}/{range}/{dist}/{Re_cls}/Merged_{DR}_plot/k_Number_{N_cls}_gg_cls.eps',
-        gg_NT = 'output/WTS4/{normalize_P}/{range}/{dist}/{Re_cls}/Merged_{DR}_plot/k_Number_{N_cls}_gg_NT.eps',
-        gg_eval_label = 'output/WTS4/{normalize_P}/{range}/{dist}/{Re_cls}/Merged_{DR}_plot/k_Number_{N_cls}_gg_eval_label.eps',
-        gg_count_sum = 'output/WTS4/{normalize_P}/{range}/{dist}/{Re_cls}/Merged_{DR}_plot/k_Number_{N_cls}_gg_count_sum.eps',
-        gg_cell_count = 'output/WTS4/{normalize_P}/{range}/{dist}/{Re_cls}/Merged_{DR}_plot/k_Number_{N_cls}_gg_cell_count.eps',
+        gg_cls = 'output/WTS4/{normalize_P}/{range}/{dist}/{Re_cls}/Merged_{DR}_plot/k_Number_{N_cls}_gg_cls.svg',
+        gg_NT = 'output/WTS4/{normalize_P}/{range}/{dist}/{Re_cls}/Merged_{DR}_plot/k_Number_{N_cls}_gg_NT.svg',
+        gg_eval_label = 'output/WTS4/{normalize_P}/{range}/{dist}/{Re_cls}/Merged_{DR}_plot/k_Number_{N_cls}_gg_eval_label.svg',
+        gg_count_sum = 'output/WTS4/{normalize_P}/{range}/{dist}/{Re_cls}/Merged_{DR}_plot/k_Number_{N_cls}_gg_count_sum.svg',
+        gg_cell_count = 'output/WTS4/{normalize_P}/{range}/{dist}/{Re_cls}/Merged_{DR}_plot/k_Number_{N_cls}_gg_cell_count.svg',
         csv = 'output/WTS4/{normalize_P}/{range}/{dist}/{Re_cls}/Merged_{DR}_plot/label_table_k{N_cls}.csv'
     params:
         NL = 'data/igraph/Fig1_HNS.RData',
@@ -92,7 +92,8 @@ rule WTS4_DimReduc_plot:
     benchmark:
         'benchmarks/WTS4/{normalize_P}/{range}/{dist}/{Re_cls}/Merged_{DR}_plot/k_Number_{N_cls}.txt'
     container:
-        "docker://yamaken37/dimreduc:20211213"
+        # "docker://yamaken37/dimreduc:20211213"
+        "docker://yamaken37/ggplot_svg:20230118"
     resources:
         mem_gb=200
     log:
