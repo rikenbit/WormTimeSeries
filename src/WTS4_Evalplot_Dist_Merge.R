@@ -8,7 +8,8 @@ args_input_SBD_abs <-c("output/WTS4/normalize_1/stimAfter/SBD_abs")
 # eval method
 args_eval_method <- c("Silhouette")
 # output
-args_output <- c("output/WTS4/normalize_1/stimAfter/Evalplot_Dist_Merge/Silhouette.png")
+# args_output <- c("output/WTS4/normalize_1/stimAfter/Evalplot_Dist_Merge/Silhouette.png")
+args_output <- c("output/WTS4/normalize_1/stimAfter/Evalplot_Dist_Merge/Silhouette.eps")
 
 #### args_k_number####
 args_k_number <- as.numeric(2:20)
@@ -82,9 +83,9 @@ df_CSPA_MCMI <- data.frame(k_number = as.numeric(args_k_number),
                            )
 
 #### transform long format####
-df_CSPA_MCMI %>% 
-  pivot_longer(col= -k_number, 
-               names_to = "DataName", 
+df_CSPA_MCMI %>%
+  pivot_longer(col= -k_number,
+               names_to = "DataName",
                values_to ="Eval_Value") -> df_long
 
 #### ggplot####
@@ -94,7 +95,7 @@ if (args_eval_method == "Silhouette") {
     label_y <-  c("Eval_Value")
 }
 
-gg <- ggplot(df_long, 
+gg <- ggplot(df_long,
              aes(x=k_number,
                  y=Eval_Value,
                  colour = DataName)
@@ -105,12 +106,12 @@ gg <- ggplot(df_long,
   labs(x = "Number of clusters",
        y = label_y,
        color = "Clustering methods") +
-  scale_color_hue(labels = c(EUCL_CSPA = "CSPA (Euclidean)", 
-                             EUCL_MCMIHOOI = "MC-MI-HOOI (Euclidean)", 
-                             mSBD_CSPA = "CSPA (mSBD)", 
+  scale_color_hue(labels = c(EUCL_CSPA = "CSPA (Euclidean)",
+                             EUCL_MCMIHOOI = "MC-MI-HOOI (Euclidean)",
+                             mSBD_CSPA = "CSPA (mSBD)",
                              mSBD_MCMIHOOI = "WormTensor"))
 # #### point_shape#####
-# gg <- ggplot(df_long, 
+# gg <- ggplot(df_long,
 #              aes(x=k_number,
 #                  y=Eval_Value,
 #                  colour = DataName,
@@ -122,23 +123,24 @@ gg <- ggplot(df_long,
 #     labs(x = "Number of clusters",
 #          y = label_y) +
 #     scale_color_hue(name ="Clustering methods",
-#                     labels = c(EUCL_CSPA = "CSPA (Euclidean)", 
-#                                EUCL_MCMIHOOI = "MC-MI-HOOI (Euclidean)", 
-#                                mSBD_CSPA = "CSPA (mSBD)", 
+#                     labels = c(EUCL_CSPA = "CSPA (Euclidean)",
+#                                EUCL_MCMIHOOI = "MC-MI-HOOI (Euclidean)",
+#                                mSBD_CSPA = "CSPA (mSBD)",
 #                                mSBD_MCMIHOOI = "WormTensor")
 #                     ) +
 #     scale_shape_manual(values=c(15,16,17,18),
 #                        name ="Clustering methods",
-#                        labels = c(EUCL_CSPA = "CSPA (Euclidean)", 
-#                                   EUCL_MCMIHOOI = "MC-MI-HOOI (Euclidean)", 
-#                                   mSBD_CSPA = "CSPA (mSBD)", 
+#                        labels = c(EUCL_CSPA = "CSPA (Euclidean)",
+#                                   EUCL_MCMIHOOI = "MC-MI-HOOI (Euclidean)",
+#                                   mSBD_CSPA = "CSPA (mSBD)",
 #                                   mSBD_MCMIHOOI = "WormTensor")
 #                        )
 
 #### ggsave####
-ggsave(filename = args_output, 
+ggsave(filename = args_output,
        plot = gg,
-       dpi = 100, 
-       width = 50.0, 
+       dpi = 100,
+       width = 50.0,
        height = 30.0,
-       limitsize = FALSE)
+       limitsize = FALSE,
+       device="eps")
