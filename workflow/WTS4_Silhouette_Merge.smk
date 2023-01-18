@@ -23,7 +23,7 @@ rule all:
             N_cls=N_CLUSTERS,
             Re_cls=ReClustering_method
             ),
-        expand('output/WTS4/normalize_1/{range}/{dist}/{Re_cls}/Sil_plot/k_Number_{N_cls}.png',
+        expand('output/WTS4/normalize_1/{range}/{dist}/{Re_cls}/Sil_plot/k_Number_{N_cls}.eps',
             range=time_range,
             dist=dist_data,
             N_cls=N_CLUSTERS,
@@ -35,14 +35,14 @@ rule all:
             N_cls=N_CLUSTERS,
             Re_cls=ReClustering_method
             )
-        
+
 rule WTS4_Silhouette_Merge:
     input:
         m_distance = 'output/WTS4/normalize_1/{range}/{dist}/{Re_cls}/Merged_distance/k_Number_{N_cls}.RData',
         m_cls = 'output/WTS4/normalize_1/{range}/{dist}/{Re_cls}/Merged_cls/k_Number_{N_cls}.RData'
     output:
         value = 'output/WTS4/normalize_1/{range}/{dist}/{Re_cls}/Eval/Silhouette/k_Number_{N_cls}.RData',
-        plot = 'output/WTS4/normalize_1/{range}/{dist}/{Re_cls}/Sil_plot/k_Number_{N_cls}.png',
+        plot = 'output/WTS4/normalize_1/{range}/{dist}/{Re_cls}/Sil_plot/k_Number_{N_cls}.eps',
         gg_object ='output/WTS4/normalize_1/{range}/{dist}/{Re_cls}/Sil_gg/k_Number_{N_cls}.RData'
     benchmark:
         'benchmarks/WTS4/normalize_1/{range}/{dist}/{Re_cls}/Eval/Silhouette/k_Number_{N_cls}.RData.txt'
