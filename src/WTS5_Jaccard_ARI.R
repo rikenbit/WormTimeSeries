@@ -4,15 +4,15 @@ source("src/functions_WTS5_Jaccard_ARI.R")
 args_input_label <- c("data/WTS4_Eval_behavior_ACF.xlsx")
 
 #### test args####
-# mSBD MCMI
-args_input_cls <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/MCMIHOOI/Merged_cls/k_Number_6.RData")
-args_output_heatmap <- c("output/WTS5/normalize_1/stimAfter/Jaccard/Heatmap_mSBD_MCMI_Classes.eps")
+# # mSBD MCMI
+# args_input_cls <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/MCMIHOOI/Merged_cls/k_Number_6.RData")
+# args_output_heatmap <- c("output/WTS5/normalize_1/stimAfter/Jaccard/Heatmap_mSBD_MCMI_Classes.eps")
 # # mSBD CSPA
-args_input_cls <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/CSPA/Merged_cls/k_Number_5.RData")
-args_output_heatmap <- c("output/WTS5/normalize_1/stimAfter/Jaccard/Heatmap_mSBD_CSPA_Classes.eps")
-# EUCL MCMI
-args_input_cls <- c("output/WTS4/normalize_1/stimAfter/EUCL/MCMIHOOI/Merged_cls/k_Number_10.RData")
-args_output_heatmap <- c("output/WTS5/normalize_1/stimAfter/Jaccard/Heatmap_EUCL_MCMI_Classes.eps")
+# args_input_cls <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/CSPA/Merged_cls/k_Number_5.RData")
+# args_output_heatmap <- c("output/WTS5/normalize_1/stimAfter/Jaccard/Heatmap_mSBD_CSPA_Classes.eps")
+# # EUCL MCMI
+# args_input_cls <- c("output/WTS4/normalize_1/stimAfter/EUCL/MCMIHOOI/Merged_cls/k_Number_10.RData")
+# args_output_heatmap <- c("output/WTS5/normalize_1/stimAfter/Jaccard/Heatmap_EUCL_MCMI_Classes.eps")
 # EUCL CSPA
 args_input_cls <- c("output/WTS4/normalize_1/stimAfter/EUCL/CSPA/Merged_cls/k_Number_4.RData")
 args_output_heatmap <- c("output/WTS5/normalize_1/stimAfter/Jaccard/Heatmap_EUCL_CSPA_Classes.eps")
@@ -78,11 +78,35 @@ df_ghm <-as.data.frame(df_ghm)
 df_ghm$label <- factor(df_ghm$label, levels = c("NaCl", "PC1_pos", "PC1_neg", "PC2", "PC3", "NA"))
 df_ghm$cls <- factor(df_ghm$cls, levels = c("1", "2", "3", "4", "5", "6", "7", "8", "9", "10"))
 #### geom_tile####
-ghm <- ggplot_ghm(df_ghm)
+df_ghm |> 
+    dplyr::filter(label!="NA") |> 
+        ggplot_ghm() -> ghm
 #### ggsave####
+# # mSBD MCMI
+# ggsave(filename = args_output_heatmap, 
+#        plot = ghm, 
+#        dpi = 80, 
+#        width = 18.0, 
+#        height = 20.0,
+#        device="eps")
+# # mSBD CSPA
+# ggsave(filename = args_output_heatmap, 
+#        plot = ghm, 
+#        dpi = 80, 
+#        width = 20.0, 
+#        height = 20.0,
+#        device="eps")
+# # EUCL MCMI
+# ggsave(filename = args_output_heatmap, 
+#        plot = ghm, 
+#        dpi = 80, 
+#        width = 20.0, 
+#        height = 30.0,
+#        device="eps")
+# EUCL CSPA
 ggsave(filename = args_output_heatmap, 
        plot = ghm, 
        dpi = 80, 
        width = 20.0, 
-       height = 28.0,
+       height = 18.0,
        device="eps")
