@@ -18,27 +18,27 @@ normalize_pattern = ["normalize_1"]
 
 rule all:
     input:
-        expand('output/WTS4/{normalize_P}/{range}/{dist}/DimReduc_sample/k_Number_{N_cls}/Eval_Sample_trend.png',
+        expand('output/WTS4/{normalize_P}/{range}/{dist}/DimReduc_sample/k_Number_{N_cls}/Eval_Sample_trend.eps',
             range=time_range,
             dist=dist_data,
             N_cls=N_CLUSTERS,
             normalize_P=normalize_pattern
             ),
-        expand('output/WTS4/{normalize_P}/{range}/{dist}/DimReduc_sample/k_Number_{N_cls}/Eval_Sample_trend_plot.png',
+        expand('output/WTS4/{normalize_P}/{range}/{dist}/DimReduc_sample/k_Number_{N_cls}/Eval_Sample_trend_plot.eps',
             range=time_range,
             dist=dist_data,
             N_cls=N_CLUSTERS,
             normalize_P=normalize_pattern
             )
-        
+
 rule WTS4_Eval_Sample_Trend:
     input:
         sample_cls = 'output/WTS4/{normalize_P}/{range}/{dist}/Cluster_sample/k_Number_{N_cls}/sample_cls.RData',
         merged_cls = 'output/WTS4/{normalize_P}/{range}/{dist}/MCMIHOOI/Merged_cls/k_Number_{N_cls}.RData',
         merged_data = 'output/WTS4/{normalize_P}/{range}/{dist}/MCMIHOOI/Merged_data/k_Number_{N_cls}.RData'
     output:
-        trend = 'output/WTS4/{normalize_P}/{range}/{dist}/DimReduc_sample/k_Number_{N_cls}/Eval_Sample_trend.png',
-        trend_plot = 'output/WTS4/{normalize_P}/{range}/{dist}/DimReduc_sample/k_Number_{N_cls}/Eval_Sample_trend_plot.png'
+        trend = 'output/WTS4/{normalize_P}/{range}/{dist}/DimReduc_sample/k_Number_{N_cls}/Eval_Sample_trend.eps',
+        trend_plot = 'output/WTS4/{normalize_P}/{range}/{dist}/DimReduc_sample/k_Number_{N_cls}/Eval_Sample_trend_plot.eps'
     params:
         # merged_label_path = 'data/WTS4_Eval_sample_fix.xlsx',
         input_path = 'output/WTS4/{normalize_P}/{range}/{dist}/Distance'

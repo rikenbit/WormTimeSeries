@@ -17,25 +17,25 @@ ReClustering_method = ["MCMIHOOI"]
 
 rule all:
     input:
-        expand('output/WTS4/normalize_1/{range}/{dist}/{Re_cls}/PairPlot/k_Number_{N_cls}/Cluster.png',
+        expand('output/WTS4/normalize_1/{range}/{dist}/{Re_cls}/PairPlot/k_Number_{N_cls}/Cluster.svg',
             range=time_range,
             dist=dist_data,
             N_cls=N_CLUSTERS,
             Re_cls=ReClustering_method
             ),
-        expand('output/WTS4/normalize_1/{range}/{dist}/{Re_cls}/PairPlot/k_Number_{N_cls}/Neuron_type.png',
+        expand('output/WTS4/normalize_1/{range}/{dist}/{Re_cls}/PairPlot/k_Number_{N_cls}/Neuron_type.svg',
             range=time_range,
             dist=dist_data,
             N_cls=N_CLUSTERS,
             Re_cls=ReClustering_method
             ),
-        expand('output/WTS4/normalize_1/{range}/{dist}/{Re_cls}/PairPlot/k_Number_{N_cls}/Class.png',
+        expand('output/WTS4/normalize_1/{range}/{dist}/{Re_cls}/PairPlot/k_Number_{N_cls}/Class.svg',
             range=time_range,
             dist=dist_data,
             N_cls=N_CLUSTERS,
             Re_cls=ReClustering_method
             )
-        
+
 rule WTS4_Pairplot:
     input:
         Merged_data = 'output/WTS4/normalize_1/{range}/{dist}/{Re_cls}/Merged_data/k_Number_{N_cls}.RData',
@@ -44,16 +44,17 @@ rule WTS4_Pairplot:
         Cluster = 'output/WTS4/normalize_1/{range}/{dist}/MCMIHOOI/Merged_cls/k_Number_{N_cls}.RData'
 
     output:
-        Cluster = 'output/WTS4/normalize_1/{range}/{dist}/{Re_cls}/PairPlot/k_Number_{N_cls}/Cluster.png',
-        Neuron_type = 'output/WTS4/normalize_1/{range}/{dist}/{Re_cls}/PairPlot/k_Number_{N_cls}/Neuron_type.png',
-        Class = 'output/WTS4/normalize_1/{range}/{dist}/{Re_cls}/PairPlot/k_Number_{N_cls}/Class.png'
+        Cluster = 'output/WTS4/normalize_1/{range}/{dist}/{Re_cls}/PairPlot/k_Number_{N_cls}/Cluster.svg',
+        Neuron_type = 'output/WTS4/normalize_1/{range}/{dist}/{Re_cls}/PairPlot/k_Number_{N_cls}/Neuron_type.svg',
+        Class = 'output/WTS4/normalize_1/{range}/{dist}/{Re_cls}/PairPlot/k_Number_{N_cls}/Class.svg'
     params:
         NL = 'data/igraph/Fig1_HNS.RData',
         EL = 'data/WTS4_Eval_behavior_fix.xlsx'
     benchmark:
         'benchmarks/WTS4/normalize_1/{range}/{dist}/{Re_cls}/PairPlot/k_Number_{N_cls}/MCMI_pairs.txt'
     container:
-        "docker://yamaken37/mcmi_pairs:20220309"
+        # "docker://yamaken37/mcmi_pairs:20220309"
+        "docker://yamaken37/mcmi_pairs:20230118"
     resources:
         mem_gb=200
     log:

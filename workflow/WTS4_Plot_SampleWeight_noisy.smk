@@ -28,7 +28,7 @@
 # # N_SAMPLES = ["1"]
 
 # rule all:
-#     input: 
+#     input:
 #         expand('output/WTS4/{NOISE}_{TRY}/NoiseSampleNumber_{N}/{range}/{dist}/{Re_cls}/Plot_SampleWeight.png',
 #             range=time_range,
 #             dist=dist_data,
@@ -37,7 +37,7 @@
 #             N=N_SAMPLES,
 #             TRY=N_TRY
 #             )
-        
+
 # rule WTS4_Plot_SampleWeight_noisy:
 #     output:
 #         'output/WTS4/{NOISE}_{TRY}/NoiseSampleNumber_{N}/{range}/{dist}/{Re_cls}/Plot_SampleWeight.png'
@@ -77,24 +77,25 @@ time_range = ["stimAfter"]
 ReClustering_method = ["MCMIHOOI"]
 
 rule all:
-    input: 
-        expand('output/WTS4/{NOISE}/{range}/{dist}/{Re_cls}/Plot_SampleWeight.png',
+    input:
+        expand('output/WTS4/{NOISE}/{range}/{dist}/{Re_cls}/Plot_SampleWeight.svg',
             range=time_range,
             dist=dist_data,
             Re_cls=ReClustering_method,
             NOISE=NOISE_TEST
             )
-        
+
 rule WTS4_Plot_SampleWeight_noisy:
     output:
-        'output/WTS4/{NOISE}/{range}/{dist}/{Re_cls}/Plot_SampleWeight.png'
+        'output/WTS4/{NOISE}/{range}/{dist}/{Re_cls}/Plot_SampleWeight.svg'
     params:
         weight_path  = 'output/WTS4/{NOISE}/{range}/{dist}/{Re_cls}/Merged_data',
         sample_path  = 'output/WTS4/{NOISE}/{range}/{dist}/Distance'
     benchmark:
         'benchmarks/WTS4/{NOISE}/{range}/{dist}/{Re_cls}/Plot_SampleWeight.txt'
     container:
-        "docker://yamaken37/cluster_sample:20220119"
+        # "docker://yamaken37/cluster_sample:20220119"
+        "docker://yamaken37/ggplot_svg:20230118"
     resources:
         mem_gb=200
     log:
