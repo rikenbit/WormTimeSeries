@@ -18,11 +18,11 @@ library(openxlsx)
     return_object <- p_1 +
         geom_line(aes(x = time_frame,
                       y = n_activity,
-                      colour = "n_activity")
+                      colour = "n_activity"),linewidth =1
         ) +
         geom_line(aes(x = time_frame,
                       y = yshift,
-                      colour = "n_yshift")
+                      colour = "n_yshift"), linewidth =1
         ) +
         geom_line(aes(x = time_frame,
                       y = stim_timing,
@@ -36,7 +36,8 @@ library(openxlsx)
         t_1 +
         t_2 +
         t_3 +
-        sX
+        sX +
+        theme(axis.text = element_text(size = 30))
     return(return_object)
 }
 .ReadData_stimAfter = function(x,y) {

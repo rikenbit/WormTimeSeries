@@ -1,23 +1,34 @@
 source("src/functions_WTS5_tsPlot.R")
 
-#### args setting####
+# #### args sample21 vsASER####
 # args_sample <- c("21")
 # args_input_n <- c("data/normalize_1/ReadData_21.RData")
-# args_output <- c("output/WTS5/normalize_1/stimAfter/SBD_abs/tsPlot/SampleNumber_21.eps")
+# args_output <- c("output/WTS5/normalize_1/stimAfter/SBD_abs/tsPlot/SampleNumber_21_ASER_1000.eps")
 # args_stim_xlsx <- c("data/stimulation/stimulation_timing.xlsx")
 # args_input_stim <- c("data/stimulation/stim_21.RData")
 # args_yshift <- c("output/WTS3/normalize_1/stimAfter/SBD_abs_manual/SampleNumber_21/yshift.RData")
 # args_yshift_value <- c("output/WTS3/normalize_1/stimAfter/SBD_abs_manual/SampleNumber_21/yshift_value.RData")
-#### test args####
+# #### args sample2 vsASER####
+# args_sample <- c("2")
+# args_input_n <- c("data/normalize_1/ReadData_2.RData")
+# args_stim_xlsx <- c("data/stimulation/stimulation_timing.xlsx")
+# args_input_stim <- c("data/stimulation/stim_2.RData")
+# args_yshift <- c("output/WTS3/normalize_1/stimAfter/SBD_abs_manual/SampleNumber_2/yshift.RData")
+# args_yshift_value <- c("output/WTS3/normalize_1/stimAfter/SBD_abs_manual/SampleNumber_2/yshift_value.RData")
+# 
+# # args_output <- c("output/WTS5/normalize_1/stimAfter/SBD_abs/tsPlot/SampleNumber_2.eps")
+# # args_output <- c("output/WTS5/normalize_1/stimAfter/SBD_abs/tsPlot/SampleNumber_2_BAGR.eps")
+# args_output <- c("output/WTS5/normalize_1/stimAfter/SBD_abs/tsPlot/SampleNumber_2_ASEL.eps")
+
+#### args sample2 vs AVAR####
 args_sample <- c("2")
 args_input_n <- c("data/normalize_1/ReadData_2.RData")
+# args_output <- c("output/WTS5/normalize_1/stimAfter/SBD_abs/tsPlot/SampleNumber_2_AVAR_RIML.eps")
+args_output <- c("output/WTS5/normalize_1/stimAfter/SBD_abs/tsPlot/SampleNumber_2_AVAR_RIMR.eps")
 args_stim_xlsx <- c("data/stimulation/stimulation_timing.xlsx")
 args_input_stim <- c("data/stimulation/stim_2.RData")
-args_yshift <- c("output/WTS3/normalize_1/stimAfter/SBD_abs_manual/SampleNumber_2/yshift.RData")
-args_yshift_value <- c("output/WTS3/normalize_1/stimAfter/SBD_abs_manual/SampleNumber_2/yshift_value.RData")
-
-args_output <- c("output/WTS5/normalize_1/stimAfter/SBD_abs/tsPlot/SampleNumber_2.eps")
-# args_output <- c("output/WTS5/normalize_1/stimAfter/SBD_abs/tsPlot/SampleNumber_2_BAGR.eps")
+args_yshift <- c("output/WTS3/normalize_1/stimAfter/SBD_abs_manual/SampleNumber_2/yshift_AVAR.RData")
+args_yshift_value <- c("output/WTS3/normalize_1/stimAfter/SBD_abs_manual/SampleNumber_2/yshift_value_AVAR.RData")
 
 #### load Neuron Activity Data####
 load(args_input_n)
@@ -76,7 +87,8 @@ df_tsPlot$time_frame <- as.numeric(df_tsPlot$time_frame)
 #### ggtheme####
 sX <- scale_x_continuous(name = "TimeFrame(1frame/0.2sec)",
                          breaks = seq(0,
-                                      length(timeframe),
+                                      # length(timeframe),
+                                      6000,
                                       by= 1000)
                          )
 t_1 <- theme(plot.title = element_text(size = 30, hjust = 0.5, family ="HiraKakuPro-W3"))
@@ -86,7 +98,9 @@ t_3 <- theme(legend.title = element_text(size = 28),
 )
 
 # label_filter_list <- c("ASER","ASEL")
-label_filter_list <- c("ASER","BAGR")
+# label_filter_list <- c("ASER","BAGR")
+# label_filter_list <- c("AVAR","RIML")
+label_filter_list <- c("AVAR","RIMR")
 
 seq(1:length(label_filter_list)) %>%
     purrr::map(., .plot_yshift) -> gg_cells

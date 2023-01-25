@@ -1,42 +1,59 @@
 source("src/functions_WTS3_SBD_abs.R")
 
 #### args setting####
-# args <- commandArgs(trailingOnly = T)
-# # sample number
-# args_sample <- args[1]
-# # path NeuronActivity Data
-# args_neuron <- args[2]
-# # args_time <- c("all")
-# args_time <- args[3]
-# # stimtiming
-# args_stim_xlsx <- args[4]
-# # y-shiftè¨ˆç®—å¯¾è±¡ã®ç´°èƒž
-# args_shift <- args[5]
-# # output SBD_absè·é›¢è¡Œåˆ—
-# args_SBD <- args[6]
-# # output SBD_abs yshift
-# args_yshift <- args[7]
-
-#### test args####
-# sample number ã‚µãƒ³ãƒ—ãƒ«ç•ªå·ã®æŒ‡å®š
-args_sample <- c("2")
+args <- commandArgs(trailingOnly = T)
+# sample number
+args_sample <- args[1]
 # path NeuronActivity Data
-args_neuron <- c("data/normalize_1/ReadData_2.RData")
-
+args_neuron <- args[2]
 # args_time <- c("all")
-args_time <- c("stimAfter")
+args_time <- args[3]
 # stimtiming
-args_stim_xlsx <- c("data/stimulation/stimulation_timing.xlsx")
-# y-shiftè¨ˆç®—å¯¾è±¡ã®ç´°èƒž
-args_shift <- c("AVAR")
-# output SBD_absè·é›¢è¡Œåˆ—
-args_SBD <- c("output/WTS3/normalize_1/stimAfter/SBD_abs/SampleNumber_2/SBD_abs_AVAR.RData")
+args_stim_xlsx <- args[4]
+# y-shiftÓ‹ËãŒÏó¤Î¼š°û
+args_shift <- args[5]
+# output SBD_abs¾àëxÐÐÁÐ
+args_SBD <- args[6]
 # output SBD_abs yshift
-args_yshift <- c("output/WTS3/normalize_1/stimAfter/SBD_abs/SampleNumber_2/yshift_AVAR.RData")
+args_yshift <- args[7]
+
+# #### test args####
+# # sample number ¥µ¥ó¥×¥ë·¬ºÅ¤ÎÖ¸¶¨
+# args_sample <- c("2")
+# # path NeuronActivity Data
+# args_neuron <- c("data/normalize_1/ReadData_2.RData")
+
+# # args_time <- c("all")
+# args_time <- c("stimAfter")
+# # stimtiming
+# args_stim_xlsx <- c("data/stimulation/stimulation_timing.xlsx")
+# # y-shiftÓ‹ËãŒÏó¤Î¼š°û
+# args_shift <- c("ASER")
+# # output SBD_abs¾àëxÐÐÁÐ
+# args_SBD <- c("output/WTS3/normalize_1/stimAfter/SBD_abs/SampleNumber_2/SBD_abs.RData")
+# # output SBD_abs yshift
+# args_yshift <- c("output/WTS3/normalize_1/stimAfter/SBD_abs/SampleNumber_2/yshift.RData")
+
+# #### test args####
+# # sample number ¥µ¥ó¥×¥ë·¬ºÅ¤ÎÖ¸¶¨
+# args_sample <- c("2")
+# # path NeuronActivity Data
+# args_neuron <- c("data/normalize_1/ReadData_2.RData")
+
+# # args_time <- c("all")
+# args_time <- c("stimAfter")
+# # stimtiming
+# args_stim_xlsx <- c("data/stimulation/stimulation_timing.xlsx")
+# # y-shiftÓ‹ËãŒÏó¤Î¼š°û
+# args_shift <- c("AVAR")
+# # output SBD_abs¾àëxÐÐÁÐ
+# args_SBD <- c("output/WTS3/normalize_1/stimAfter/SBD_abs_manual/SampleNumber_2/SBD_abs_AVAR.RData")
+# # output SBD_abs yshift
+# args_yshift <- c("output/WTS3/normalize_1/stimAfter/SBD_abs_manual/SampleNumber_2/yshift_AVAR.RData")
 
 #### load NeuronActivity####
 load(args_neuron)
-# å…ƒãƒ‡ãƒ¼ã‚¿ãŒãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã”ã¨ã§ã¯ãªãï¼Œãƒ•ã‚¡ã‚¤ãƒ«åã§å„ã‚µãƒ³ãƒ—ãƒ«ãŒã‚ã‹ã‚Œã¦ã„ã‚‹å¯¾å¿œ
+# Ôª¥Ç©`¥¿¤¬¥Ç¥£¥ì¥¯¥È¥ê¤´¤È¤Ç¤Ï¤Ê¤¯£¬¥Õ¥¡¥¤¥ëÃû¤Ç¸÷¥µ¥ó¥×¥ë¤¬¤ï¤«¤ì¤Æ¤¤¤ëŒê
 eval(parse(text=paste0("ReadData <- ReadData_",args_sample)))
 
 #### switch time range & trim ReadData####
@@ -76,7 +93,7 @@ d <- stats::as.dist(SBD_zero_mat)
 save(d, file=args_SBD)
 
 #### yshift####
-# è¡Œåˆ—ã£ã½ã„ãƒ‡ãƒ¼ã‚¿ã‚’ç´°èƒžã”ã¨ã«liståŒ–
+# ÐÐÁÐ¤Ã¤Ý¤¤¥Ç©`¥¿¤ò¼š°û¤´¤È¤Ëlist»¯
 ReadData.list <- asplit(ReadData,2)
 # prepare shift_1
 eval(parse(text=paste0("shift_1 <- ReadData.list$",args_shift," %>% as.numeric()")))
