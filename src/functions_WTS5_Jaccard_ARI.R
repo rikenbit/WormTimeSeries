@@ -10,16 +10,17 @@ library(mclust) #ARI
 ##################################################
 #### jaccard####
 jaccard <- function(a, b) {
-  intersection = length(intersect(a, b))
-  union = length(a) + length(b) - intersection
-  return (intersection/union)
+    intersection = length(intersect(a, b))
+    union = length(a) + length(b) - intersection
+    return(intersection/union)
 }
 
 ggplot_ghm = function(x) {
   ghm <- ggplot(x, aes(x = label, y = cls, fill = jaccard))
-  ghm <- ghm + geom_tile()
-  ghm <- ghm + theme_bw()
-  ghm <- ghm + theme(
+    # ghm <- ggplot(x, aes(x = label, y = cls, fill = ari))
+    ghm <- ghm + geom_tile()
+    ghm <- ghm + theme_bw()
+    ghm <- ghm + theme(
     panel.grid.minor = element_blank(),
     panel.grid.major = element_blank(),
     panel.background = element_blank(),
@@ -34,10 +35,10 @@ ggplot_ghm = function(x) {
     legend.text = element_text(size = 60),
     legend.title = element_text(size = 60)
     )
-  ghm <- ghm + scale_fill_viridis(na.value = "grey", direction = 1) # heatmap color is viridis http://www.okadajp.org/RWiki/?色見本
-  ghm <- ghm + labs(x = "",
+    ghm <- ghm + scale_fill_viridis(na.value = "grey", direction = 1) # heatmap color is viridis http://www.okadajp.org/RWiki/?色見本
+    ghm <- ghm + labs(x = "",
                     y = "Cluster Number")
-  # ghm <- ghm + labs(fill = "Jaccard")
-  ghm <- ghm + labs(fill = "ARI")
-  return(ghm)
+    ghm <- ghm + labs(fill = "Jaccard")
+    # ghm <- ghm + labs(fill = "ARI")
+    return(ghm)
 }

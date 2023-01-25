@@ -44,3 +44,12 @@ system.time(dist_value <- ts2net:::tssim_event_sync(t_tts1, t_tts2, tau_max = 50
 
 # 200cell x 200cell 40000 *3分 =120000分=2000時間
 
+
+
+#### tsdist_nmi関数 テスト####
+# https://cran.r-project.org/web/packages/ts2net/ts2net.pdf
+# test_tts1 <- ReadData[,1]
+t_tts1 <- ReadData["ASER"]$ASER
+t_tts2 <- ReadData["ASEL"]$ASEL
+
+system.time(dist_value <- ts2net:::tsdist_nmi(t_tts1, t_tts2))

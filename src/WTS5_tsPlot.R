@@ -11,13 +11,14 @@ source("src/functions_WTS5_tsPlot.R")
 #### test args####
 args_sample <- c("2")
 args_input_n <- c("data/normalize_1/ReadData_2.RData")
-args_output <- c("output/WTS5/normalize_1/stimAfter/SBD_abs/tsPlot/SampleNumber_2.eps")
 args_stim_xlsx <- c("data/stimulation/stimulation_timing.xlsx")
 args_input_stim <- c("data/stimulation/stim_2.RData")
-# args_yshift <- c("output/WTS5/normalize_1/stimAfter/SBD_abs/SampleNumber_2/yshift.RData")
-# args_yshift_value <- c("output/WTS5/normalize_1/stimAfter/SBD_abs/SampleNumber_2/yshift_value.RData")
 args_yshift <- c("output/WTS3/normalize_1/stimAfter/SBD_abs_manual/SampleNumber_2/yshift.RData")
 args_yshift_value <- c("output/WTS3/normalize_1/stimAfter/SBD_abs_manual/SampleNumber_2/yshift_value.RData")
+
+args_output <- c("output/WTS5/normalize_1/stimAfter/SBD_abs/tsPlot/SampleNumber_2.eps")
+# args_output <- c("output/WTS5/normalize_1/stimAfter/SBD_abs/tsPlot/SampleNumber_2_BAGR.eps")
+
 #### load Neuron Activity Data####
 load(args_input_n)
 eval(parse(text=paste0("input_n <- ReadData_", args_sample)))
@@ -84,7 +85,8 @@ t_3 <- theme(legend.title = element_text(size = 28),
              legend.text = element_text(size = 20)
 )
 
-label_filter_list <- c("ASER","ASEL")
+# label_filter_list <- c("ASER","ASEL")
+label_filter_list <- c("ASER","BAGR")
 
 seq(1:length(label_filter_list)) %>%
     purrr::map(., .plot_yshift) -> gg_cells

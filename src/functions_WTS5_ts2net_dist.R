@@ -3,7 +3,7 @@
 library(tidyverse)
 library(openxlsx)
 # install.packages("ts2net")
-remotes::install_github("lnferreira/ts2net")
+# remotes::install_github("lnferreira/ts2net")
 # 1でALLを選択
 library(ts2net)
 ##################################################
@@ -24,5 +24,3 @@ library(ts2net)
     return_object <- x[stimtimng:nrow(x),]
     return(return_object)
 }
-
-
