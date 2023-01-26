@@ -1,41 +1,35 @@
 # WTS5_tsPlot
 ###################################################
-# No. of Clusters
-N_CLUSTERS = list(map(str, range(2, 21)))
-# N_CLUSTERS = ["3"]
+N_SAMPLES = ["2"]
 
-# Distance Data
-dist_data = ["EUCL","SBD_abs"]
-# dist_data = ["SBD_abs"]
-
-# data time range
-time_range = ["stimAfter"]
-
-# ReClustering method
-ReClustering_method = ["CSPA","OINDSCAL","MCMIHOOI"]
-# ReClustering_method = ["CSPA"]
+CellType = ["RIMR"]
+Shift_CellType = ["AVAR"]
 
 rule all:
     input:
-        expand('output/WTS4/normalize_1/{range}/{dist}/{Re_cls}/Merged_data/k_Number_{N_cls}.RData',
-            range=time_range,
-            dist=dist_data,
-            N_cls=N_CLUSTERS,
-            Re_cls=ReClustering_method
+        expand('output/WTS5/normalize_1/stimAfter/SBD_abs/tsPlot/SampleNumber_{N}_{celltype}_{s_celltype}.eps',
+            N=N_SAMPLES,
+            celltype=CellType,
+            s_celltype=Shift_CellType
             )
-        
+
 rule WTS5_tsPlot:
     input:
-        Mem_matrix = 'output/WTS4/normalize_1/{range}/{dist}/Membership/k_Number_{N_cls}.RData'
+        RData = 'data/normalize_1/ReadData_{N}.RData',
+        stim = 'data/stimulation/stim_{N}.RData',
+        yshift ='output/WTS3/normalize_1/stimAfter/SBD_abs_manual/SampleNumber_{N}/yshift_{celltype}.RData',
+        yshift_value = 'output/WTS3/normalize_1/stimAfter/SBD_abs_manual/SampleNumber_{N}/yshift_value_{celltype}.RData'
     output:
-        m_data = 'output/WTS4/normalize_1/{range}/{dist}/{Re_cls}/Merged_data/k_Number_{N_cls}.RData'
+        'output/WTS5/normalize_1/stimAfter/SBD_abs/tsPlot/SampleNumber_{N}_{celltype}_{s_celltype}.eps'
+    params:
+        stim_xlsx = 'data/stimulation/stimulation_timing.xlsx'
     benchmark:
-        'benchmarks/WTS4/normalize_1/{range}/{dist}/{Re_cls}/Merged_data/k_Number_{N_cls}.txt'
+        'benchmarks/WTS5/normalize_1/stimAfter/SBD_abs/tsPlot/SampleNumber_{N}_{celltype}_{s_celltype}.txt'
     container:
-        "docker://docker_images"
+        "docker://yamaken37/ggplot_svg:20230118"
     resources:
         mem_gb=200
     log:
-        'logs/WTS4/normalize_1/{range}/{dist}/{Re_cls}/Merged_data/k_Number_{N_cls}.log'
+        'logs/WTS5/normalize_1/stimAfter/SBD_abs/tsPlot/SampleNumber_{N}_{celltype}_{s_celltype}.log'
     shell:
-        'src/WTS5_tsPlot.sh {wildcards.Re_cls} {input.Mem_matrix} {output.m_data}>& {log}'
+        'src/WTS5_tsPlot.sh {wildcards.N} {wildcards.celltype} {wildcards.s_celltype} {input} {params.stim_xlsx} {output} >& {log}'
