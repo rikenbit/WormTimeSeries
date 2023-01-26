@@ -1,15 +1,15 @@
 source("src/functions_WTS3_yshift.R")
 
-#### args setting####
-args <- commandArgs(trailingOnly = T)
-# sample number
-args_sample <- args[1]
-# input SBD yshift df
-args_yshift <- args[2]
-# input stim timing extra
-args_stim_xlsx <- args[3]
-# output SBD yshift df
-args_yshift_value <- args[4]
+# #### args setting####
+# args <- commandArgs(trailingOnly = T)
+# # sample number
+# args_sample <- args[1]
+# # input SBD yshift df
+# args_yshift <- args[2]
+# # input stim timing extra
+# args_stim_xlsx <- args[3]
+# # output SBD yshift df
+# args_yshift_value <- args[4]
 
 # #### test args####
 # # sample number
@@ -30,6 +30,16 @@ args_yshift_value <- args[4]
 # args_stim_xlsx <- c("data/stimulation/stimulation_timing.xlsx")
 # # output SBD yshift df
 # args_yshift_value <- c("output/WTS3/normalize_1/stimAfter/SBD_abs_manual/SampleNumber_2/yshift_value_AVAR.RData")
+
+### test args####
+# sample number
+args_sample <- c("2")
+# input SBD yshift df
+args_yshift <- c("output/WTS3/normalize_1/stimAfter/SBD_abs_manual/SampleNumber_2/yshift_RIMR.RData")
+# input stim timing extra
+args_stim_xlsx <- c("data/stimulation/stimulation_timing.xlsx")
+# output SBD yshift df
+args_yshift_value <- c("output/WTS3/normalize_1/stimAfter/SBD_abs_manual/SampleNumber_2/yshift_value_RIMR.RData")
 
 #### load y-shift####
 load(args_yshift)

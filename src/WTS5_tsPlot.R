@@ -20,15 +20,26 @@ source("src/functions_WTS5_tsPlot.R")
 # # args_output <- c("output/WTS5/normalize_1/stimAfter/SBD_abs/tsPlot/SampleNumber_2_BAGR.eps")
 # args_output <- c("output/WTS5/normalize_1/stimAfter/SBD_abs/tsPlot/SampleNumber_2_ASEL.eps")
 
-#### args sample2 vs AVAR####
+# #### args sample2 vs AVAR####
+# args_sample <- c("2")
+# args_input_n <- c("data/normalize_1/ReadData_2.RData")
+# # args_output <- c("output/WTS5/normalize_1/stimAfter/SBD_abs/tsPlot/SampleNumber_2_AVAR_RIML.eps")
+# args_output <- c("output/WTS5/normalize_1/stimAfter/SBD_abs/tsPlot/SampleNumber_2_AVAR_RIMR.eps")
+# args_stim_xlsx <- c("data/stimulation/stimulation_timing.xlsx")
+# args_input_stim <- c("data/stimulation/stim_2.RData")
+# args_yshift <- c("output/WTS3/normalize_1/stimAfter/SBD_abs_manual/SampleNumber_2/yshift_AVAR.RData")
+# args_yshift_value <- c("output/WTS3/normalize_1/stimAfter/SBD_abs_manual/SampleNumber_2/yshift_value_AVAR.RData")
+
+#### args sample2 vs RIMR####
 args_sample <- c("2")
 args_input_n <- c("data/normalize_1/ReadData_2.RData")
 # args_output <- c("output/WTS5/normalize_1/stimAfter/SBD_abs/tsPlot/SampleNumber_2_AVAR_RIML.eps")
-args_output <- c("output/WTS5/normalize_1/stimAfter/SBD_abs/tsPlot/SampleNumber_2_AVAR_RIMR.eps")
+args_output <- c("output/WTS5/normalize_1/stimAfter/SBD_abs/tsPlot/SampleNumber_2_RIMR_AVAR.eps")
 args_stim_xlsx <- c("data/stimulation/stimulation_timing.xlsx")
 args_input_stim <- c("data/stimulation/stim_2.RData")
-args_yshift <- c("output/WTS3/normalize_1/stimAfter/SBD_abs_manual/SampleNumber_2/yshift_AVAR.RData")
-args_yshift_value <- c("output/WTS3/normalize_1/stimAfter/SBD_abs_manual/SampleNumber_2/yshift_value_AVAR.RData")
+args_yshift <- c("output/WTS3/normalize_1/stimAfter/SBD_abs_manual/SampleNumber_2/yshift_RIMR.RData")
+args_yshift_value <- c("output/WTS3/normalize_1/stimAfter/SBD_abs_manual/SampleNumber_2/yshift_value_RIMR.RData")
+
 
 #### load Neuron Activity Data####
 load(args_input_n)
@@ -100,7 +111,7 @@ t_3 <- theme(legend.title = element_text(size = 28),
 # label_filter_list <- c("ASER","ASEL")
 # label_filter_list <- c("ASER","BAGR")
 # label_filter_list <- c("AVAR","RIML")
-label_filter_list <- c("AVAR","RIMR")
+label_filter_list <- c("RIMR","AVAR")
 
 seq(1:length(label_filter_list)) %>%
     purrr::map(., .plot_yshift) -> gg_cells
