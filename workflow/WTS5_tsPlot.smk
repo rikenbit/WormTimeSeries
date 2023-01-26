@@ -4,8 +4,8 @@
 N_SAMPLES = ["1"]
 
 CellType = ["RIMR"]
-Shift_CellType = ["AVAR"]
-# Shift_CellType = ["AVAL"]
+# Shift_CellType = ["AVAR"]
+Shift_CellType = ["AVAL","AVAR"]
 
 rule all:
     input:
