@@ -122,7 +122,8 @@ t_3 <- theme(legend.title = element_text(size = 28),
 # label_filter_list <- c("ASER","BAGR")
 # label_filter_list <- c("AVAR","RIML")
 # label_filter_list <- c("RIMR","AVAR")
-label_filter_list <-c("args_celltype","args_s_celltype")
+label_filter_list <-c(args_celltype,
+                      args_s_celltype)
 
 seq(1:length(label_filter_list)) %>%
     purrr::map(., .plot_yshift) -> gg_cells

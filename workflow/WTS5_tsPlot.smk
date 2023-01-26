@@ -3,7 +3,8 @@
 N_SAMPLES = ["2"]
 
 CellType = ["RIMR"]
-Shift_CellType = ["AVAR"]
+# Shift_CellType = ["AVAR"]
+Shift_CellType = ["AVAL"]
 
 rule all:
     input:
