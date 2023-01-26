@@ -13,4 +13,4 @@ SLURM_RESTART_COUNT=2
 
 echo $@
 echo $CONDA_PREFIX
-$CONDA_PREFIX/bin/Rscript src/WTS5_SBD_abs.R $@
+$CONDA_PREFIX/bin/Rscript src/WTS5_yshift.R $@

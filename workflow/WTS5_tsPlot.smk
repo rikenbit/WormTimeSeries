@@ -1,10 +1,11 @@
 # WTS5_tsPlot
 ###################################################
-N_SAMPLES = ["2"]
+# N_SAMPLES = ["2"]
+N_SAMPLES = ["1"]
 
 CellType = ["RIMR"]
-# Shift_CellType = ["AVAR"]
-Shift_CellType = ["AVAL"]
+Shift_CellType = ["AVAR"]
+# Shift_CellType = ["AVAL"]
 
 rule all:
     input:
@@ -18,8 +19,10 @@ rule WTS5_tsPlot:
     input:
         RData = 'data/normalize_1/ReadData_{N}.RData',
         stim = 'data/stimulation/stim_{N}.RData',
-        yshift ='output/WTS3/normalize_1/stimAfter/SBD_abs_manual/SampleNumber_{N}/yshift_{celltype}.RData',
-        yshift_value = 'output/WTS3/normalize_1/stimAfter/SBD_abs_manual/SampleNumber_{N}/yshift_value_{celltype}.RData'
+        # yshift ='output/WTS3/normalize_1/stimAfter/SBD_abs_manual/SampleNumber_{N}/yshift_{celltype}.RData',
+        # yshift_value = 'output/WTS3/normalize_1/stimAfter/SBD_abs_manual/SampleNumber_{N}/yshift_value_{celltype}.RData'
+        yshift ='output/WTS5/normalize_1/stimAfter/SBD_abs/SampleNumber_{N}/yshift_{celltype}.RData',
+        value_shift = 'output/WTS5/normalize_1/stimAfter/SBD_abs/SampleNumber_{N}/value_{celltype}.RData'
     output:
         'output/WTS5/normalize_1/stimAfter/SBD_abs/tsPlot/SampleNumber_{N}_{celltype}_{s_celltype}.eps'
     params:
