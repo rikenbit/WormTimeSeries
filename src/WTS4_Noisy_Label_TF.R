@@ -14,18 +14,6 @@ args_test_number <- args[4]
 # save ALL_Ann_df
 args_output <- args[5]
 
-# #### test args####
-# # path NeuronActivity Data
-# args_ReadData <- c("data/normalize_1/ReadData_2.RData")
-# # sample number サンプル番号の指定
-# args_sample <- c("2")
-# # マージデータの細胞名取得
-# # Cluster
-# args_merged_cls <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/MCMIHOOI/Merged_cls/k_Number_9.RData")
-# # 試行回数
-# args_test_number <- c("1")
-# # save ALL_Ann_df
-# args_output <- c("data/n1_noise_1/ReadData_2.RData")
 
 #### load ReadData####
 load(args_ReadData)
@@ -37,17 +25,17 @@ grep("^[0-9]", colnames(ReadData), invert=FALSE) %>%
   ReadData[,.] -> not_Ann_df
 
 #### 細胞名列のデータフレーム####
-grep("^[0-9]", colnames(ReadData), invert=TRUE) %>% 
+grep("^[0-9]", colnames(ReadData), invert=TRUE) %>%
   ReadData[,.] -> Ann_df
 
 #### 和集合の細胞名を取得####
 load(args_merged_cls)
-as.data.frame(merged_cls) %>% 
-  rownames_to_column("cell_type") %>% 
+as.data.frame(merged_cls) %>%
+  rownames_to_column("cell_type") %>%
   .$cell_type -> all_celltype
 
 #### 使われていない細胞名を取得####
-setdiff(all_celltype, 
+setdiff(all_celltype,
         colnames(Ann_df)
 ) -> not_Used_celltype
 
@@ -55,7 +43,7 @@ setdiff(all_celltype,
 # 乱数固定
 set.seed(args_test_number)
 # 重複を許して、数字列から値（6000行）を抽出
-sample(colnames(not_Ann_df), 
+sample(colnames(not_Ann_df),
        length(not_Used_celltype),
        replace = TRUE
 ) -> Ramdom_celltype
@@ -65,15 +53,15 @@ Labeled_Ann_df <- not_Ann_df[, Ramdom_celltype]
 colnames(Labeled_Ann_df) <- not_Used_celltype
 
 #### 時系列random.sampling####
-not_Ann_df %>% 
-  as.matrix() %>% 
+not_Ann_df %>%
+  as.matrix() %>%
   t() -> A
 # 乱数固定
 set.seed(args_test_number)
 B <- random.sampling(A, n=length(not_Used_celltype))
 # random.sampling関数が行列の想定が逆なのでt()で転値
-B %>% 
-  t() %>% 
+B %>%
+  t() %>%
   as.data.frame() -> Labeled_TF
 colnames(Labeled_TF) <- colnames(Labeled_Ann_df)
 

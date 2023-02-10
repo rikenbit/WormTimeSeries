@@ -15,20 +15,6 @@ args_shift <- args[5]
 # output SBD_abs yshift
 args_yshift <- args[6]
 
-# #### test args####
-# # sample number サンプル番号の指定
-# args_sample <- c("2")
-# # path NeuronActivity Data
-# args_neuron <- c("data/normalize_1/ReadData_2.RData")
-# # args_time <- c("all")
-# args_time <- c("stimAfter")
-# # stimtiming
-# args_stim_xlsx <- c("data/stimulation/stimulation_timing.xlsx")
-# # y-shift計算対象の細胞
-# args_shift <- c("RIMR")
-# # output SBD_abs yshift
-# args_yshift <- c("output/WTS3/normalize_1/stimAfter/SBD_abs_manual/SampleNumber_2/yshift_RIMR.RData")
-
 #### load NeuronActivity####
 load(args_neuron)
 # 元データがディレクトリごとではなく，ファイル名で各サンプルがわかれている対応

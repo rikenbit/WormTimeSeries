@@ -13,18 +13,6 @@ args_datadir <- args[4]
 # outputファイル名
 args_output <- args[5]
 
-# #### test args####
-# # select animal number 個体番号の指定
-# args_sample <- c("3")
-# # select cell number 細胞番号の指定
-# args_cell <- c("1")
-# # select celltype 細胞型名の指定
-# args_celltype <- c("108")
-# # select datadir ディレクトリ 名の指定
-# args_datadir <- c("n1_28sample")
-# # outputファイル名
-# args_output <- c("output/WTS4/n1_28sample/plot/SampleNumber_3/CellNumber_1_CellType_108.png")
-
 ##### Neuron Activity Data#####
 path <- "data"
 inputdir <- args_datadir
@@ -92,7 +80,7 @@ g %>% mutate(N_roll = roll_meanr(Nactivity, n=51, align="right", fill=NA)) -> g_
 # diff
 diff_value <- 50
 n_diff <- append(rep(NA, diff_value), diff(g$Nactivity, diff_value))
-g_roll %>% 
+g_roll %>%
   mutate(N_diff = n_diff) -> g_roll_diff
 
 ##### ggplot#####
@@ -101,11 +89,11 @@ p_2 <- p_1 +
   geom_line(aes(y = Nactivity, colour = "Nactivity"), size = 0.5) +
   geom_line(aes(y = N_roll, colour = "N_rollmean"), size = 1.5, alpha = 0.7) +
   geom_line(aes(y = N_diff, colour = "N_diff"), size = 1.5, alpha = 0.7, linetype = "dotted")
-p_3 <- p_1 +        
+p_3 <- p_1 +
   geom_line(aes(y = StimTiming, colour = "StimTiming") , size = 1.5)
-p_4 <- p_1 +        
+p_4 <- p_1 +
   geom_line(aes(y = mCherry, colour = "mCherry") , size = 1.5)
-p_5 <- p_1 +        
+p_5 <- p_1 +
   geom_line(aes(y = Position, colour = "Position") , size = 1.5)
 
 
@@ -154,8 +142,8 @@ gg5 <- p_5 +
   labs(colour="each data")
 gg <- gg2 + gg3 + gg4 + gg5 + plot_layout(ncol = 1, heights = c(2, 1, 1, 1))
 ##### ggsave#####
-ggsave(filename = args_output, 
-       plot = gg, 
-       dpi = 100, 
-       width = 20.0, 
+ggsave(filename = args_output,
+       plot = gg,
+       dpi = 100,
+       width = 20.0,
        height = 15.0)

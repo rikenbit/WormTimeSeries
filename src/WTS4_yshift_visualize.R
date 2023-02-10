@@ -10,7 +10,7 @@ args_label <- args[2]
 args_type <- args[3]
 # filter (label combination)
 args_label_comb <- args[4]
-# output 
+# output
 args_output <- args[5]
 # threshold of value
 args_thrr <- args[6]
@@ -26,29 +26,6 @@ args_stat_limit <- switch(args_stat,
 args_stat_limit <- as.numeric(args_stat_limit)
 # args_stat_limit <- as.numeric("1")
 
-# #### test args####
-# # input matrix
-# args_input <- ("output/WTS4/normalize_1/stimAfter/SBD_abs/Shift_FM_mean/SampleNumber_ALL.RData")
-# # labels
-# args_label <-("data/WTS4_Eval_behavior_ACF.xlsx")
-# # value type
-# args_type <- ("abs")
-# # filter (label combination)
-# args_label_comb <- c("ALL")
-# args_label_comb <- c("1np")
-# # output
-# args_output <- ("output/WTS4/normalize_1/stimAfter/SBD_abs/Shift_FM_mean/SampleNumber_ALL/abs/500/ALL.png")
-# #threshold of value
-# args_thrr <- c("500")
-# args_thrr <- as.numeric(args_thrr)
-# # stat type
-# args_stat <- c("M_mean")
-# args_stat_limit <- switch(args_stat,
-#               "M_mean" = args_thrr,
-#               "M_sd" = args_thrr * 3,
-#               "M_count" = 24
-# )
-# args_stat_limit <- as.numeric(args_stat_limit)
 #### load####
 # load matrix
 load(args_input)
@@ -58,9 +35,9 @@ input_mat <- 1-shift_matrix
 read.xlsx(args_label,
           sheet = "Sheet1",
           rowNames = FALSE,
-          colNames =TRUE) |> 
-    dplyr::rename(CellType = celltype, 
-                  Classes = class) |> 
+          colNames =TRUE) |>
+    dplyr::rename(CellType = celltype,
+                  Classes = class) |>
     dplyr::arrange(Classes,CellType) -> label_df
 
 #### filter cell type####
@@ -100,16 +77,16 @@ if (args_label_comb=="No_F") {
     args_textsize <- 60
     }
 
-ghm <- vis_ghm[[args_type]](input_mat_F_S) + 
+ghm <- vis_ghm[[args_type]](input_mat_F_S) +
     # theme(text = element_text(size = 40)) +
     theme(text = element_text(size = args_textsize)) +
     theme(legend.key.height = unit(1.5, "cm")) +
     theme(legend.key.width = unit(1.5, "cm"))
 
 #### save####
-ggsave(filename = args_output, 
-       plot = ghm, 
-       dpi = 80, 
-       width = 40, 
+ggsave(filename = args_output,
+       plot = ghm,
+       dpi = 80,
+       width = 40,
        height = 36
        )

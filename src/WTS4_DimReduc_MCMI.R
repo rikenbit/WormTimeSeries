@@ -15,23 +15,6 @@ args_NL <- args[6]
 args_eval_label <- args[7]
 
 
-# #### test args####
-# # input merged_distance
-# args_input_MCMIHOOI <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/MCMIHOOI/Merged_data/k_Number_5.RData")
-# 
-# # DimReduc
-# args_output <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/DimReduc_MCMI/k_Number_5/tsne/table.png")
-# args_input_path <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Distance")
-# args_DimReduc <- c("tsne")
-# 
-# # No. of Clusters
-# args_k <- c("5")
-# 
-# # add anotation data
-# args_NL <- c("data/igraph/Fig1_HNS.RData")
-# args_eval_label <- c("data/WTS4_Eval_behavior_fix.xlsx")
-
-
 #### No. of Clusters####
 k <- as.numeric(args_k)
 
@@ -39,9 +22,9 @@ k <- as.numeric(args_k)
 # merged_data
 load(args_input_MCMIHOOI)
 data.frame(weight = merged_data$W,
-           stringsAsFactors = FALSE) %>% 
+           stringsAsFactors = FALSE) %>%
     rownames_to_column("SampleNumber") %>%
-        mutate(weight_abs =abs(weight)) %>% 
+        mutate(weight_abs =abs(weight)) %>%
             dplyr::arrange(desc(weight_abs)) -> df_weight
 
 #### load dist data####
@@ -77,19 +60,19 @@ seq(1:length(DF_cord)) %>%
     purrr::map(., .df_cord_cls) -> DF_cord_cls
 # save sample_cls
 sample_cls <- lapply(DF_cord_cls, function(x){dplyr::select(x, cell_type, Cluster)})
-args_output %>% 
-    str_remove(., "/table.png") %>% 
+args_output %>%
+    str_remove(., "/table.png") %>%
         str_remove(., args_DimReduc) -> args_output_sample_cls
 eval(parse(text=paste0("args_output_sample_cls <- c('",args_output_sample_cls,"sample_cls.RData')")))
 save(sample_cls, file=args_output_sample_cls)
 #### merge igraph NeuronType####
 load(args_NL)
 # node information convert dataframe
-ig_Fig1_HNS %>% 
+ig_Fig1_HNS %>%
     igraph::as_data_frame(., what="vertices") -> df_node
 # remove space from colnames
-df_node %>% 
-    names() %>% 
+df_node %>%
+    names() %>%
         str_replace_all(., c(" " = "")) -> names(df_node)
 df_nl <- data.frame(cell_type = df_node$name,
                     NeuronType = df_node$NeuronType,
@@ -105,20 +88,20 @@ seq(1:length(DF_cord_cls)) %>%
 read.xlsx(args_eval_label,
           sheet = "Sheet1",
           rowNames = FALSE,
-          colNames =TRUE) %>% 
-    dplyr::rename(cell_type = celltype, 
+          colNames =TRUE) %>%
+    dplyr::rename(cell_type = celltype,
                   Classes = class) -> df_eval_label
 seq(1:length(DF_cord_cls_nl)) %>%
     purrr::map(., .df_cord_cls_nl_be) -> DF_cord_cls_nl_be
 
 #### gg_weight####
 # ggtexttable
-df_weight %>% 
-    rownames_to_column("Ranking") %>% 
-        mutate_if(is.numeric, round, digits = 3) %>% 
+df_weight %>%
+    rownames_to_column("Ranking") %>%
+        mutate_if(is.numeric, round, digits = 3) %>%
             ggtexttable(rows = NULL, theme = ttheme(base_size = 48)) -> gg_weight
 
-#### gg_list purrr#### 
+#### gg_list purrr####
 seq(1:length(DF_cord_cls_nl_be)) %>%
     purrr::map(., .plot_dimreduc) -> gg_list
 
@@ -126,11 +109,11 @@ seq(1:length(DF_cord_cls_nl_be)) %>%
 for(x in 1:length(gg_list)){
 # for(x in 1:2 ){
     # weight table
-    gg_weight_bg <- table_cell_bg(gg_weight, 
+    gg_weight_bg <- table_cell_bg(gg_weight,
                                row = x + 1,
-                               column = 1:4, 
+                               column = 1:4,
                                linewidth = 5,
-                               fill="darkolivegreen1", 
+                               fill="darkolivegreen1",
                                color = "darkolivegreen4")
 
     # patchwork add gg_weight
@@ -139,78 +122,24 @@ for(x in 1:length(gg_list)){
         plot_layout(nrow = 1)
 
     # filename
-    args_output %>% 
+    args_output %>%
         str_remove(., "/table.png") -> args_output_name
     sample_n <- df_weight[x,1]
     eval(parse(text=paste0("plot_title <- c('",x,"_SampleNumber_",sample_n,".png')")))
     eval(parse(text=paste0("args_output_sample <- c('",args_output_name,"/",plot_title,"')")))
-    
+
     # ggsave
-    ggsave(filename = args_output_sample, 
+    ggsave(filename = args_output_sample,
            plot = gg,
-           dpi = 100, 
-           width = 80.0, 
+           dpi = 100,
+           width = 80.0,
            height = 20.0,
            limitsize = FALSE)
 }
 #### ggplot output file####
-ggsave(filename = args_output, 
+ggsave(filename = args_output,
        plot = gg_weight,
-       dpi = 100, 
-       width = 80.0, 
+       dpi = 100,
+       width = 80.0,
        height = 20.0,
        limitsize = FALSE)
-
-# #### name count####
-# #文字の細胞名
-# cn_list <- list()
-# #数字の列名
-# digit_list <- list()
-# for(i in 1:length(D)){
-#     D[[i]] %>% attr(., "Labels") -> tmp
-#     cn_list[[i]] <- tmp[grep("^[0-9]", tmp, invert=TRUE)]
-#     digit_list[[i]] <- tmp[grep("^[0-9]", tmp, invert=FALSE)]
-# }
-# #文字列の列数のカウント
-# cn_num <- unlist(lapply(cn_list, function(x){length(x)}))
-# #数字の列数のカウント
-# digit_num <- unlist(lapply(digit_list, function(x){length(x)}))
-
-# #### not Annotated####
-# # 和集合ベクトル
-# load("output/WTS4/normalize_1/stimAfter/SBD_abs/Membership/k_Number_2.RData")
-# newHs[[1]] %>% 
-#     rownames() -> all_annotated_name
-# # not_annotated数
-# not_annotated_count <- unlist(lapply(cn_list, function(x){length(setdiff(all_annotated_name, x))}))
-
-# #### name count dataframe####
-# df_count <- data.frame(
-#     SampleNumber = as.character(1:length(D)),
-#     annotated = cn_num,
-#     not_annotated = not_annotated_count,
-#     digit = digit_num
-#     )
-# df_count %>%
-#     pivot_longer(cols = c(annotated, not_annotated, digit),
-#                  names_to = "CellType",
-#                  values_to = "count") -> data
-# data$CellType <- factor(data$CellType, 
-#                         levels =c("digit", 
-#                                   "not_annotated", 
-#                                   "annotated"))
-# #### bar plot####
-# # sort MCMI$Weight
-# p <- ggplot(data, aes(x=SampleNumber, y=count)) +
-#     geom_bar(stat="identity", aes(fill=CellType)) +
-#     scale_x_discrete(limits=df_weight$SampleNumber)
-# ggsave(filename = "output/WTS4/normalize_1/stimAfter/SBD_abs/DimReduc_MCMI/k_Number_5/tsne/test_p.png", 
-#        plot = p)
-
-# p_ano <- data %>%
-#     filter(CellType =="annotated" | CellType == "not_annotated") %>%
-#     ggplot(., aes(x=SampleNumber, y=count)) +
-#     geom_bar(stat="identity", aes(fill=CellType)) +
-#     scale_x_discrete(limits=df_weight$SampleNumber)
-# ggsave(filename = "output/WTS4/normalize_1/stimAfter/SBD_abs/DimReduc_MCMI/k_Number_5/tsne/test_p_ano.png", 
-#        plot = p_ano)

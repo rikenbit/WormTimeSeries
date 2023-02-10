@@ -2,7 +2,7 @@ source("src/functions_WTS4_SBD_abs.R")
 
 #### args setting####
 args <- commandArgs(trailingOnly = T)
-# sample number 
+# sample number
 args_sample <- args[1]
 # path NeuronActivity Data
 args_neuron <- args[2]
@@ -12,28 +12,6 @@ args_time <- args[3]
 args_stim_xlsx <- args[4]
 # output SBD_abs距離行列
 args_SBD <- args[5]
-# #### test args####
-# # sample number サンプル番号の指定
-# args_sample <- c("2")
-# # path NeuronActivity Data
-# args_neuron <- c("data/normalize_1/ReadData_2.RData")
-# # args_time <- c("all")
-# args_time <- c("stimAfter")
-# # stimtiming
-# args_stim_xlsx <- c("data/stimulation/stimulation_timing.xlsx")
-# # output SBD_abs距離行列
-# args_SBD <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Distance/SampleNumber_2.RData")
-
-# # sample number サンプル番号の指定
-# args_sample <- c("3")
-# # path NeuronActivity Data
-# args_neuron <- c("data/n1_28sample/ReadData_3.RData")
-# # args_time <- c("all")
-# args_time <- c("stimAfter")
-# # stimtiming
-# args_stim_xlsx <- c("data/stimulation/stimulation_timing.xlsx")
-# # output SBD_abs距離行列
-# args_SBD <- c("output/WTS4/n1_28sample/stimAfter/SBD_abs/Distance/SampleNumber_3.RData")
 
 #### load NeuronActivity####
 load(args_neuron)
@@ -55,9 +33,9 @@ SBD_zero_mat <- sapply(1:ncol(ReadData), function(x) {
             shift_1 <- ReadData[,x]
             shift_2 <- ReadData[,z]
             return_object <- dtwclust::SBD(shift_1,
-                         shift_2, 
-                         znorm = FALSE, 
-                         error.check = TRUE, 
+                         shift_2,
+                         znorm = FALSE,
+                         error.check = TRUE,
                          return.shifted = TRUE)
             return_object$dist
         } else{

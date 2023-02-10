@@ -2,7 +2,7 @@ source("src/functions_WTS3_DTW.R")
 
 #### args setting####
 args <- commandArgs(trailingOnly = T)
-# sample number 
+# sample number
 args_sample <- args[1]
 # input NeuronActivity Data
 args_neuron <- args[2]
@@ -13,20 +13,6 @@ args_stim_xlsx <- args[4]
 # output SBD距離行列
 args_DTW <- args[5]
 
-#### test args####
-# # sample number サンプル番号の指定
-# args_sample <- c("1")
-# # input NeuronActivity Data
-# args_neuron <- c("data/normalize_1/ReadData_1.RData")
-# # time range
-# # args_time <- c("all")
-# args_time <- c("stimAfter")
-# # stimtiming
-# args_stim_xlsx <- c("data/stimulation/stimulation_timing.xlsx")
-# 
-# # output SBD距離行列
-# # args_DTW <- c("output/WTS3/normalize_1/all/DTW/SampleNumber_1/DTW.RData")
-# args_DTW <- c("output/WTS3/normalize_1/stimAfter/DTW/SampleNumber_1/DTW.RData")
 
 #### load NeuronActivity####
 load(args_neuron)

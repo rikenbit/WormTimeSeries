@@ -27,23 +27,6 @@ args_output_gg_cell_count <- args[12]
 # Additional File 1: Cellular labels to interpret the clustering results
 args_output_csv <- args[13]
 
-# #### test args####
-# args_input_cord <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/CSPA/Merged_tsne_cord/k_Number_5.RData")
-# args_input_cls <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/CSPA/Merged_cls/k_Number_5.RData")
-# args_DimReduc <- c("tsne")
-
-# args_NL <- c("data/igraph/Fig1_HNS.RData")
-# args_eval_label <- c("data/WTS4_Eval_behavior_ACF.xlsx")
-# args_cell_count <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/Distance/CellCount.RData")
-# args_count_sum <- c("output/WTS4/normalize_1/stimAfter/SBD_abs/ClsCount/k_Number_5/df_count_sum.RData")
-
-# args_output_gg_cls <- c('output/WTS4/normalize_1/stimAfter/SBD_abs/CSPA/Merged_tsne_plot/k_Number_5_gg_cls.png')
-# args_output_gg_NT <- c('output/WTS4/normalize_1/stimAfter/SBD_abs/CSPA/Merged_tsne_plot/k_Number_5_gg_NT.png')
-# args_output_gg_eval_label <- c('output/WTS4/normalize_1/stimAfter/SBD_abs/CSPA/Merged_tsne_plot/k_Number_5_gg_eval_label.png')
-# args_output_gg_count_sum <- c('output/WTS4/normalize_1/stimAfter/SBD_abs/CSPA/Merged_tsne_plot/k_Number_5_gg_count_sum.png')
-# args_output_gg_cell_count <- c('output/WTS4/normalize_1/stimAfter/SBD_abs/CSPA/Merged_tsne_plot/k_Number_5_gg_cell_count.png')
-# args_output_csv <- c('output/WTS4/normalize_1/stimAfter/SBD_abs/CSPA/Merged_tsne_plot/label_table_k9.csv')
-
 #### load Dimensionality Reduction cord####
 load(args_input_cord)
 

@@ -17,55 +17,6 @@ source("src/functions_WTS3_SBD_abs.R")
 # # output SBD_abs yshift
 # args_yshift <- args[7]
 
-# #### test args####
-# # sample number サンプル番号の指定
-# args_sample <- c("2")
-# # path NeuronActivity Data
-# args_neuron <- c("data/normalize_1/ReadData_2.RData")
-
-# # args_time <- c("all")
-# args_time <- c("stimAfter")
-# # stimtiming
-# args_stim_xlsx <- c("data/stimulation/stimulation_timing.xlsx")
-# # y-shift計算対象の細胞
-# args_shift <- c("ASER")
-# # output SBD_abs距離行列
-# args_SBD <- c("output/WTS3/normalize_1/stimAfter/SBD_abs/SampleNumber_2/SBD_abs.RData")
-# # output SBD_abs yshift
-# args_yshift <- c("output/WTS3/normalize_1/stimAfter/SBD_abs/SampleNumber_2/yshift.RData")
-
-# #### test args####
-# # sample number サンプル番号の指定
-# args_sample <- c("2")
-# # path NeuronActivity Data
-# args_neuron <- c("data/normalize_1/ReadData_2.RData")
-
-# # args_time <- c("all")
-# args_time <- c("stimAfter")
-# # stimtiming
-# args_stim_xlsx <- c("data/stimulation/stimulation_timing.xlsx")
-# # y-shift計算対象の細胞
-# args_shift <- c("AVAR")
-# # output SBD_abs距離行列
-# args_SBD <- c("output/WTS3/normalize_1/stimAfter/SBD_abs_manual/SampleNumber_2/SBD_abs_AVAR.RData")
-# # output SBD_abs yshift
-# args_yshift <- c("output/WTS3/normalize_1/stimAfter/SBD_abs_manual/SampleNumber_2/yshift_AVAR.RData")
-
-#### test args####
-# sample number サンプル番号の指定
-args_sample <- c("2")
-# path NeuronActivity Data
-args_neuron <- c("data/normalize_1/ReadData_2.RData")
-# args_time <- c("all")
-args_time <- c("stimAfter")
-# stimtiming
-args_stim_xlsx <- c("data/stimulation/stimulation_timing.xlsx")
-# y-shift計算対象の細胞
-args_shift <- c("RIMR")
-# output SBD_abs距離行列
-# args_SBD <- c("output/WTS3/normalize_1/stimAfter/SBD_abs_manual/SampleNumber_2/SBD_abs_RIMR.RData")
-# output SBD_abs yshift
-args_yshift <- c("output/WTS3/normalize_1/stimAfter/SBD_abs_manual/SampleNumber_2/yshift_RIMR.RData")
 
 #### load NeuronActivity####
 load(args_neuron)

@@ -18,21 +18,6 @@ args_sample <- args[4]
 args_celltype <- args[5]
 # outputファイル名
 args_output <- args[6]
-#### test args####
-# # select data データの指定
-# args_data <- c("normalize_1")
-# # select timeframe 時系列区間の指定
-# args_TF <- c("after")
-# # select lag（ラグ） ラグの間隔の指定
-# args_lag <- as.numeric(c("600"))
-# # select Acf 自己相関の指定
-# args_Acf <- c("Acf")
-# # select animal number 個体番号の指定
-# args_sample <- c("1")
-# # select celltype 細胞型名の指定
-# args_celltype <- c("ASER")
-# # outputファイル名
-# args_output <- c("output/WTS2/correlogram/normalize_1/after/600/Acf/SampleNumber_1/CellType_ASER.png")
 
 #### load NeuronActivity####
 # inputpath <- paste('data', args_data, 'ReadData_1.RData', sep = '/')
@@ -42,7 +27,7 @@ load(inputpath)
 eval(parse(text=paste0("ReadData <- ReadData_",args_sample)))
 # TimeFrame
 timeframe <- as.numeric(rownames(ReadData))
-# NeuronActivity 
+# NeuronActivity
 # nactivity <- ReadData[,'細胞型名']
 eval(parse(text=paste0("nactivity <- ReadData[,'",args_celltype,"']")))
 
@@ -52,8 +37,8 @@ eval(parse(text=paste0("inputpath <- paste('data','stimulation', 'stim_",args_sa
 load(inputpath)
 # stim <- stim_1
 eval(parse(text=paste0("stim <- stim_",args_sample)))
-stim %>% 
-    .[1:length(nactivity)] %>% 
+stim %>%
+    .[1:length(nactivity)] %>%
     as.numeric() -> stimtiming
 
 #### dataframe####

@@ -1,8 +1,5 @@
 source("src/functions_WTS3_venn.R")
 
-prot1 <- c("AIBR","ASEL","ASER","ASGR","ASHL","ASHR","ASIR","ASJL","ASKR","AUAL","AWAL","AWAR","AWBL","AWBR","AWCL","AWCR","BAGL","BAGR","CEPVL","CEPVR","OLQVR","RIAR","RIR","SIBDR","URXL","URXR")
-prot2 <- c("AIMR","ASEL","ASER","ASHL","ASHR","ASIL","ASKR","AUAL","AUAR","AWBL","AWCR","BAGL","BAGR","OLLL","OLQVR","RIVR")
-prot3 <- c("ASHL","ASIL","ASKR","AUAL","AUAR","AWAL","BAGL","BAGR","CEPVR","OLLL","OLQVR","RIVR","SIBDR","URXL","URXR")
 data <- list(ACF = prot1, Clustering = prot2, Proximity = prot3)
 
 # Venn ACF VS クラスタ VS 空間的近さ
@@ -50,7 +47,7 @@ w[[7]]$label  <- paste(setdiff(prot1,union(prot2,prot3)),collapse="\n")
 # # C-(A+B)
 # w[[13]]$label <- paste(setdiff(cc,union(aa,bb)),collapse = "")
 
-# # plot  
+# # plot
 # grid.newpage()
 # grid.draw(w)
 

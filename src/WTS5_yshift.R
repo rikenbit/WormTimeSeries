@@ -11,16 +11,6 @@ args_stim_xlsx <- args[3]
 # output SBD yshift df
 args_yshift_value <- args[4]
 
-# ### test args####
-# # sample number
-# args_sample <- c("2")
-# # input SBD yshift df
-# args_yshift <- c("output/WTS3/normalize_1/stimAfter/SBD_abs_manual/SampleNumber_2/yshift_RIMR.RData")
-# # input stim timing extra
-# args_stim_xlsx <- c("data/stimulation/stimulation_timing.xlsx")
-# # output SBD yshift df
-# args_yshift_value <- c("output/WTS3/normalize_1/stimAfter/SBD_abs_manual/SampleNumber_2/value_RIMR.RData")
-
 #### load y-shift####
 load(args_yshift)
 as.numeric(sbd_yshift_df$time_frame) -> sbd_yshift_df$time_frame

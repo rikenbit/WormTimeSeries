@@ -2,7 +2,7 @@ source("src/functions_WTS4_yshift.R")
 
 #### args setting####
 args <- commandArgs(trailingOnly = T)
-# sample number 
+# sample number
 args_sample <- args[1]
 # path NeuronActivity Data
 args_neuron <- args[2]
@@ -14,20 +14,6 @@ args_stim_xlsx <- args[4]
 args_output<- args[5]
 # 値の形式　数字の細胞除去の有無
 args_in_mat <- args[6]
-
-# #### test args####
-# # sample number サンプル番号の指定
-# args_sample <- c("2")
-# # path NeuronActivity Data
-# args_neuron <- c("data/normalize_1/ReadData_2.RData")
-# # time range
-# args_time <- c("stimAfter")
-# # stimtiming
-# args_stim_xlsx <- c("data/stimulation/stimulation_timing.xlsx")
-# # output y-shiftの総当たり結果の行列
-# args_output <- ("output/WTS4/normalize_1/stimAfter/SBD_abs/Shift/SampleNumber_3.RData")
-# # 数字の細胞除去
-# args_output_F <- ("output/WTS4/normalize_1/stimAfter/SBD_abs/Shift_F/SampleNumber_3.RData")
 
 #### load NeuronActivity####
 load(args_neuron)
@@ -67,6 +53,3 @@ shift_matrix <- switch (args_in_mat,
                         "Shift_F" = .filter_cellnames(out_all)
                         )
 save(shift_matrix, file=args_output)
-# out_allは行方向の細胞を基準（ゼロ）としたさいの列方向の細胞の平行移動
-# 下記コマンドでどれだけ平行移動したか取得できる
-# out_all["HYPL10VL",]やout_all[2,]やout_all[c("GLRR","HYPL10VL"),]やout_all[c("ASER","BAGR","BAGL"),c("ASER","BAGR","BAGL")]
