@@ -3,9 +3,9 @@
 # N_SAMPLES = ["2"]
 N_SAMPLES = ["1"]
 
-CellType = ["RIMR"]
-# Shift_CellType = ["AVAR"]
-Shift_CellType = ["AVAL","AVAR"]
+CellType = [""]
+# Shift_CellType = [""]
+Shift_CellType = ["",""]
 
 rule all:
     input:
